@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
 use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\RatingController;
 use App\Http\Controllers\API\SuggestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,13 +53,15 @@ Route::group([
 
     Route::get('logout',  [AuthController::class, 'logout']);
     Route::post('refresh',  [AuthController::class, 'refresh']);
-    Route::get('me' ,  [AuthController::class, 'me']);
 
+    Route::get('me' ,  [UserController::class, 'me']);
     Route::post('user' ,  [UserController::class, 'update']);
+
     Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
 
-    Route::get('notifications',[NotificationController::class, 'index' ]);
+    Route::post('rate',[RatingController::class, 'store' ]);
 
+    Route::get('notifications',[NotificationController::class, 'index' ]);
 
     Route::get('questions',[QuestionController::class, 'index' ]);
 

@@ -10,6 +10,7 @@ use Astrotomic\Translatable\Locales;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Services\ScheduleService;
 
 class AuthController extends Controller
 {
@@ -68,8 +69,11 @@ class AuthController extends Controller
         }
 
         $this->device_token($request->device_token, $user);
-        $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
+        $user->load(['provider.department','provider.subdepartment','provider.images']);
+        $scheduleService = new ScheduleService();
+        $workTime = $scheduleService->getProviderWorkTime($user->id);
 
+        $user['schedule'] =  $workTime ;
         return $this->respondWithToken($token ,$user);
     }
 

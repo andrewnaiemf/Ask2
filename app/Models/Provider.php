@@ -15,7 +15,8 @@ class Provider extends Model
     protected $fillable = [
         'user_id', 'commercial_register', 'location', 'info', 'service', 'email',
         'latitude', 'longitude', 'facebook_link', 'instagram_link', 'twitter_link',
-        'snapchat_link', 'linkedin_link', 'department_id', 'subdepartment_id'
+        'snapchat_link', 'linkedin_link', 'department_id', 'subdepartment_id',
+        'open_all_time'
     ];
 
     protected $dates = ['deleted_at'];
@@ -23,7 +24,7 @@ class Provider extends Model
 	protected $hidden = [
         'deleted_at','updated_at','created_at','email', 'latitude', 'longitude','info','service',
         'facebook_link', 'instagram_link', 'twitter_link','snapchat_link',
-        'linkedin_link','department_id', 'subdepartment_id'
+        'linkedin_link','department_id', 'subdepartment_id','open_all_time'
 	];
 
     protected $appends = ['communications', 'description'];

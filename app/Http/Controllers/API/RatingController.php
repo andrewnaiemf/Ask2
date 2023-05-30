@@ -54,7 +54,7 @@ class RatingController extends Controller
 
         $rate = Rating::create([
             'user_id' =>  $request->user_id,
-            'rating' => $request->rate,
+            'rate' => $request->rate,
             'feedback' => $request->feedback,
             'rated_user_id' => auth()->user()->id
         ]);
@@ -75,6 +75,7 @@ class RatingController extends Controller
             'user_id' =>  $rate->user_id,
             'notified_user_id' => $rate->rated_user_id,
             'type' => 'rating',
+            'screen' => 'rating',
             'data' =>$rate
         ]);
 

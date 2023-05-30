@@ -10,6 +10,7 @@ class Rating extends Model
 {
     use HasFactory,SoftDeletes;
 
+    protected $table = "rating";
     protected $fillable = [//user_id user who rate the other one
         'user_id', 'rated_user_id', 'rate', 'feedback'
     ];

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Services\ScheduleService;
 
 class UserController extends Controller
 {
@@ -65,6 +66,25 @@ class UserController extends Controller
         //
     }
 
+    public function me()
+    {
+        $user = User::find(auth()->user()->id);
+
+        $user_status = $user->provider->status;
+        if($user_status  != 'Accepted') {
+            return $this->returnError(__('api.pleaseContactWithAdministrator'));
+        }
+
+        $user->load(['provider.department','provider.subdepartment','provider.images']);
+        $scheduleService = new ScheduleService();
+        $workTime = $scheduleService->getProviderWorkTime($user->id);
+
+        $user['schedule'] =  $workTime ;
+
+        return $this->returnData(['user' => $user ]);
+
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -86,6 +106,8 @@ class UserController extends Controller
         $this->workDescription($userId, $request['email'] , $request['city_id']);
 
         $this->providerDocuments($userId, $request['profile'] , $request['image']);
+
+        $this->providerSchedule($userId, $request['schedule'] ,$request['is_open_all_time']);
 
 
         if (!empty($providerData)) {
@@ -125,6 +147,21 @@ class UserController extends Controller
 
         if ($image) {
             $this->updateProviderPlaceImages($user,$image);
+        }
+
+    }
+
+    public function providerSchedule($userId, $schedule, $open_all_time){
+
+        $user = Provider::find($userId);
+
+        if($open_all_time && empty($schedule)){//provider open all day
+            $user->update(['open_all_time' => $open_all_time]);
+        }else{
+            $user->update(['open_all_time' => 0]);// provider open in particular time
+
+            $user->schedule()->forceDelete(); // Delete existing schedules
+            $user->schedule()->createMany($schedule); // Create new schedules
         }
 
     }
