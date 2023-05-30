@@ -30,6 +30,7 @@ return [
     'cannotstarttripnow' => 'لا يمكنك بدأ رحلة جديدة الان',
     'pleaseContactWithAdministrator' => 'من فضلك تواصل مع الدمن',
     'suggestion_sent_successfully' => 'تم ارسال افتراحك بنجاح',
+    'imgeDeletedSuccessfully' => 'تم حذف الصورة بنجاح',
 
 
 

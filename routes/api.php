@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\API\CityController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
 use App\Http\Controllers\API\Provider\DepartmentController;
+use App\Http\Controllers\API\Provider\DocumentController;
+use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\SuggestionController;
 use Illuminate\Http\Request;
@@ -51,7 +54,14 @@ Route::group([
     Route::post('refresh',  [AuthController::class, 'refresh']);
     Route::get('me' ,  [AuthController::class, 'me']);
 
+    Route::post('user' ,  [UserController::class, 'update']);
+    Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
+
+    Route::get('notifications',[NotificationController::class, 'index' ]);
+
+
     Route::get('questions',[QuestionController::class, 'index' ]);
+
     Route::post('suggestion',[SuggestionController::class, 'store' ]);
 
 });

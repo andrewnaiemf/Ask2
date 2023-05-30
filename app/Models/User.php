@@ -28,7 +28,8 @@ class User extends Authenticatable  implements JWTSubject
         'profile',
         'uuid','city_id',
         'device_token',
-        'uuid'
+        'uuid',
+        'email'
 	];
 
 	protected $deleted_at = 'deleted_at';
