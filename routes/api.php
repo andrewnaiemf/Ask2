@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
+use App\Http\Controllers\API\Provider\BookingController;
 use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
 use App\Http\Controllers\API\Provider\UserController;
@@ -60,6 +61,9 @@ Route::group([
     Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
 
     Route::post('rate',[RatingController::class, 'store' ]);
+
+    Route::get('booking',[BookingController::class, 'index' ]);
+    Route::get('booking/{id}',[BookingController::class, 'show' ]);
 
     Route::get('notifications',[NotificationController::class, 'index' ]);
 
