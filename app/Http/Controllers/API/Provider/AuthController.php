@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Clinic;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Provider;
@@ -27,6 +28,7 @@ class AuthController extends Controller
 
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
+        $user['provider']['clinics'] = Clinic::all();
 
 
         $credentials = $request->only(['phone','password']);
@@ -69,9 +71,16 @@ class AuthController extends Controller
         }
 
         $this->device_token($request->device_token, $user);
-        $user->load(['provider.department','provider.subdepartment','provider.images']);
+
+        $user->load(['provider.department',
+                        'provider.subdepartment',
+                        'provider.images',
+                        'provider.ratings',
+                    ]);
+        $user['provider']['clinics'] = Clinic::all();
+
         $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->id);
+        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
 
         $user['schedule'] =  $workTime ;
         return $this->respondWithToken($token ,$user);
@@ -119,8 +128,11 @@ class AuthController extends Controller
         ]);
 
         $this->device_token($request->device_token, $user);
-        $user->update(['account_type' => 'Provider']);
-        $this->userProfile( $request->file('profile'), $user);
+
+        $user->update(['account_type' => 'Provider','profile' => '']);
+        if($request->file('profile')){
+            $this->userProfile( $request->file('profile'), $user);
+        }
 
         $this->attachProviderData($request, $user);
 
@@ -179,7 +191,7 @@ class AuthController extends Controller
         $path = 'Provider/' .$user->id. '/';
 
         $imageName = $profile->hashName();
-        $profile->storeAs($path,$imageName);
+        $profile->storeAs('public/'.$path,$imageName);
         $full_path = $path.$imageName;
         $user->update(['profile'=> $full_path]);
     }

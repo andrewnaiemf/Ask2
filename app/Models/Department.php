@@ -26,6 +26,7 @@ class Department extends Model
 
         $lang = app(Locales::class)->current();
 
+        $array['id'] =$this['id'];
         $array['name'] =$this->{'name_'.$lang};
 
         if ($this->relationLoaded('subdepartments')) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Clinic;
 use App\Models\DocumentProvider;
 use App\Models\Provider;
 use App\Models\User;
@@ -75,9 +76,11 @@ class UserController extends Controller
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
-        $user->load(['provider.department','provider.subdepartment','provider.images']);
+        $user->load(['provider.department','provider.subdepartment','provider.images','provider.ratings']);
+        $user['provider']['clinics'] = Clinic::all();
+
         $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->id);
+        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
 
         $user['schedule'] =  $workTime ;
 
@@ -107,11 +110,13 @@ class UserController extends Controller
 
         $this->providerDocuments($userId, $request['profile'] , $request['image']);
 
-        $this->providerSchedule($userId, $request['schedule'] ,$request['is_open_all_time']);
+        if ($request['schedule'] || $request['is_open_all_time']) {
+            $this->providerSchedule($userId, $request['schedule'] ,$request['is_open_all_time']);
+        }
 
 
         if (!empty($providerData)) {
-            $provider = Provider::find($userId);
+            $provider = Provider::where('user_id',$userId)->first();
             $provider->update($providerData);
         }
 
@@ -153,7 +158,7 @@ class UserController extends Controller
 
     public function providerSchedule($userId, $schedule, $open_all_time){
 
-        $user = Provider::find($userId);
+        $user = Provider::where('user_id',$userId)->first();
 
         if($open_all_time && empty($schedule)){//provider open all day
             $user->update(['open_all_time' => $open_all_time]);
@@ -173,12 +178,12 @@ class UserController extends Controller
 
             $segments = explode('/', $userProfile);
             $imageName = $segments[2];
-            $profile->storeAs($path,$imageName);
+            $profile->storeAs('public/'.$path,$imageName);
 
         }else{
 
             $imageName = $profile->hashName();
-            $profile->storeAs($path,$imageName);
+            $profile->storeAs('public/'.$path,$imageName);
             $full_path = $path.$imageName;
 
             $user->update([
@@ -194,11 +199,11 @@ class UserController extends Controller
        foreach ($images as $image) {
 
             $imageName = $image->hashName();
-            $image->storeAs($path,$imageName);
+            $image->storeAs('public/'.$path,$imageName);
             $full_path = $path.$imageName;
 
             DocumentProvider::create([
-                'provider_id' => $user->id,
+                'provider_id' => $user->provider->id,
                 'name' => 'describe_image',
                 'path' => $full_path,
             ]);
@@ -211,22 +216,23 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'info' => 'string|max:255',
-            'service' => 'string|max:255',
-            'city_id' => 'exists:cities,id',
+            'info' => 'nullable|string|max:255',
+            'service' => 'nullable|string|max:255',
+            'city_id' => 'nullable|exists:cities,id',
             'email' => [
+                'nullable',
                 'email',
                 Rule::unique('users')->ignore(auth()->user()->id),
             ],
-            'latitude' => ['string', 'max:255', 'regex:/^[-]?((([0-8]?[0-9])(\.(\d+))?)|(90(\.0+)?))$/'],
-            'longitude' => ['string', 'max:255', 'regex:/^[-]?((([0-9]?[0-9]?[0-9])(\.(\d+))?)|(1[0-7][0-9](\.\d+)?)|(180(\.0+)?))$/'],
-            'facebook_link' => ['string', 'max:255', 'url'],
-            'instagram_link' => ['string', 'max:255', 'url'],
-            'twitter_link' => ['string', 'max:255', 'url'],
-            'snapchat_link' => ['string', 'max:255', 'url'],
-            'linkedin_link' => ['string', 'max:255', 'url'],
-            'profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'latitude' => ['nullable','string', 'max:255', 'regex:/^[-]?((([0-8]?[0-9])(\.(\d+))?)|(90(\.0+)?))$/'],
+            'longitude' => ['nullable','string', 'max:255', 'regex:/^[-]?((([0-9]?[0-9]?[0-9])(\.(\d+))?)|(1[0-7][0-9](\.\d+)?)|(180(\.0+)?))$/'],
+            'facebook_link' => ['nullable','string', 'max:255', 'url'],
+            'instagram_link' => ['nullable','string', 'max:255', 'url'],
+            'twitter_link' => ['nullable','string', 'max:255', 'url'],
+            'snapchat_link' => ['nullable','string', 'max:255', 'url'],
+            'linkedin_link' => ['nullable','string', 'max:255', 'url'],
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {

@@ -27,7 +27,17 @@ class Provider extends Model
         'linkedin_link','department_id', 'subdepartment_id','open_all_time'
 	];
 
-    protected $appends = ['communications', 'description'];
+    protected $appends = ['communications', 'description', 'rating'];
+
+
+    public function getRatingAttribute()
+    {
+        if (auth()->user()) {
+            $average_rating =  $this->ratings()->avg('rate');
+            return number_format($average_rating, 2);
+        }
+        return '0' ;
+    }
 
     public function getCommunicationsAttribute()
     {
@@ -54,6 +64,7 @@ class Provider extends Model
 
         foreach ($fields as $field) {
             if (!is_null($this->$field)) {
+
                 $isNull = false;
                 break;
             }
@@ -70,7 +81,7 @@ class Provider extends Model
             'snapchat_link' => $this->snapchat_link,
             'linkedin_link' => $this->linkedin_link,
             'phone' => $user->phone,
-            'email' => $this->email,
+            'email' => $user->email,
             'city' => $user->city->{'name_'.$lang},
             'longitude' => $this->longitude,
             'latitude' => $this->latitude,
