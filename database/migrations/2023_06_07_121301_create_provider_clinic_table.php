@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClinicScheduleTable extends Migration
+class CreateProviderClinicTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateClinicScheduleTable extends Migration
      */
     public function up()
     {
-        Schema::create('clinic_schedule', function (Blueprint $table) {
+        Schema::create('provider_clinic', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('provider_id');
             $table->unsignedBigInteger('clinic_id');
-            $table->unsignedTinyInteger('day_of_week');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
-            $table->foreign('provider_id')->references('id')->on('providers');
-            $table->foreign('clinic_id')->references('id')->on('clinics');
-            $table->softDeletes();
+
+            $table->foreign('provider_id')->references('id')->on('providers')->onDelete('cascade');
+            $table->foreign('clinic_id')->references('id')->on('clinics')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ class CreateClinicScheduleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clinic_schedule');
+        Schema::dropIfExists('provider_clinic');
     }
 }

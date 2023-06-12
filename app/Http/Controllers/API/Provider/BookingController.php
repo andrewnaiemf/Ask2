@@ -33,7 +33,7 @@ class BookingController extends Controller
                                     'year' => $request->year,
                                     'month' => $request->month,
                                     'day' =>$request->day
-                                    ])->with(['provider','user'])
+                                    ])->with(['provider','user','clinicBookings.clinic'])
                                     ->orderBy('id', 'desc')
                                     ->simplePaginate($perPage);
 
@@ -70,7 +70,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['provider','user']));
+        $booking->load((['provider','user','clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }

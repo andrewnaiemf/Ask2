@@ -27,4 +27,16 @@ class Clinic extends Model
         $array['name'] =$this->{'name_'.$lang};
 
         return $array;
-    }}
+    }
+
+    public function providers()
+    {
+        return $this->belongsToMany(Provider::class, 'provider_clinic');
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(ClinicSchedule::class);
+    }
+
+}

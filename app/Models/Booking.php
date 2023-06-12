@@ -29,4 +29,10 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class, 'provider_id');
     }
+
+    public function clinicBookings()
+    {
+        return $this->hasMany(ClinicBooking::class, 'booking_id');
+    }
+
 }

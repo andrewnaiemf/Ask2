@@ -32,6 +32,8 @@ return [
     'suggestion_sent_successfully' => 'تم ارسال افتراحك بنجاح',
     'imgeDeletedSuccessfully' => 'تم حذف الصورة بنجاح',
 
-
+    'clinic' => [
+        'scheduleUpdatedSuccessfully' => 'تم تعديل المواعيد بنجاح'
+    ],
 
 ];

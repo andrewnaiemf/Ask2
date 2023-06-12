@@ -160,4 +160,14 @@ class Provider extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function clinics()
+    {
+        return $this->belongsToMany(Clinic::class, 'provider_clinic');
+    }
+
+    public function schedules()
+    {
+        return $this->hasManyThrough(ClinicSchedule::class, Clinic::class);
+    }
+
 }

@@ -11,7 +11,7 @@ class Schedule extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'provider_id', 'day_of_week', 'start_time', 'end_time'
+        'provider_id', 'day_of_week', 'start_time', 'end_time', 'is_active'
     ];
 
     protected $table = 'provider_schedule';
@@ -48,7 +48,7 @@ class Schedule extends Model
         // Iterate over the remaining days in the schedule
         foreach ($schedules as $day) {
             // Compare the start and end times of the current day with the first day
-            if ($day->start_time !== $firstDay->start_time || $day->end_time !== $firstDay->end_time) {
+            if ($day->start_time !== $firstDay->start_time || $day->end_time !== $firstDay->end_time ) {
                 // If the start or end time is different, return false
                 return false;
             }

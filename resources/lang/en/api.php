@@ -32,4 +32,8 @@ return [
     'suggestion_sent_successfully' => 'suggestion sent successfully',
     'imgeDeletedSuccessfully' => 'The imge is deleted successfully',
 
+    'clinic' => [
+        'scheduleUpdatedSuccessfully' => 'Schedule updated successfully'
+    ],
+
 ];

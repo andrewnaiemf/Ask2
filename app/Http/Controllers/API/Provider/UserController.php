@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\DocumentProvider;
 use App\Models\Provider;
+use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -67,8 +68,7 @@ class UserController extends Controller
         //
     }
 
-    public function me()
-    {
+    public function me(){
         $user = User::find(auth()->user()->id);
 
         $user_status = $user->provider->status;
@@ -76,13 +76,18 @@ class UserController extends Controller
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
-        $user->load(['provider.department','provider.subdepartment','provider.images','provider.ratings']);
-        $user['provider']['clinics'] = Clinic::all();
+        $user->load(['provider.department',
+            'provider.subdepartment',
+            'provider.images',
+            'provider.ratings',
+            'provider.clinics'
+        ]);
+
 
         $scheduleService = new ScheduleService();
         $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
 
-        $user['schedule'] =  $workTime ;
+        $user['schedule'] = $workTime;
 
         return $this->returnData(['user' => $user ]);
 
@@ -95,8 +100,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
-    {
+    public function update(Request $request){
         $userId = auth()->user()->id;
         $validation =  $this->validateUserData( $request );
 
@@ -110,8 +114,8 @@ class UserController extends Controller
 
         $this->providerDocuments($userId, $request['profile'] , $request['image']);
 
-        if ($request['schedule'] || $request['is_open_all_time']) {
-            $this->providerSchedule($userId, $request['schedule'] ,$request['is_open_all_time']);
+        if ($request['schedule']) {
+            $this->providerSchedule($userId, $request['schedule'] ,$request['open_all_time']);
         }
 
 
@@ -156,17 +160,19 @@ class UserController extends Controller
 
     }
 
-    public function providerSchedule($userId, $schedule, $open_all_time){
+    public function providerSchedule($userId, $schedules, $open_all_time){
+        $provider = Provider::where('user_id',$userId)->first();
 
-        $user = Provider::where('user_id',$userId)->first();
 
-        if($open_all_time && empty($schedule)){//provider open all day
-            $user->update(['open_all_time' => $open_all_time]);
-        }else{
-            $user->update(['open_all_time' => 0]);// provider open in particular time
-
-            $user->schedule()->forceDelete(); // Delete existing schedules
-            $user->schedule()->createMany($schedule); // Create new schedules
+        $provider->update(['open_all_time' => $open_all_time]);
+        foreach ($schedules as $id => $schedule) {
+            $day = $provider->schedule()->where('day_of_week', $schedule['day_of_week'])->first();
+            if($day){
+                $day->update($schedule);
+            }else{
+                $schedule['provider_id'] = $userId;
+                Schedule::create( $schedule);
+            }
         }
 
     }
@@ -233,6 +239,7 @@ class UserController extends Controller
             'linkedin_link' => ['nullable','string', 'max:255', 'url'],
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'nullable|boolean'
         ]);
 
         if ($validator->fails()) {

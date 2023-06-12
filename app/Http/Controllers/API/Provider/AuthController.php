@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\ClinicSchedule;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Provider;
@@ -29,7 +31,7 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
         $user['provider']['clinics'] = Clinic::all();
-
+        $user['provider']['clinics_schedule']= $this->clinicSchedule($user);
 
         $credentials = $request->only(['phone','password']);
 
@@ -76,8 +78,9 @@ class AuthController extends Controller
                         'provider.subdepartment',
                         'provider.images',
                         'provider.ratings',
+                        'provider.clinics'
                     ]);
-        $user['provider']['clinics'] = Clinic::all();
+        // dd($user->provider->clinics[0]->schedule);
 
         $scheduleService = new ScheduleService();
         $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
@@ -208,6 +211,28 @@ class AuthController extends Controller
         $provider = Provider::create($providerData);
 
         return $provider;
+    }
+
+    public function clinicSchedule($user)
+    {
+        $subdepartmentName = Department::findOrFail($user->provider->subdepartment_id)->name_en;
+
+        if($subdepartmentName == 'Hospitals'){
+            $schedules = [];
+            $clinics = Clinic::all();
+            // foreach ($clinics as  $clinic) {
+            //     for ($i=0; $i < 7; $i++) {
+            //         $ClinicSchedule = ClinicSchedule::create([
+            //             'provider_id' => $user->provider->id,
+            //             'clinic_id' => $clinic->id,
+            //             'day_of_week' => $i,
+            //         ]);
+            //         array_push($schedules,$ClinicSchedule);
+            //     }
+            // }
+            $user->provider->clinics()->attach($clinics);
+        }
+        return;
     }
 
 }
