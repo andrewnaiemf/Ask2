@@ -170,7 +170,7 @@ class UserController extends Controller
             if($day){
                 $day->update($schedule);
             }else{
-                $schedule['provider_id'] = $userId;
+                $schedule['provider_id'] = $provider->id;
                 Schedule::create( $schedule);
             }
         }

@@ -40,7 +40,7 @@ class ClinicSceduleController extends Controller
     {
         $this->validatescheduleData($request);
 
-        $provider = Provider::find(auth()->user()->id);
+        $provider = Provider::where('user_id',auth()->user()->id)->first();
         $clinicId = $request->clinic_id;
 
         $existingSchedules = ClinicSchedule::where('provider_id', $provider->id)
