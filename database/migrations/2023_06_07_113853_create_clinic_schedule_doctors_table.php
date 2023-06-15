@@ -18,6 +18,8 @@ class CreateClinicScheduleDoctorsTable extends Migration
             $table->unsignedBigInteger('clinic_schedule_id');
             $table->string('doctor_name')->nullable();
             $table->string('doctor_cost')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->foreign('clinic_schedule_id')->references('id')->on('clinic_schedule');
             $table->softDeletes();
 

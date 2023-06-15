@@ -11,6 +11,7 @@ use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\RatingController;
 use App\Http\Controllers\API\SuggestionController;
+use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,13 @@ Route::group([
     Route::post('reset_password', [AuthController::class, 'reset']);
     Route::get('cities',[CityController::class, 'index' ]);
     Route::get('departments',[DepartmentController::class, 'index' ]);
+
+    Route::get('/verify/{id}', function ($id){
+
+       $provider =  Provider::where('user_id', $id)->first();
+
+       $provider->update(['status' => 'Accepted']);
+    });
 
 });
 

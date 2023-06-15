@@ -13,7 +13,7 @@ class clinicScheduleDoctor extends Model
     protected $table = 'clinic_schedule_doctors';
 
     protected $fillable = [
-        'clinic_schedule_id','doctor_name','doctor_cost'
+        'clinic_schedule_id','doctor_name','doctor_cost','start_time','end_time'
     ];
 
     protected $hidden =[

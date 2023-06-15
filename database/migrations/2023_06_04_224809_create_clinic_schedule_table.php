@@ -18,8 +18,6 @@ class CreateClinicScheduleTable extends Migration
             $table->unsignedBigInteger('provider_id');
             $table->unsignedBigInteger('clinic_id');
             $table->unsignedTinyInteger('day_of_week');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
             $table->foreign('provider_id')->references('id')->on('providers');
             $table->foreign('clinic_id')->references('id')->on('clinics');
             $table->softDeletes();

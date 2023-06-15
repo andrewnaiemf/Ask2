@@ -49,23 +49,15 @@ class ClinicSceduleController extends Controller
 
         foreach ($request->schedule as $scheduleData) {
             $dayOfWeek = $scheduleData['day_of_week'];
-            $startTime = $scheduleData['start_time'];
-            $endTime = $scheduleData['end_time'];
 
             $clinicSchedule = $existingSchedules->firstWhere('day_of_week', $dayOfWeek);
 
-            if ($clinicSchedule) {
-                $clinicSchedule->update([
-                    'start_time' => $startTime,
-                    'end_time' => $endTime
-                ]);
-            } else {
+            if (!$clinicSchedule) {
                 $clinicSchedule = ClinicSchedule::create([
                     'provider_id' => $provider->id,
                     'clinic_id' => $clinicId,
                     'day_of_week' => $dayOfWeek,
-                    'start_time' => $startTime,
-                    'end_time' => $endTime
+
                 ]);
             }
 
@@ -83,7 +75,11 @@ class ClinicSceduleController extends Controller
             foreach ($scheduleData['doctors'] as $doctorData) {
                 $clinicSchedule->clinicScheduleDoctors()->updateOrCreate(
                     ['doctor_name' => $doctorData['name']],
-                    ['doctor_cost' => $doctorData['cost']]
+                    [
+                        'doctor_cost' => $doctorData['cost'],
+                        'start_time' => $doctorData['start_time'],
+                        'end_time' => $doctorData['end_time']
+                    ]
                 );
             }
         }
@@ -146,8 +142,8 @@ class ClinicSceduleController extends Controller
             'clinic_id' => 'required|numeric',
             'schedule' => 'required|array',
             'schedule.*.day_of_week' => 'required|numeric',
-            'schedule.*.start_time' => 'nullable|date_format:H:i',
-            'schedule.*.end_time' => 'nullable|date_format:H:i',
+            'schedule.*.doctors.*.start_time' => 'nullable|date_format:H:i',
+            'schedule.*.doctors.*.end_time' => 'nullable|date_format:H:i',
             'schedule.*.doctors' => 'nullable|array',
             'schedule.*.doctors.*.name' => 'nullable|string',
             'schedule.*.doctors.*.cost' => 'nullable|numeric',
