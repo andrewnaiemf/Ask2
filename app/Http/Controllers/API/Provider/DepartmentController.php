@@ -10,8 +10,7 @@ class DepartmentController extends Controller
 {
     public function index(){
 
-        $departments = Department::with('subdepartments')->whereNull('parent_id')->get();
-
+        $departments = Department::with('subdepartments.providers')->whereNull('parent_id')->get();
         return $this->returnData( $departments );
     }
 }

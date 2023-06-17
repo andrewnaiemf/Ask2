@@ -22,19 +22,28 @@ class Department extends Model
 	];
 
     public function toArray()
-    {
+{
+    $lang = app(Locales::class)->current();
 
-        $lang = app(Locales::class)->current();
+    $array['id'] = $this['id'];
+    $array['name'] = $this->{'name_'.$lang};
+    if ($this->relationLoaded('subdepartments')) {
+        $array['subdepartments'] = $this->subdepartments->map(function ($subdepartment) {
+            // Load the providers relationship if it's not already loaded
+            if (!$subdepartment->relationLoaded('providers')) {
+                $subdepartment->load('providers');
+            }
 
-        $array['id'] =$this['id'];
-        $array['name'] =$this->{'name_'.$lang};
-
-        if ($this->relationLoaded('subdepartments')) {
-            $array['subdepartments'] = $this->subdepartments->toArray();
-        }
-
-        return $array;
+            $subdepartmentProviders = $subdepartment->providers->toArray();
+            // dd( $subdepartmentProviders);
+            return array_merge($subdepartment->toArray(), ['providers' => $subdepartmentProviders]);
+        })->toArray();
     }
+
+
+
+    return $array;
+}
 
 
     public function parent()
@@ -49,6 +58,13 @@ class Department extends Model
 
     public function providers()
     {
-        return $this->hasMany(Provider::class);
+        return $this->hasManyThrough(
+            Provider::class,
+            Department::class,
+            'id', // Foreign key on the departments table
+            'subdepartment_id', // Foreign key on the providers table
+            'id', // Local key on the current model (departments table)
+            'id' // Local key on the intermediate model (providers table)
+        )->where('status', 'Accepted');
     }
 }
