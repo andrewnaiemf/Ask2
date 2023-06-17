@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Provider;
+namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
@@ -29,9 +29,6 @@ class AuthController extends Controller
         }
 
         $user = $this->createUser($request);
-        $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
-        $user['provider']['clinics'] = Clinic::all();
-        $user['provider']['clinics_schedule']= $this->clinicSchedule($user);
 
         $credentials = $request->only(['phone','password']);
 
@@ -67,23 +64,8 @@ class AuthController extends Controller
 
         $user = User::find(auth()->user()->id);
 
-        $user_status = $user->provider->status;
-        if($user_status  != 'Accepted') {
-            return $this->returnError(__('api.pleaseContactWithAdministrator'));
-        }
-
         $this->device_token($request->device_token, $user);
 
-        $user->load(['provider.department',
-                        'provider.subdepartment',
-                        'provider.images',
-                        'provider.ratings',
-                        'provider.clinics'
-                    ]);
-        $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
-
-        $user['schedule'] =  $workTime ;
         return $this->respondWithToken($token ,$user);
     }
 
@@ -130,12 +112,11 @@ class AuthController extends Controller
 
         $this->device_token($request->device_token, $user);
 
-        $user->update(['account_type' => 'Provider','profile' => '']);
+        $user->update(['account_type' => 'user','profile' => '']);
         if($request->file('profile')){
             $this->userProfile( $request->file('profile'), $user);
         }
 
-        $this->attachProviderData($request, $user);
 
         return $user;
     }
@@ -176,20 +157,14 @@ class AuthController extends Controller
             'phone' => 'required|numeric|unique:users',
             'password' => 'required|confirmed|string|min:6',
             'password_confirmation' => 'required',
-            'department_id' => 'integer|required|exists:departments,id',
-            'subdepartment_id' => 'integer|required|exists:departments,id',
-            'location' => 'required|string',
             'city_id' => 'integer|required|exists:cities,id',
-            'commercial_register' => 'required|string',
-            'profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'terms' => 'accepted',
             'device_token' => 'required|string'
         ]);
     }
 
     private function userProfile($profile, $user){
 
-        $path = 'Provider/' .$user->id. '/';
+        $path = 'Customer/' .$user->id. '/';
 
         $imageName = $profile->hashName();
         $profile->storeAs('public/'.$path,$imageName);
@@ -197,19 +172,6 @@ class AuthController extends Controller
         $user->update(['profile'=> $full_path]);
     }
 
-    private function attachProviderData($request, $user){
-        $providerData = [
-            'user_id' => $user->id,
-            'commercial_register' => $request->commercial_register,
-            'location' => $request->location,
-            'department_id' => $request->department_id,
-            'subdepartment_id' => $request->subdepartment_id,
-        ];
-
-        $provider = Provider::create($providerData);
-
-        return $provider;
-    }
 
     public function clinicSchedule($user)
     {

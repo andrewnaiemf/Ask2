@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CityController;
+use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
 use App\Http\Controllers\API\Provider\BookingController;
@@ -37,6 +38,9 @@ Route::group([
 
 ], function () {
 
+
+    /////////////////////////// provider ///////////////////////
+
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
@@ -50,6 +54,15 @@ Route::group([
 
        $provider->update(['status' => 'Accepted']);
     });
+
+
+    /////////////////////////// customer ///////////////////////
+
+    Route::post('register', [CustomerAuthController::class, 'register']);
+    Route::post('login', [CustomerAuthController::class, 'login']);
+
+    Route::post('reset_password', [CustomerAuthController::class, 'reset']);
+
 
 });
 
