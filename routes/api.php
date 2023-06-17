@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\API\Customer\BookingController as CustomerBookingController;
+use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
+use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
 use App\Http\Controllers\API\Provider\BookingController;
@@ -31,6 +34,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+///////////////////////////////// provider /////////////////////////////
 
 Route::group([
 
@@ -39,7 +43,6 @@ Route::group([
 ], function () {
 
 
-    /////////////////////////// provider ///////////////////////
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -56,15 +59,8 @@ Route::group([
     });
 
 
-    /////////////////////////// customer ///////////////////////
-
-    Route::post('register', [CustomerAuthController::class, 'register']);
-    Route::post('login', [CustomerAuthController::class, 'login']);
-
-    Route::post('reset_password', [CustomerAuthController::class, 'reset']);
-
-
 });
+
 
 
 Route::group([
@@ -82,7 +78,6 @@ Route::group([
 
     Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
 
-    Route::post('rate',[RatingController::class, 'store' ]);
 
     Route::get('booking',[BookingController::class, 'index' ]);
     Route::get('booking/{id}',[BookingController::class, 'show' ]);
@@ -95,5 +90,49 @@ Route::group([
     Route::get('questions',[QuestionController::class, 'index' ]);
 
     Route::post('suggestion',[SuggestionController::class, 'store' ]);
+
+    Route::post('rate',[RatingController::class, 'store' ]);
+
+});
+
+
+
+///////////////////////////////// customer //////////////////////////////
+
+
+Route::group([
+
+    'prefix' => 'auth/customer'
+
+], function () {
+
+
+    Route::post('register', [CustomerAuthController::class, 'register']);
+    Route::post('login', [CustomerAuthController::class, 'login']);
+
+    Route::post('reset_password', [CustomerAuthController::class, 'reset']);
+
+});
+
+
+
+
+Route::group([
+
+    'middleware' => 'auth:api',
+    'prefix' => 'auth/customer'
+
+], function () {
+
+
+    Route::get('me' ,  [CustomerUserController::class, 'me']);
+
+    Route::get('homeScreen' ,  [CustomerHomeController::class, 'index']);
+
+    Route::get('booking',[CustomerBookingController::class, 'index' ]);
+    Route::get('booking/{id}',[CustomerBookingController::class, 'show' ]);
+
+
+
 
 });

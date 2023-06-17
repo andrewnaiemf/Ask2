@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API\Provider;
+namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\Department;
 use App\Models\DocumentProvider;
 use App\Models\Provider;
 use App\Models\Schedule;
@@ -69,27 +70,10 @@ class UserController extends Controller
     }
 
     public function me(){
+
         $user = User::find(auth()->user()->id);
 
-        $user_status = $user->provider->status;
-        if($user_status  != 'Accepted') {
-            return $this->returnError(__('api.pleaseContactWithAdministrator'));
-        }
-
-        $user->load(['provider.department',
-            'provider.subdepartment',
-            'provider.images',
-            'provider.ratings',
-            'provider.clinics'
-        ]);
-
-
-        $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
-
-        $user['schedule'] = $workTime;
-
-        return $this->returnData(['user' => $user ]);
+        return $this->returnData(['user' => $user]);
 
     }
 
@@ -258,4 +242,5 @@ class UserController extends Controller
     {
         //
     }
+
 }

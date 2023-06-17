@@ -35,4 +35,16 @@ class Booking extends Model
         return $this->hasMany(ClinicBooking::class, 'booking_id');
     }
 
+
+    public function subdepartment()
+    {
+        return $this->belongsTo(Department::class, 'sub_department_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+
 }
