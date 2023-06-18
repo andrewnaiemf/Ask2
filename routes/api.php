@@ -46,6 +46,7 @@ Route::group([
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
 
     Route::post('reset_password', [AuthController::class, 'reset']);
     Route::get('cities',[CityController::class, 'index' ]);
@@ -127,12 +128,14 @@ Route::group([
 
     Route::get('me' ,  [CustomerUserController::class, 'me']);
 
+    Route::post('user' ,  [CustomerUserController::class, 'update']);
+
     Route::get('homeScreen' ,  [CustomerHomeController::class, 'index']);
 
     Route::get('booking',[CustomerBookingController::class, 'index' ]);
     Route::get('booking/{id}',[CustomerBookingController::class, 'show' ]);
 
-
+    Route::get('search/{word}',[CustomerHomeController::class, 'search' ]);
 
 
 });

@@ -37,4 +37,26 @@ class HomeController extends Controller
         return  $departments;
 
     }
+
+    public function search($searchTerm, Request $request){
+
+        $perPage = $request->header('per_page', 10);
+
+        if ($request->search_for == 'provider') {
+
+            $data = User::where('account_type', 'provider')
+            ->where('name', 'LIKE', '%' . $searchTerm . '%')
+            ->simplePaginate($perPage);
+        }else{
+
+            $data = Department::where('name_'.app()->getLocale(), 'LIKE', '%' . $searchTerm . '%')
+            ->simplePaginate($perPage);
+        }
+        // $services = Provider::where('service', 'LIKE', '%' . $searchTerm . '%')
+        //     ->where('status', 'Accepted')
+        //     ->paginate(10);
+
+        return $this->returnData(['result' => $data]);
+
+    }
 }

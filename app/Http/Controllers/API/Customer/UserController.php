@@ -92,76 +92,21 @@ class UserController extends Controller
             return $validation;
         }
 
-        $providerData = $request->except(['city_id', 'email', 'profile', 'image']);
+        $customerData = $request->except([ 'profile']);
 
-        $this->workDescription($userId, $request['email'] , $request['city_id']);
+        $this->updateProfilePicture(auth()->user(), $request['profile']);
 
-        $this->providerDocuments($userId, $request['profile'] , $request['image']);
-
-        if ($request['schedule']) {
-            $this->providerSchedule($userId, $request['schedule'] ,$request['open_all_time']);
-        }
-
-
-        if (!empty($providerData)) {
-            $provider = Provider::where('user_id',$userId)->first();
-            $provider->update($providerData);
+        if (!empty($customerData)) {
+            $customer = User::find($userId);
+            $customer->update($customerData);
         }
 
         return $this->returnSuccessMessage( trans("api.user'sdataUpdatedSuccessfully") );
     }
 
-    public function workDescription($userId, $email, $city_id){
+    public function updateProfilePicture($user, $profile){
 
-        $userData = [];
-        if ($email) {
-            $userData['email'] = $email;
-        }
-
-        if ($city_id) {
-            $userData['city_id'] = $city_id;
-        }
-
-        if (!empty($userData)) {
-            $user = User::find($userId);
-            $user->update($userData);
-        }
-
-    }
-
-    public function providerDocuments($userId, $profile, $image){
-
-        $user = User::find($userId);
-        $path = 'Provider/' .$userId. '/';
-
-        if ($profile) {
-           $this->updateProfilePicture($user, $path, $profile);
-        }
-
-        if ($image) {
-            $this->updateProviderPlaceImages($user,$image);
-        }
-
-    }
-
-    public function providerSchedule($userId, $schedules, $open_all_time){
-        $provider = Provider::where('user_id',$userId)->first();
-
-
-        $provider->update(['open_all_time' => $open_all_time]);
-        foreach ($schedules as $id => $schedule) {
-            $day = $provider->schedule()->where('day_of_week', $schedule['day_of_week'])->first();
-            if($day){
-                $day->update($schedule);
-            }else{
-                $schedule['provider_id'] = $provider->id;
-                Schedule::create( $schedule);
-            }
-        }
-
-    }
-
-    public function updateProfilePicture($user, $path, $profile){
+        $path = 'Customer/' .$user->id. '/Profile/';
 
         $userProfile =  $user->profile;
         if ($userProfile) {
@@ -206,24 +151,15 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'info' => 'nullable|string|max:255',
-            'service' => 'nullable|string|max:255',
+
+            'phone' => ['nullable',
+                    'numeric',
+                    Rule::unique('users')->ignore(auth()->user()->id),
+                ],
             'city_id' => 'nullable|exists:cities,id',
-            'email' => [
-                'nullable',
-                'email',
-                Rule::unique('users')->ignore(auth()->user()->id),
-            ],
-            'latitude' => ['nullable','string', 'max:255', 'regex:/^[-]?((([0-8]?[0-9])(\.(\d+))?)|(90(\.0+)?))$/'],
-            'longitude' => ['nullable','string', 'max:255', 'regex:/^[-]?((([0-9]?[0-9]?[0-9])(\.(\d+))?)|(1[0-7][0-9](\.\d+)?)|(180(\.0+)?))$/'],
-            'facebook_link' => ['nullable','string', 'max:255', 'url'],
-            'instagram_link' => ['nullable','string', 'max:255', 'url'],
-            'twitter_link' => ['nullable','string', 'max:255', 'url'],
-            'snapchat_link' => ['nullable','string', 'max:255', 'url'],
-            'linkedin_link' => ['nullable','string', 'max:255', 'url'],
+            'name' => 'nullable|string',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'is_active' => 'nullable|boolean'
+
         ]);
 
         if ($validator->fails()) {
