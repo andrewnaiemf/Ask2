@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Customer\AddressController;
 use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\API\Customer\BookingController as CustomerBookingController;
 use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
+use App\Http\Controllers\API\Customer\NewsController;
 use App\Http\Controllers\API\Customer\ProviderController;
 use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
 use App\Http\Controllers\API\NotificationController;
@@ -89,6 +90,7 @@ Route::group([
     Route::get('clinic/schedule/{id}',[ClinicSceduleController::class, 'show' ]);
 
     Route::get('notifications',[NotificationController::class, 'index' ]);
+    Route::get('notification/{id}',[NotificationController::class, 'show' ]);
 
     Route::get('questions',[QuestionController::class, 'index' ]);
 
@@ -137,6 +139,8 @@ Route::group([
     Route::resource('address' , AddressController::class);
 
     Route::resource('booking', CustomerBookingController::class);
+
+    Route::resource('news', NewsController::class);
 
     Route::get('provider/{id}',[ProviderController::class, 'show' ]);
 

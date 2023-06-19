@@ -19,7 +19,7 @@ class NotificationController extends Controller
 
         $notifications = Notification::where('notified_user_id', auth()->user()->id)
         ->orderBy('id', 'desc')
-        ->with('user','notifieddUser')
+        ->with('user','notifiedUser')
         ->simplePaginate($perPage);
 
         return $this->returnData( $notifications );
@@ -54,7 +54,11 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        //
+        $notification = Notification::find( $id);
+        if($notification){
+            $notification->update(['read' => 1]);
+        }
+        return $this->returnData( $notification );
     }
 
     /**

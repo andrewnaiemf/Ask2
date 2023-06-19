@@ -11,7 +11,7 @@ class Notification extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [//user_id user who notify the other one
-        'user_id', 'notified_user_id', 'type', 'screen', 'data'
+        'user_id', 'notified_user_id', 'type', 'screen', 'data', 'read'
     ];
 
     protected $hidden =[
@@ -31,7 +31,7 @@ class Notification extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function notifieddUser()
+    public function notifiedUser()
     {
         return $this->belongsTo(User::class, 'notified_user_id');
     }

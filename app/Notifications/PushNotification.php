@@ -2,18 +2,25 @@
 
 namespace App\Notifications;
 
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 
 class PushNotification
 {
-    public static function send($tokens ,$message, $notification_data = null)
+    public function send($ids ,$message, $notification_data = null)
     {
         $screen = '';
         switch ($message) {
             case 'rating':
                 $screen  = 'rating';
                 $message = 'Someone rate you';
+            break;
+
+            case 'booking':
+                $screen  = 'booking';
+                $message = 'You have new booking';
             break;
 
             default:
@@ -24,7 +31,8 @@ class PushNotification
         $url = 'https://fcm.googleapis.com/fcm/send';
         $serverKey = env('FCM_KEY') ?? '';
         $devs=[];
-        $devices = $tokens;
+
+        $devices = User::whereIn('id',$ids)->pluck('device_token');
         foreach ($devices as $tokens) {
             if( $tokens){
                 foreach ($tokens as $token){
@@ -77,5 +85,19 @@ class PushNotification
 
         // FCM response
         return json_decode($result);
+    }
+
+
+    public static function create($sender_id, $resciever_id, $data, $type){
+
+        Notification::create([
+            'user_id' =>  $sender_id,
+            'notified_user_id' =>  $resciever_id,
+            'type' =>  $type,
+            'screen' =>  $type,
+            'data' =>$data
+        ]);
+
+        PushNotification::send([$resciever_id], $type, $data);
     }
 }

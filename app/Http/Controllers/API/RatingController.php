@@ -59,27 +59,10 @@ class RatingController extends Controller
             'rated_user_id' => auth()->user()->id
         ]);
 
-        $this->createNotification( $rate );
+        PushNotification::create($rate->user_id ,$rate->rated_user_id ,$rate ,'rating');
 
         return $this->returnSuccessMessage( trans("api.ratingSetSuccessfully") );
 
-
-        // return $this->returnError( trans("api.InvalidRequest"));
-    }
-
-    public function createNotification( $rate ){
-
-        $provider = User::find($rate->user_id);
-
-        Notification::create([
-            'user_id' =>  $rate->user_id,
-            'notified_user_id' => $rate->rated_user_id,
-            'type' => 'rating',
-            'screen' => 'rating',
-            'data' =>$rate
-        ]);
-
-        PushNotification::send([$provider->device_token], 'rating', $rate);
     }
 
     /**

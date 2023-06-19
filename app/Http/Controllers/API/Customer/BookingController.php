@@ -8,6 +8,7 @@ use App\Models\Clinic;
 use App\Models\ClinicBooking;
 use App\Models\Provider;
 use App\Models\User;
+use App\Notifications\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -71,6 +72,7 @@ class BookingController extends Controller
             }
         }
 
+        PushNotification::create($booking->user_id ,$provider->user->id ,$booking ,'booking');
 
         return $this->returnSuccessMessage( trans("api.bookingSentSuccessfully") );
     }
