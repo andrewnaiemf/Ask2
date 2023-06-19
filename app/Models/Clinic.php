@@ -23,8 +23,9 @@ class Clinic extends Model
 
         $lang = app(Locales::class)->current();
 
-        $array['id'] =$this['id'];
-        $array['name'] =$this->{'name_'.$lang};
+        $array['id'] = $this['id'];
+        $array['name'] = $this->{'name_'.$lang};
+        $array['icon'] = $this['icon'];
 
         return $array;
     }
