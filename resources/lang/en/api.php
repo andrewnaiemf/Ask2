@@ -36,4 +36,7 @@ return [
         'scheduleUpdatedSuccessfully' => 'Schedule updated successfully'
     ],
 
+    'addressAddedSuccessfully' => 'Address added successfully',
+    'bookingSentSuccessfully' => 'booking sent successfully',
+    'InvalidProvider' => 'Invalid Provider',
 ];

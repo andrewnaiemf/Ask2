@@ -35,5 +35,8 @@ return [
     'clinic' => [
         'scheduleUpdatedSuccessfully' => 'تم تعديل المواعيد بنجاح'
     ],
+    'addressAddedSuccessfully' => 'تم اضافة عنوان بنجاح',
+    'bookingSentSuccessfully' => 'تم ارسال حجزك بنجاح',
+    'InvalidProvider' => 'مزود خدمة خاطيء',
 
 ];

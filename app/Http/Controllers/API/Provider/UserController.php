@@ -79,9 +79,9 @@ class UserController extends Controller
         $user->load(['provider.department',
             'provider.subdepartment',
             'provider.images',
-            'provider.ratings',
-            'provider.clinics'
+            'provider.ratings'
         ]);
+        $user['provider']['clinics'] = Clinic::all();
 
 
         $scheduleService = new ScheduleService();

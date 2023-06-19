@@ -11,7 +11,7 @@ class Booking extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'user_id','provider_id','year','month','day','time','notes','status'
+        'user_id','provider_id','year','month','day','time','notes','status','department_id','sub_department_id'
     ];
 
     protected $hidden =[

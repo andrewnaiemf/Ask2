@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\API\CityController;
+use App\Http\Controllers\API\Customer\AddressController;
 use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\API\Customer\BookingController as CustomerBookingController;
 use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
+use App\Http\Controllers\API\Customer\ProviderController;
 use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
@@ -132,8 +134,12 @@ Route::group([
 
     Route::get('homeScreen' ,  [CustomerHomeController::class, 'index']);
 
-    Route::get('booking',[CustomerBookingController::class, 'index' ]);
-    Route::get('booking/{id}',[CustomerBookingController::class, 'show' ]);
+    Route::resource('address' , AddressController::class);
+
+    Route::resource('booking', CustomerBookingController::class);
+
+    Route::get('provider/{id}',[ProviderController::class, 'show' ]);
+
 
     Route::get('search/{word}',[CustomerHomeController::class, 'search' ]);
 
