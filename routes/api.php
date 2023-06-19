@@ -4,6 +4,7 @@ use App\Http\Controllers\API\CityController;
 use App\Http\Controllers\API\Customer\AddressController;
 use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\API\Customer\BookingController as CustomerBookingController;
+use App\Http\Controllers\API\Customer\FavoriteController;
 use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
 use App\Http\Controllers\API\Customer\NewsController;
 use App\Http\Controllers\API\Customer\ProviderController;
@@ -141,6 +142,8 @@ Route::group([
     Route::resource('booking', CustomerBookingController::class);
 
     Route::resource('news', NewsController::class);
+
+    Route::resource('favorite', FavoriteController::class);
 
     Route::get('provider/{id}',[ProviderController::class, 'show' ]);
 
