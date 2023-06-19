@@ -24,7 +24,7 @@ class BookingController extends Controller
                 ->unless($request->status == 'New', function ($query) {
                     return $query->whereNotIn('status', ['New']);
                 })
-                ->with(['subdepartment'])
+                ->with(['subdepartment','clinicBookings'])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($perPage);
 
