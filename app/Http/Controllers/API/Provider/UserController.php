@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Models\Clinic;
+use App\Models\ClinicSchedule;
 use App\Models\DocumentProvider;
 use App\Models\Provider;
 use App\Models\Schedule;
@@ -68,30 +69,47 @@ class UserController extends Controller
         //
     }
 
-    public function me(){
-        $user = User::find(auth()->user()->id);
+    public function me()
+    {
+        $provider = Provider::where('user_id', auth()->user()->id)->first();
 
-        $user_status = $user->provider->status;
-        if($user_status  != 'Accepted') {
+        if (!$provider || $provider->status !== 'Accepted') {
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
-        $user->load(['provider.department',
-            'provider.subdepartment',
-            'provider.images',
-            'provider.ratings'
+        $provider->load([
+            'department',
+            'subdepartment',
+            'images',
+            'ratings',
+            'clinics.schedules.clinicScheduleDoctors'
         ]);
-        $user['provider']['clinics'] = Clinic::all();
 
+        $providerData = $provider->toArray();
+
+        $providerData['clinics'] = [];
+
+        foreach ($provider->clinics as $clinic) {
+            $clinicData = $clinic->toArray();
+            $clinicData['schedules'] = $clinic->schedules->toArray();
+
+            foreach ($clinic->schedules as $schedule) {
+                $scheduleData = $schedule->toArray();
+                $scheduleData['doctors'] = $schedule->clinicScheduleDoctors->toArray();
+                $clinicData['schedules'][] = $scheduleData;
+            }
+
+            $providerData['clinics'][] = $clinicData;
+        }
 
         $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
+        $workTime = $scheduleService->getProviderWorkTime($provider->id);
+        $providerData['schedule'] = $workTime;
 
-        $user['schedule'] = $workTime;
-
-        return $this->returnData(['user' => $user ]);
-
+        return $this->returnData(['provider' => $providerData]);
     }
+
+
 
     /**
      * Update the specified resource in storage.
