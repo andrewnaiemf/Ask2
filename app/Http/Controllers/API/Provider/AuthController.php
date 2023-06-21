@@ -31,7 +31,7 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
 
-        $user['provider']['clinics'] =$user->provider->subdepartment == '22' ?   Clinic::all() : null;
+        $user['provider']['clinics'] =$user->provider->subdepartment->id == '22' ?   Clinic::all() : null;
 
         $user['provider']['clinics_schedule']= $this->clinicSchedule($user);
 
@@ -74,6 +74,13 @@ class AuthController extends Controller
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
+        $providerId = $user->provider->id; // Assign the provider ID to $providerId
+
+        // Check if the authenticated user is the same as the provider
+        if ($user->provider->id !== $providerId) {
+            return $this->returnError(__('api.unauthorized'));
+        }
+
         $this->device_token($request->device_token, $user);
 
         $user->load(['provider.department',
@@ -89,11 +96,17 @@ class AuthController extends Controller
 
         foreach ($user->provider->clinics as $clinic) {
             $clinicData = $clinic->toArray();
-            $clinicData['schedules'] = $clinic->schedules->toArray();
+            $clinicData['schedules'] = [];
 
-            foreach ($clinicData['schedules'] as &$schedule) {
-                $schedule['doctors'] = $schedule['clinic_schedule_doctors'];
-                unset($schedule['clinic_schedule_doctors']);
+            foreach ($clinic->schedules as $schedule) {
+                // Check if the schedule belongs to the provider
+                if ($schedule->provider_id === $providerId) {
+                    $scheduleData = $schedule->toArray();
+                    $scheduleData['doctors'] = $schedule->clinicScheduleDoctors;
+                    unset($scheduleData['clinic_schedule_doctors']);
+
+                    $clinicData['schedules'][] = $scheduleData;
+                }
             }
 
             $providerData['provider']['clinics'][] = $clinicData;

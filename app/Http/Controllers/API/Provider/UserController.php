@@ -74,28 +74,42 @@ class UserController extends Controller
         $user = User::find(auth()->user()->id);
 
         $user_status = $user->provider->status;
-        if ($user_status != 'Accepted') {
+        if($user_status  != 'Accepted') {
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
-        $user->load([
-            'provider.department',
-            'provider.subdepartment',
-            'provider.images',
-            'provider.ratings',
-            'provider.clinics.schedules.clinicScheduleDoctors'
-        ]);
+        $providerId = $user->provider->id; // Assign the provider ID to $providerId
+
+        // Check if the authenticated user is the same as the provider
+        if ($user->provider->id !== $providerId) {
+            return $this->returnError(__('api.unauthorized'));
+        }
+
+
+        $user->load(['provider.department',
+                        'provider.subdepartment',
+                        'provider.images',
+                        'provider.ratings',
+                        'provider.clinics.schedules.clinicScheduleDoctors'
+
+                    ]);
 
         $providerData = $user->toArray();
         $providerData['provider']['clinics'] = [];
 
         foreach ($user->provider->clinics as $clinic) {
             $clinicData = $clinic->toArray();
-            $clinicData['schedules'] = $clinic->schedules->toArray();
+            $clinicData['schedules'] = [];
 
-            foreach ($clinicData['schedules'] as &$schedule) {
-                $schedule['doctors'] = $schedule['clinic_schedule_doctors'];
-                unset($schedule['clinic_schedule_doctors']);
+            foreach ($clinic->schedules as $schedule) {
+                // Check if the schedule belongs to the provider
+                if ($schedule->provider_id === $providerId) {
+                    $scheduleData = $schedule->toArray();
+                    $scheduleData['doctors'] = $schedule->clinicScheduleDoctors;
+                    unset($scheduleData['clinic_schedule_doctors']);
+
+                    $clinicData['schedules'][] = $scheduleData;
+                }
             }
 
             $providerData['provider']['clinics'][] = $clinicData;
@@ -103,10 +117,11 @@ class UserController extends Controller
 
         $scheduleService = new ScheduleService();
         $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
-        $providerData['schedule'] = $workTime;
 
+        $providerData['schedule'] =  $workTime ;
         return $this->returnData(['user' => $providerData]);
     }
+
 
 
 
