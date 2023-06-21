@@ -71,43 +71,45 @@ class UserController extends Controller
 
     public function me()
     {
-        $provider = Provider::where('user_id', auth()->user()->id)->first();
+        $user = User::find(auth()->user()->id);
 
-        if (!$provider || $provider->status !== 'Accepted') {
+        $user_status = $user->provider->status;
+        if ($user_status != 'Accepted') {
             return $this->returnError(__('api.pleaseContactWithAdministrator'));
         }
 
-        $provider->load([
-            'department',
-            'subdepartment',
-            'images',
-            'ratings',
-            'clinics.schedules.clinicScheduleDoctors'
+        $user->load([
+            'provider.department',
+            'provider.subdepartment',
+            'provider.images',
+            'provider.ratings',
+            'provider.clinics.schedules.clinicScheduleDoctors'
         ]);
 
-        $providerData = $provider->toArray();
+        $providerData = $user->toArray();
+        $providerData['provider']['clinics'] = [];
 
-        $providerData['clinics'] = [];
-
-        foreach ($provider->clinics as $clinic) {
+        foreach ($user->provider->clinics as $clinic) {
             $clinicData = $clinic->toArray();
             $clinicData['schedules'] = $clinic->schedules->toArray();
 
-            foreach ($clinic->schedules as $schedule) {
-                $scheduleData = $schedule->toArray();
-                $scheduleData['doctors'] = $schedule->clinicScheduleDoctors->toArray();
-                $clinicData['schedules'][] = $scheduleData;
+            foreach ($clinicData['schedules'] as &$schedule) {
+                $schedule['doctors'] = $schedule['clinic_schedule_doctors'];
+                unset($schedule['clinic_schedule_doctors']);
             }
 
-            $providerData['clinics'][] = $clinicData;
+            $providerData['provider']['clinics'][] = $clinicData;
         }
 
         $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($provider->id);
+        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
         $providerData['schedule'] = $workTime;
 
-        return $this->returnData(['provider' => $providerData]);
+        return $this->returnData(['user' => $providerData]);
     }
+
+
+
 
 
 
