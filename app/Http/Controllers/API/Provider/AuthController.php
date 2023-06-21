@@ -236,6 +236,7 @@ class AuthController extends Controller
             'location' => $request->location,
             'department_id' => $request->department_id,
             'subdepartment_id' => $request->subdepartment_id,
+            'stsats' =>'Accepted'
         ];
 
         $provider = Provider::create($providerData);
