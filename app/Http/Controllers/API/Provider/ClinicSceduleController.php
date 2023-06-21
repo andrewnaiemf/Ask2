@@ -57,10 +57,9 @@ class ClinicSceduleController extends Controller
                     'provider_id' => $provider->id,
                     'clinic_id' => $clinicId,
                     'day_of_week' => $dayOfWeek,
-
                 ]);
             }
-
+            $clinicSchedule->update(['is_open'=>$scheduleData['is_open']]);
             $doctorsData = $scheduleData['doctors'];
 
             // Get the doctor names from the request
@@ -78,7 +77,7 @@ class ClinicSceduleController extends Controller
                     [
                         'doctor_cost' => $doctorData['cost'],
                         'start_time' => $doctorData['start_time'],
-                        'end_time' => $doctorData['end_time']
+                        'end_time' => $doctorData['end_time'],
                     ]
                 );
             }

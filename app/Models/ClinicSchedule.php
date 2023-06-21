@@ -14,7 +14,7 @@ class ClinicSchedule extends Model
     protected $table = 'clinic_schedule';
 
     protected $fillable = [
-        'provider_id','clinic_id','day_of_week'
+        'provider_id','clinic_id','day_of_week','is_open'
     ];
 
     protected $hidden =[
