@@ -80,13 +80,30 @@ class AuthController extends Controller
                         'provider.subdepartment',
                         'provider.images',
                         'provider.ratings',
-                        'provider.clinics'
+                        'provider.clinics.schedules.clinicScheduleDoctors'
+
                     ]);
+
+        $providerData = $user->toArray();
+        $providerData['provider']['clinics'] = [];
+
+        foreach ($user->provider->clinics as $clinic) {
+            $clinicData = $clinic->toArray();
+            $clinicData['schedules'] = $clinic->schedules->toArray();
+
+            foreach ($clinicData['schedules'] as &$schedule) {
+                $schedule['doctors'] = $schedule['clinic_schedule_doctors'];
+                unset($schedule['clinic_schedule_doctors']);
+            }
+
+            $providerData['provider']['clinics'][] = $clinicData;
+        }
+
         $scheduleService = new ScheduleService();
         $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
 
-        $user['schedule'] =  $workTime ;
-        return $this->respondWithToken($token ,$user);
+        $providerData['schedule'] =  $workTime ;
+        return $this->respondWithToken($token ,$providerData);
     }
 
 
