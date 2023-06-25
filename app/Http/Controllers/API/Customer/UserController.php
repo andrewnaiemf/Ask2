@@ -71,7 +71,7 @@ class UserController extends Controller
 
     public function me(){
 
-        $user = User::find(auth()->user()->id);
+        $user = User::with('city')->find(auth()->user()->id);
 
         return $this->returnData(['user' => $user]);
 

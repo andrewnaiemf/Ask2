@@ -14,7 +14,7 @@ class HomeController extends Controller
 
     public function index(){
 
-        $user = User::find(auth()->user()->id);
+        $user = User::with('city')->find(auth()->user()->id);
 
         $mostRate = $this->mostRate();
         $mainDepartments = $this->mainDepartments();
