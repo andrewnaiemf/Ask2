@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Services\ScheduleService;
+use Storage;
 
 class UserController extends Controller
 {
@@ -109,22 +110,18 @@ class UserController extends Controller
         $path = 'Customer/' .$user->id. '/Profile/';
 
         $userProfile =  $user->profile;
-        if ($userProfile) {
 
-            $segments = explode('/', $userProfile);
-            $imageName = $segments[2];
-            $profile->storeAs('public/'.$path,$imageName);
-
-        }else{
-
-            $imageName = $profile->hashName();
-            $profile->storeAs('public/'.$path,$imageName);
-            $full_path = $path.$imageName;
-
-            $user->update([
-                'profile' => $full_path
-            ]);
+        if ($userProfile && Storage::exists($userProfile)) {
+            Storage::delete($userProfile);
         }
+
+        $imageName = $profile->hashName();
+        $profile->storeAs($path, $imageName);
+        $full_path = $path . $imageName;
+
+        $user->update([
+            'profile' => $full_path
+        ]);
     }
 
     public function updateProviderPlaceImages($user, $images){
