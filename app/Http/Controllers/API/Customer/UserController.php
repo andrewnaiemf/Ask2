@@ -107,21 +107,24 @@ class UserController extends Controller
 
     public function updateProfilePicture($user, $profile){
 
-        $path = 'Customer/' .$user->id. '/Profile/';
-
+        $path = 'Customer/' .$user->id. '/';
         $userProfile =  $user->profile;
+        if ($userProfile) {
 
-        if ($userProfile && Storage::exists($userProfile)) {
-            Storage::delete($userProfile);
+            $segments = explode('/', $userProfile);
+            $imageName = $segments[2];
+            $profile->storeAs('public/'.$path,$imageName);
+
+        }else{
+
+            $imageName = $profile->hashName();
+            $profile->storeAs('public/'.$path,$imageName);
+            $full_path = $path.$imageName;
+
+            $user->update([
+                'profile' => $full_path
+            ]);
         }
-
-        $imageName = $profile->hashName();
-        $profile->storeAs($path, $imageName);
-        $full_path = $path . $imageName;
-
-        $user->update([
-            'profile' => $full_path
-        ]);
     }
 
     public function updateProviderPlaceImages($user, $images){
