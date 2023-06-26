@@ -22,9 +22,9 @@ class CreateNewsTable extends Migration
             $table->decimal('lng', 10, 7);
             $table->string('title');
             $table->json('content')->nullable();
-            $table->string('url');
-            $table->string('phone');
-            $table->string('whatsapp_phone');
+            $table->string('url')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('whatsapp_phone')->nullable();
             $table->json('images')->nullable();
             $table->softDeletes();
             $table->timestamps();

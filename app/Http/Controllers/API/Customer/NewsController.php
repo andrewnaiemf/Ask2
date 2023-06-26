@@ -45,7 +45,10 @@ class NewsController extends Controller
 
         $validatedData  =  $this->validateNewsrData( $request );
 
-        // $newsData = $validatedData->except(['images']);
+        if (!is_array( $validatedData)) {
+            return $validatedData ;
+        }
+
         $news = News::create( $validatedData);
 
 
@@ -104,7 +107,7 @@ class NewsController extends Controller
             $imageFullPath = 'news/' . $userId . '/' . $imageName;
             array_push($imagesPathes , $imageFullPath);
         }
-// dd( $imagesPathes );
+
         $news->update(['images'=> $imagesPathes]);
 
     }

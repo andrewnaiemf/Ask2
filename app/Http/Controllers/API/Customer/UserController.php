@@ -95,7 +95,9 @@ class UserController extends Controller
 
         $customerData = $request->except([ 'profile']);
 
-        $this->updateProfilePicture(auth()->user(), $request['profile']);
+        if ($request['profile']) {
+            $this->updateProfilePicture(auth()->user(), $request['profile']);
+        }
 
         if (!empty($customerData)) {
             $customer = User::find($userId);
