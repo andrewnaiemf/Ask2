@@ -127,6 +127,8 @@ class NewsController extends Controller
             'data' => '{}'
         ]);
 
+        User::find( $sender_id)->update(['can_share_news'=>1]);
+
         return $this->returnSuccessMessage( trans("api.newsRequestSentSuccessfully") );
 
     }
