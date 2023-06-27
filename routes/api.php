@@ -142,6 +142,7 @@ Route::group([
     Route::resource('booking', CustomerBookingController::class);
 
     Route::resource('news', NewsController::class);
+    Route::get('askForAddNews', [NewsController::class, 'askForAddNews']);
 
     Route::resource('favorite', FavoriteController::class);
 

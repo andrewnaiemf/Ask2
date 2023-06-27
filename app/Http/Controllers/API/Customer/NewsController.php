@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -109,6 +110,24 @@ class NewsController extends Controller
         }
 
         $news->update(['images'=> $imagesPathes]);
+
+    }
+
+    public function askForAddNews(){
+
+        $sender_id = auth()->user()->id;
+        $resciever_id = User::where('account_type','admin')->first()->id;
+        $type = 'addNews';
+
+        Notification::create([
+            'user_id' =>  $sender_id,
+            'notified_user_id' =>  $resciever_id,
+            'type' =>  $type,
+            'screen' =>  $type,
+            'data' => '{}'
+        ]);
+
+        return $this->returnSuccessMessage( trans("api.newsRequestSentSuccessfully") );
 
     }
 

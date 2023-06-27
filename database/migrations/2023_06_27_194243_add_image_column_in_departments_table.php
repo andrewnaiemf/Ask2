@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyColumnsNullableInNewsTable extends Migration
+class AddImageColumnInDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class ModifyColumnsNullableInNewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('news', function (Blueprint $table) {
-            $table->string('url')->nullable()->change();
-            $table->string('phone')->nullable()->change();
-            $table->string('whatsapp_phone')->nullable()->change();
+        Schema::table('departments', function (Blueprint $table) {
+            $table->string('icon')->nullable()->after('parent_id');
         });
     }
 
@@ -27,8 +25,8 @@ class ModifyColumnsNullableInNewsTable extends Migration
      */
     public function down()
     {
-        Schema::table('news', function (Blueprint $table) {
-            //
+        Schema::table('departments', function (Blueprint $table) {
+            $table->string('icon');
         });
     }
 }

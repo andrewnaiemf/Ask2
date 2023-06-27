@@ -12,7 +12,7 @@ class Department extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'name', 'parent_id'
+        'name', 'parent_id','icon'
     ];
 
     protected $hidden = [
@@ -27,6 +27,7 @@ class Department extends Model
 
     $array['id'] = $this['id'];
     $array['name'] = $this->{'name_'.$lang};
+    $array['icon'] = $this['icon'];
     if ($this->relationLoaded('subdepartments')) {
         $array['subdepartments'] = $this->subdepartments->map(function ($subdepartment) {
             // Load the providers relationship if it's not already loaded
@@ -35,7 +36,7 @@ class Department extends Model
             }
 
             $subdepartmentProviders = $subdepartment->providers->toArray();
-            // dd( $subdepartmentProviders);
+
             return array_merge($subdepartment->toArray(), ['providers' => $subdepartmentProviders]);
         })->toArray();
     }
