@@ -34,7 +34,7 @@ class HomeController extends Controller
 
     function mainDepartments(){
 
-        $departments = Department::with('subdepartments')->whereNull('parent_id')->get();
+        $departments = Department::with('subdepartments.providers.user')->whereNull('parent_id')->get();
         return  $departments;
 
     }
