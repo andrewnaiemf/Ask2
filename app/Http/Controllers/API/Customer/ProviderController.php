@@ -24,7 +24,7 @@ class ProviderController extends Controller
 
         if ($provider->subdepartment->id == 22) {
             $clinicIds = Clinic::pluck('id');
-            $clinicsData = ClinicSchedule::whereIn('clinic_id',$clinicIds)->with('clinic','clinicScheduleDoctors')->get();
+            $clinicsData = ClinicSchedule::where('provider_id',$id)->whereIn('clinic_id',$clinicIds)->with('clinic','clinicScheduleDoctors')->get();
 
             $provider['clinic_scedules'] = $clinicsData;
         }else{
