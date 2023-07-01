@@ -18,14 +18,14 @@ class BookingController extends Controller
     {
         $perPage = $request->header('per_page', 10);
 
-        $bookings =User::find(auth()->user()->id)->bookings()
+        $bookings = User::find(auth()->user()->id)->bookings()
                 ->when($request->status == 'New', function ($query) use ($request) {
                     return $query->where('status', $request->status);
                 })
                 ->unless($request->status == 'New', function ($query) {
                     return $query->whereNotIn('status', ['New']);
                 })
-                ->with(['subdepartment','clinicBookings'])
+                ->with(['subdepartment','clinicBookings','provider'])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($perPage);
 
@@ -42,7 +42,7 @@ class BookingController extends Controller
 
     public function store(Request $request){
 
-        $validation =  $this->validateAddressData( $request );
+        $validation =  $this->validateBookingData( $request );
 
         if ( $validation) {
             return $validation;
@@ -78,7 +78,7 @@ class BookingController extends Controller
     }
 
 
-    public function validateAddressData ( $request ) {
+    public function validateBookingData ( $request ) {
 
         $validator = Validator::make($request->all(), [
 

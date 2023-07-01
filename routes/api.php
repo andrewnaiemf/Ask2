@@ -16,6 +16,7 @@ use App\Http\Controllers\API\Provider\BookingController;
 use App\Http\Controllers\API\Provider\ClinicSceduleController;
 use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
+use App\Http\Controllers\API\Provider\RoomController;
 use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\RatingController;
@@ -59,7 +60,9 @@ Route::group([
 
     Route::get('departments',[DepartmentController::class, 'index' ]);
 
-    Route::get('hotel_services',[HotelServiceController::class, 'index' ]);
+    Route::get('hotel_services',[HotelServiceController::class, 'hotel_services' ]);
+    Route::get('room_type',[HotelServiceController::class, 'hotel_room_type' ]);
+    Route::get('bed_type',[HotelServiceController::class, 'hotel_bed_type' ]);
 
     Route::get('/verify/{id}', function ($id){
 
@@ -103,6 +106,8 @@ Route::group([
     Route::post('suggestion',[SuggestionController::class, 'store' ]);
 
     Route::post('rate',[RatingController::class, 'store' ]);
+
+    Route::resource('room', RoomController::class);
 
 });
 
