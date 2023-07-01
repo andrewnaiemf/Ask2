@@ -23,14 +23,16 @@ class ProviderController extends Controller
         }
 
         if ($provider->subdepartment->id == 22) {
-            $clinicIds = Clinic::pluck('id');
-            $clinicsData = ClinicSchedule::where('provider_id',$id)->whereIn('clinic_id',$clinicIds)->with('clinic','clinicScheduleDoctors')->get();
-
-            $provider['clinic_scedules'] = $clinicsData;
-        }else{
-            $provider['clinic_scedules'] =[];
+            $provider->load(['clinics' => function ($query) use ($id) {
+                $query->whereHas('schedules', function ($query) use ($id) {
+                    $query->where('provider_id', $id);
+                })->with(['schedules' => function ($query) use ($id) {
+                    $query->where('provider_id', $id)->with('clinicScheduleDoctors');
+                }]);
+            }]);
+        } else {
+            $provider['clinics'] = [];
         }
-
 
         $scheduleService = new ScheduleService();
         $workTime = $scheduleService->getProviderWorkTime($provider->id);

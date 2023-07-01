@@ -26,18 +26,20 @@ class Clinic extends Model
         $array['id'] = $this['id'];
         $array['name'] = $this->{'name_'.$lang};
         $array['icon'] = $this['icon'];
+        // $array['providers'] = $this['providers'];
+        $array['schedules'] = $this->schedules;
 
         return $array;
     }
 
     public function providers()
     {
-        return $this->belongsToMany(Provider::class, 'provider_clinic');
+        return $this->belongsToMany(Provider::class, 'provider_clinic', 'clinic_id', 'provider_id');
     }
 
     public function schedules()
     {
-        return $this->hasMany(ClinicSchedule::class);
+        return $this->hasMany(ClinicSchedule::class, 'clinic_id');
     }
 
 }
