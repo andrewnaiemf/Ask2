@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,8 +43,11 @@ class RoomController extends Controller
             return $validation;
         }
 
+        $request['provider_id'] = auth()->user()->provider->id;
+        $roomData =  $request->all();
 
-        dd('a');
+        $room = Room::create($roomData);
+        return $this->returnSuccessMessage( trans("api.room.createdSuccessfully") );
 
     }
 
