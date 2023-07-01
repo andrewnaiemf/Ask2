@@ -9,6 +9,7 @@ use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
 use App\Http\Controllers\API\Customer\NewsController;
 use App\Http\Controllers\API\Customer\ProviderController;
 use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
+use App\Http\Controllers\API\HotelServiceController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\Provider\AuthController;
 use App\Http\Controllers\API\Provider\BookingController;
@@ -53,8 +54,12 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::post('reset_password', [AuthController::class, 'reset']);
+
     Route::get('cities',[CityController::class, 'index' ]);
+
     Route::get('departments',[DepartmentController::class, 'index' ]);
+
+    Route::get('hotel_services',[HotelServiceController::class, 'index' ]);
 
     Route::get('/verify/{id}', function ($id){
 

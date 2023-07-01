@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\ClinicSchedule;
 use App\Models\DocumentProvider;
+use App\Models\HotelRating;
 use App\Models\Provider;
 use App\Models\Schedule;
 use App\Models\User;
@@ -91,7 +92,6 @@ class UserController extends Controller
                         'provider.images',
                         'provider.ratings',
                         'provider.clinics.schedules.clinicScheduleDoctors'
-
                     ]);
 
         $providerData = $user->toArray();
@@ -132,6 +132,7 @@ class UserController extends Controller
      */
     public function update(Request $request){
         $userId = auth()->user()->id;
+        $provider = Provider::where('user_id' , $userId)->first();
         $validation =  $this->validateUserData( $request );
 
         if ( $validation) {
@@ -148,6 +149,25 @@ class UserController extends Controller
             $this->providerSchedule($userId, $request['schedule'] ,$request['open_all_time']);
         }
 
+        if( $provider->department->id == 35 ){////Hotels and hotel apartments
+            $request['service'] = json_encode($request['service']);
+
+            if (isset($request['hotel_rating'])) {
+
+                $hotel_rating = $request['hotel_rating'];
+                $hotelrating = HotelRating::where('provider_id', $provider->id)->first();
+
+                if ( $hotelrating) {
+                    $hotelrating->update(['rating' => $hotel_rating]);
+                }else{
+                    HotelRating::create([
+                        'provider_id' => $provider->id,
+                        'rating' => $hotel_rating,
+                    ]);
+                }
+
+            }
+        }
 
         if (!empty($providerData)) {
             $provider = Provider::where('user_id',$userId)->first();
@@ -158,7 +178,6 @@ class UserController extends Controller
     }
 
     public function workDescription($userId, $email, $city_id){
-
         $userData = [];
         if ($email) {
             $userData['email'] = $email;
@@ -253,7 +272,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
 
             'info' => 'nullable|string|max:255',
-            'service' => 'nullable|string|max:255',
+            'hotel_rating' => 'nullable|integer|In:0,1,2,3,4,5',
+            'service' => 'nullable|max:255',
             'city_id' => 'nullable|exists:cities,id',
             'email' => [
                 'nullable',

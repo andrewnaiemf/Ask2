@@ -21,11 +21,27 @@ class Provider extends Model
 
     protected $dates = ['deleted_at'];
 
-	protected $hidden = [
-        'deleted_at','updated_at','created_at','email', 'latitude', 'longitude','info','service',
-        'facebook_link', 'instagram_link', 'twitter_link','snapchat_link',
-        'linkedin_link','department_id', 'subdepartment_id','open_all_time'
-	];
+    protected $hidden = [
+        'deleted_at',
+        'updated_at',
+        'created_at',
+        'email',
+        'latitude',
+        'longitude',
+        'info',
+        'service',
+        'facebook_link',
+        'instagram_link',
+        'twitter_link',
+        'snapchat_link',
+        'linkedin_link',
+        'department_id',
+        'subdepartment_id',
+        'open_all_time',
+        'hotelRatingRelation', // Hide the relationship method name
+        'hotel_rating', // Hide the attribute name
+    ];
+
 
     protected $appends = ['communications', 'description', 'rating'];
 
@@ -94,6 +110,7 @@ class Provider extends Model
         $fields = [
             'info',
             'service',
+            'hotel_rating'
         ];
 
         $isNull = true;
@@ -108,9 +125,20 @@ class Provider extends Model
         if ($isNull) {
             return null;
         }
+
+        if ($this->department->id == 35) {//Hotels and hotel apartments
+            $serviceIds = json_decode($this->service);
+            $service = HotelService::whereIn('id',$serviceIds)->get();
+
+        } else {
+            $service = $this->service;
+        }
+
+
         return (object) [
             'info' => $this->info,
-            'service' => $this->service,
+            'service' => $service,
+            'hotel_rating' => $this->getHotelRatingAttribute()
         ];
     }
 
@@ -168,6 +196,24 @@ class Provider extends Model
     public function schedules()
     {
         return $this->hasManyThrough(ClinicSchedule::class, Clinic::class);
+    }
+
+    public function hotelServices()
+    {
+        return $this->belongsToMany(HotelService::class, 'provider_hotel_service');
+    }
+
+    public function getHotelRatingAttribute()
+    {
+        if ($this->hotelRatingRelation) {
+            return $this->hotelRatingRelation->rating;
+        }
+        return null;
+    }
+
+    public function hotelRatingRelation()
+    {
+        return $this->hasOne(HotelRating::class, 'provider_id');
     }
 
 }
