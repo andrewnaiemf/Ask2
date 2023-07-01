@@ -21,7 +21,7 @@ class NewsController extends Controller
     {
         $perPage = $request->header('per_page', 10);
 
-        $news = News::where('city_id',auth()->user()->city_id)->simplePaginate($perPage);
+        $news = News::with('city')->where('city_id',auth()->user()->city_id)->simplePaginate($perPage);
         return $this->returnData( $news );
     }
 

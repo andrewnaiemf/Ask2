@@ -112,10 +112,13 @@ class AuthController extends Controller
             $providerData['provider']['clinics'][] = $clinicData;
         }
 
-        $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
-
-        $providerData['schedule'] =  $workTime ;
+        if ( $user->provider->department->id == 35) {
+            $providerData['schedule'] = $user->provider->hotelSchedule;
+        }else{
+            $scheduleService = new ScheduleService();
+            $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
+            $providerData['schedule'] =  $workTime ;
+        }
         return $this->respondWithToken($token ,$providerData);
     }
 

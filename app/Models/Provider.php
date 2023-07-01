@@ -216,4 +216,9 @@ class Provider extends Model
         return $this->hasOne(HotelRating::class, 'provider_id');
     }
 
+    public function hotelSchedule()
+    {
+        return $this->hasOne(HotelSchedule::class);
+    }
+
 }

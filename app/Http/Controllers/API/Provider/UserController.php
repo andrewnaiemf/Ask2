@@ -7,6 +7,7 @@ use App\Models\Clinic;
 use App\Models\ClinicSchedule;
 use App\Models\DocumentProvider;
 use App\Models\HotelRating;
+use App\Models\HotelSchedule;
 use App\Models\Provider;
 use App\Models\Schedule;
 use App\Models\User;
@@ -115,10 +116,14 @@ class UserController extends Controller
             $providerData['provider']['clinics'][] = $clinicData;
         }
 
-        $scheduleService = new ScheduleService();
-        $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
 
-        $providerData['schedule'] =  $workTime ;
+        if ( $user->provider->department->id == 35) {
+            $providerData['schedule'] = $user->provider->hotelSchedule;
+        }else{
+            $scheduleService = new ScheduleService();
+            $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
+            $providerData['schedule'] =  $workTime ;
+        }
         return $this->returnData(['user' => $providerData]);
     }
 
@@ -145,8 +150,14 @@ class UserController extends Controller
 
         $this->providerDocuments($userId, $request['profile'] , $request['image']);
 
-        if ($request['schedule']) {
+        if ($request['schedule'] &&  $provider->department->id != 35) {
+
             $this->providerSchedule($userId, $request['schedule'] ,$request['open_all_time']);
+
+        }else if($request['schedule'] &&  $provider->department->id == 35){
+
+            $this->providerHotelSchedule($userId, $request['schedule']);
+
         }
 
         if( $provider->department->id == 35 ){////Hotels and hotel apartments
@@ -224,6 +235,18 @@ class UserController extends Controller
             }
         }
 
+    }
+    public function providerHotelSchedule($userId, $schedules){
+        $provider = Provider::where('user_id',$userId)->first();
+
+        $hotelSchedule = new HotelSchedule([
+            'arrival_start_time' => $schedules['arrival_start_time'],
+            'arrival_end_time' => $schedules['arrival_end_time'],
+            'departure_start_time' => $schedules['departure_start_time'],
+            'departure_end_time' => $schedules['departure_end_time']
+        ]);
+
+        $provider->hotelSchedule()->save($hotelSchedule);;
     }
 
     public function updateProfilePicture($user, $path, $profile){
