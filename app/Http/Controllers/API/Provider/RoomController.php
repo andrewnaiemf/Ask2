@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bed;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -44,11 +45,36 @@ class RoomController extends Controller
         }
 
         $request['provider_id'] = auth()->user()->provider->id;
-        $roomData =  $request->all();
+        $roomData =  $request->except('images');
 
         $room = Room::create($roomData);
+
+        $beds = Bed::whereIn('id',$request['beds'])->get();
+        foreach ($beds as $bed) {
+            $room->beds()->attach($bed);
+        }
+
+        if ($request['images']) {
+            $this->updateProviderPlaceImages($room, $request['images']);
+        }
         return $this->returnSuccessMessage( trans("api.room.createdSuccessfully") );
 
+    }
+
+    public function updateProviderPlaceImages($room, $images){
+
+        $userId = auth()->user()->id;
+
+        $path = 'Provider/' .$userId. '/rooms/';
+        $pathes = [];
+       foreach ($images as $image) {
+
+            $imageName = $image->hashName();
+            $image->storeAs('public/'.$path,$imageName);
+            $full_path = $path.$imageName;
+            array_push($pathes , $full_path);
+        }
+        $room->update(['images' => $pathes]);
     }
 
 

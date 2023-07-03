@@ -35,6 +35,6 @@ class Room extends Model
 
     public function beds()
     {
-        return $this->belongsToMany(Bed::class, 'room_bed')->withTimestamps();
+        return $this->belongsToMany(Bed::class, 'bed_room')->withTimestamps();
     }
 }
