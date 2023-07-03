@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BookingDetails;
 use App\Models\Clinic;
 use App\Models\ClinicBooking;
 use App\Models\Provider;
@@ -25,7 +26,7 @@ class BookingController extends Controller
                 ->unless($request->status == 'New', function ($query) {
                     return $query->whereNotIn('status', ['New']);
                 })
-                ->with(['subdepartment','clinicBookings','provider.user'])
+                ->with(['bookingDetail','subdepartment','clinicBookings','provider.user'])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($perPage);
 
@@ -35,7 +36,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['provider','user','subdepartment','clinicBookings.clinic']));
+        $booking->load((['bookingDetail','provider','user','subdepartment','clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }
@@ -59,6 +60,15 @@ class BookingController extends Controller
         $data = array_merge($data , $request->all());
 
         $booking = Booking::create( $data);
+
+        if ($request->filled(['year', 'month', 'day', 'time'])) {
+            $bookingDetails = new BookingDetails();
+            $bookingDetails->year = $request->input('year');
+            $bookingDetails->month = $request->input('month');
+            $bookingDetails->day = $request->input('day');
+            $bookingDetails->time = $request->input('time');
+            $booking->bookingDetail()->save($bookingDetails);
+        }
 
         if ($request['clinic_id']) {
             $clinic = Clinic::find($request['clinic_id']);
@@ -84,12 +94,12 @@ class BookingController extends Controller
 
             'provider_id' => 'required|exists:providers,id',
             'note' => 'nullable|string',
-            'year' => 'required|integer|date_format:Y|in:'.date('Y'),
+            'year' => 'nullable|integer|date_format:Y|in:'.date('Y'),
             // 'month' => 'required|digits:2|integer|between:1,12',
             // 'day' => 'required|integer|between:1,31',
-            'time' => 'required|date_format:H:i',
+            'time' => 'nullable|date_format:H:i',
             'month' => [
-                'required',
+                'nullable',
                 'digits:2',
                 'between:01,12',
                 function ($attribute, $value, $fail) {
@@ -100,7 +110,7 @@ class BookingController extends Controller
                 }
             ],
             'day' => [
-                'required',
+                'nullable',
                 'integer',
                 'between:01,31',
                 function ($attribute, $value, $fail) {

@@ -28,14 +28,16 @@ class BookingController extends Controller
             return $this->returnValidationError(401,$validator->errors()->all());
         }
 
-        $bookings = Booking::where(['provider_id' => auth()->user()->id,
-                                    'status' => $request->status,
-                                    'year' => $request->year,
-                                    'month' => $request->month,
-                                    'day' =>$request->day
-                                    ])->with(['provider','user','clinicBookings.clinic'])
-                                    ->orderBy('id', 'desc')
-                                    ->simplePaginate($perPage);
+        $bookings = Booking::where('provider_id' , auth()->user()->provider->id)
+                            ->whereHas('bookingDetail', function ($query) use ($request) {
+                                $query->where('year', $request->year)
+                                    ->where('month', $request->month)
+                                    ->where('day', $request->day);
+                            })
+                            ->where('status', $request->status)
+                            ->with(['bookingDetail','provider','user','clinicBookings.clinic'])
+                            ->orderBy('id', 'desc')
+                            ->simplePaginate($perPage);
 
         return $this->returnData($bookings);
     }
@@ -70,7 +72,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['provider','user','clinicBookings.clinic']));
+        $booking->load((['bookingDetail','provider','user','clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }

@@ -44,15 +44,18 @@ class ExpireBoooking extends Command
         $currentDateTime = Carbon::now();
 
         foreach ($bookings as $booking) {
-            $bookingDateTime = Carbon::create(
-                $booking->year,
-                $booking->month,
-                $booking->day,
-            );
+            if ($booking->department->id != 35) {//35 is Hotels and hotel apartments main department
+                $bookingDateTime = Carbon::create(
+                    $booking->bookingDetail->year,
+                    $booking->bookingDetail->month,
+                    $booking->bookingDetail->day,
+                );
 
-            if ($currentDateTime > $bookingDateTime ) {
-                $booking->update(['status' => 'Expired']);
+                if ($currentDateTime > $bookingDateTime ) {
+                    $booking->update(['status' => 'Expired']);
+                }
             }
+
         }
     }
 }

@@ -44,14 +44,17 @@ class ActiveTodayBoooking extends Command
        $currentDateTime = Carbon::now()->startOfDay();
 
        foreach ($bookings as $booking) {
-            $bookingDateTime = Carbon::create(
-                $booking->year,
-                $booking->month,
-                $booking->day
-            )->startOfDay();
+            if ($booking->department->id != 35) {//35 is Hotels and hotel apartments main department
 
-            if ($currentDateTime->eq($bookingDateTime)) {
-                $booking->update(['status' => 'Today']);
+                $bookingDateTime = Carbon::create(
+                    $booking->bookingDetail->year,
+                    $booking->bookingDetail->month,
+                    $booking->bookingDetail->day
+                )->startOfDay();
+
+                if ($currentDateTime->eq($bookingDateTime)) {
+                    $booking->update(['status' => 'Today']);
+                }
             }
         }
     }
