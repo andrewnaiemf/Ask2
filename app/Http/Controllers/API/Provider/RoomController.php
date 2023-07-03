@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bed;
+use App\Models\Provider;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,9 +16,17 @@ class RoomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->header('per_page', 10);
+        $provider = Provider::where('user_id',auth()->user()->id)->first();
+
+        $rooms = Room::with('roomType')
+                ->where('provider_id', $provider->id)
+                ->simplePaginate($perPage);
+
+        return $this->returnData($rooms);
+
     }
 
     /**
@@ -55,13 +64,13 @@ class RoomController extends Controller
         }
 
         if ($request['images']) {
-            $this->updateProviderPlaceImages($room, $request['images']);
+            $this->updateRoomImages($room, $request['images']);
         }
         return $this->returnSuccessMessage( trans("api.room.createdSuccessfully") );
 
     }
 
-    public function updateProviderPlaceImages($room, $images){
+    public function updateRoomImages($room, $images){
 
         $userId = auth()->user()->id;
 
@@ -106,7 +115,9 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        //
+        $room = Room::with('roomType')->findOrFail($id);
+
+        return $this->returnData($room);
     }
 
     /**
@@ -127,9 +138,26 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update_room(Request $request, $id)
     {
-        //
+        $validation = $this->validateRoomData($request);
+
+        if ($validation) {
+            return $validation;
+        }
+
+        $room = Room::findOrFail($id);
+        $roomData = $request->except('images');
+        $room->update($roomData);
+
+        $beds = Bed::whereIn('id', $request['beds'])->get();
+        $room->beds()->sync($beds);
+
+        if ($request['images']) {
+            $this->updateRoomImages($room, $request['images']);
+        }
+
+        return $this->returnSuccessMessage(trans("api.room.updatedSuccessfully"));
     }
 
     /**
@@ -140,6 +168,9 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $room = Room::findOrFail($id);
+        $room->delete();
+
+        return $this->returnSuccessMessage(trans("api.room.deletedSuccessfully"));
     }
 }

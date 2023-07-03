@@ -108,6 +108,7 @@ Route::group([
     Route::post('rate',[RatingController::class, 'store' ]);
 
     Route::resource('room', RoomController::class);
+    Route::post('room/update/{id}', [RoomController::class , 'update_room']);
 
 });
 

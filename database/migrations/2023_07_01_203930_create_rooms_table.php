@@ -26,6 +26,7 @@ class CreateRoomsTable extends Migration
             $table->timestamps();
             $table->foreign('provider_id')->references('id')->on('providers');
             $table->foreign('room_type_id')->references('id')->on('room_types');
+            $table->softDeletes();
         });
     }
 

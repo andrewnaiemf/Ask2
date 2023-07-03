@@ -221,4 +221,9 @@ class Provider extends Model
         return $this->hasOne(HotelSchedule::class);
     }
 
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'provider_id');
+    }
+
 }
