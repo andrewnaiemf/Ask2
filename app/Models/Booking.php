@@ -50,5 +50,8 @@ class Booking extends Model
         return $this->hasOne(BookingDetails::class);
     }
 
+    public function hotelBookingDetail(){
+        return $this->hasOne(HotelBookingDetails::class);
+    }
 
 }

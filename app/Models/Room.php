@@ -20,6 +20,7 @@ class Room extends Model
         'outdoor',
         'images',
         'cost',
+        'busy_numbers'
     ];
 
     protected $hidden =[

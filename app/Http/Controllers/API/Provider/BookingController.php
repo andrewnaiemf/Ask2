@@ -28,16 +28,29 @@ class BookingController extends Controller
             return $this->returnValidationError(401,$validator->errors()->all());
         }
 
-        $bookings = Booking::where('provider_id' , auth()->user()->provider->id)
-                            ->whereHas('bookingDetail', function ($query) use ($request) {
+        $bookings = Booking::where('provider_id', auth()->user()->provider->id)
+                        ->when(auth()->user()->provider->subdepartment_id != 36, function ($query) use ($request) {
+                            $query->whereHas('bookingDetail', function ($query) use ($request) {
                                 $query->where('year', $request->year)
                                     ->where('month', $request->month)
                                     ->where('day', $request->day);
-                            })
-                            ->where('status', $request->status)
-                            ->with(['bookingDetail','provider','user','clinicBookings.clinic'])
-                            ->orderBy('id', 'desc')
-                            ->simplePaginate($perPage);
+                            });
+                        })
+                        /////////////sub_department 36 is hotel for main department 35////////////
+                        ->when(auth()->user()->provider->subdepartment_id == 36, function ($query) use ($request) {
+                            $query->whereHas('hotelBookingDetail', function ($query) use ($request) {
+                                $query->where('year', $request->year)
+                                    ->whereRaw("arrival_month <= ?", [$request->month])
+                                    ->whereRaw("departure_month >= ?", [$request->month])
+                                    ->whereRaw("arrival_day <= ?", [$request->day])
+                                    ->whereRaw("departure_day >= ?", [$request->day]);
+                            });
+                        })
+                        ->where('status', $request->status)
+                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','bookingDetail', 'provider', 'user', 'clinicBookings.clinic'])
+                        ->orderBy('id', 'desc')
+                        ->simplePaginate($perPage);
+
 
         return $this->returnData($bookings);
     }
@@ -72,7 +85,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['bookingDetail','provider','user','clinicBookings.clinic']));
+        $booking->load((['hotelBookingDetail.roomBookingDetail.room.roomType','bookingDetail','provider','user','clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }
