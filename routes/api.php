@@ -149,12 +149,12 @@ Route::group([
         Route::resource('news', NewsController::class)->except('index');
         Route::get('askForAddNews', [NewsController::class, 'askForAddNews']);
         Route::resource('favorite', FavoriteController::class);
-        Route::get('provider/{id}', [ProviderController::class, 'show']);
         Route::get('search/{word}', [CustomerHomeController::class, 'search']);
     });
 
     // Guest routes
     Route::get('news', [NewsController::class, 'index']);
     Route::get('homeScreen', [CustomerHomeController::class, 'index']);
+    Route::get('provider/{id}', [ProviderController::class, 'show']);
 
 });

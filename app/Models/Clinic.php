@@ -27,7 +27,7 @@ class Clinic extends Model
         $array['name'] = $this->{'name_'.$lang};
         $array['icon'] = $this['icon'];
         // $array['providers'] = $this['providers'];
-        $array['schedules'] = $this->schedules;
+        // $array['schedules'] = $this->schedules;
 
         return $array;
     }
