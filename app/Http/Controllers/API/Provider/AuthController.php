@@ -66,7 +66,6 @@ class AuthController extends Controller
             return $this->unauthorized();
         }
 
-
         $user = User::find(auth()->user()->id);
 
         $user_status = $user->provider->status;
@@ -213,10 +212,10 @@ class AuthController extends Controller
             'password_confirmation' => 'required',
             'department_id' => 'integer|required|exists:departments,id',
             'subdepartment_id' => 'integer|required|exists:departments,id',
-            'location' => 'required|string',
+            'location' => 'nullable|string',
             'city_id' => 'integer|required|exists:cities,id',
             'commercial_register' => 'required|string',
-            'profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'commercial_register_iamge' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'terms' => 'accepted',
             'device_token' => 'required|string'

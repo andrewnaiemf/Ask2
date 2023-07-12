@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Services\ScheduleService;
-
+use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     /**
@@ -148,7 +148,7 @@ class UserController extends Controller
 
         $this->workDescription($userId, $request['email'] , $request['city_id']);
 
-        $this->providerDocuments($userId, $request['profile'] , $request['image']);
+        $this->providerDocuments($request, $userId, $request['profile'] , $request['image']);
 
         if ($request['schedule'] &&  $provider->department->id != 35) {
 
@@ -205,14 +205,12 @@ class UserController extends Controller
 
     }
 
-    public function providerDocuments($userId, $profile, $image){
+    public function providerDocuments($request, $userId, $profile, $image){
 
         $user = User::find($userId);
         $path = 'Provider/' .$userId. '/';
 
-        if ($profile) {
-           $this->updateProfilePicture($user, $path, $profile);
-        }
+        $this->updateProfilePicture($request, $user, $path);
 
         if ($image) {
             $this->updateProviderPlaceImages($user,$image);
@@ -249,23 +247,38 @@ class UserController extends Controller
         $provider->hotelSchedule()->save($hotelSchedule);;
     }
 
-    public function updateProfilePicture($user, $path, $profile){
+    public function updateProfilePicture($request, $user, $path)
+    {
+        if ($request->has('profile')) {
+            $profile = $request->file('profile');
 
-        $userProfile =  $user->profile;
+            if ($profile) {
+                // Update the profile picture
+                $imageName = $profile->hashName();
+                $profile->storeAs('public/'.$path, $imageName);
+                $fullPath = $path.$imageName;
+
+                $user->update([
+                    'profile' => $fullPath
+                ]);
+            } else {
+                // Remove the profile picture
+                $this->removeProfilePicture($user);
+            }
+        }
+    }
+
+    private function removeProfilePicture($user)
+    {
+        $userProfile = $user->profile;
+
         if ($userProfile) {
+            // Remove the picture from storage
+            Storage::delete('public/'.$userProfile);
 
-            $segments = explode('/', $userProfile);
-            $imageName = $segments[2];
-            $profile->storeAs('public/'.$path,$imageName);
-
-        }else{
-
-            $imageName = $profile->hashName();
-            $profile->storeAs('public/'.$path,$imageName);
-            $full_path = $path.$imageName;
-
+            // Delete the picture from the database
             $user->update([
-                'profile' => $full_path
+                'profile' => ""
             ]);
         }
     }
