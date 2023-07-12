@@ -29,6 +29,12 @@ class Clinic extends Model
         // $array['providers'] = $this['providers'];
         $array['schedules'] = $this->schedules;
 
+        // if (isset($this->includeSchedules) && !$this->includeSchedules) {
+        //     $array['schedules'] = null;
+        // }else{
+        //     $array['schedules'] = $this->schedules;
+        // }
+
         return $array;
     }
 

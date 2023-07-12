@@ -136,7 +136,7 @@ class Provider extends Model
 
         return (object) [
             'info' => $this->info,
-            // 'service' => $service,
+            'service' => $service,
             'hotel_rating' => $this->getHotelRatingAttribute()
         ];
     }

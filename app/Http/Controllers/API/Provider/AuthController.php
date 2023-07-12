@@ -31,9 +31,17 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
 
+        // $user['provider']['clinics'] = in_array($user->provider->subdepartment->id, ['22', '23'])
+        // ? Clinic::select('id', 'name_ar', 'name_en', 'name_eu', 'icon')->get()
+        // : null;
+
+        // if ($user['provider']['clinics']) {
+        //         $user['provider']['clinics']->each(function ($clinic) {
+        //         $clinic->includeSchedules = false;
+        //     });
+        // }
         $user['provider']['clinics'] =  in_array($user->provider->subdepartment->id, ['22', '23']) ?   Clinic::all() : null;
 
-        $user['provider']['clinics_schedule'] = $this->clinicSchedule($user);
 
         $credentials = $request->only(['phone','password']);
 
