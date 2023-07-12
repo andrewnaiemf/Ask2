@@ -91,9 +91,7 @@ Route::group([
 
     Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
 
-
-    Route::get('booking',[BookingController::class, 'index' ]);
-    Route::get('booking/{id}',[BookingController::class, 'show' ]);
+    Route::resource('booking', BookingController::class);
 
     Route::post('clinic/schedule',[ClinicSceduleController::class, 'store' ]);
     Route::get('clinic/schedule/{id}',[ClinicSceduleController::class, 'show' ]);

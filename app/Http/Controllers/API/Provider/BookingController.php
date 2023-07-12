@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -101,16 +102,27 @@ class BookingController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
-        //
+
+        $provider = User::find(auth()->user()->id)->provider;
+        $booking = Booking::where('provider_id', $provider->id)->findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:Completed,Rejected',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $validatedData = $validator->validated();
+
+        $booking->update($validatedData);
+
+        return $this->returnSuccessMessage( trans("api.bookingUpdatedSuccessfully") );
+
     }
 
     /**
