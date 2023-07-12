@@ -128,8 +128,7 @@ class Provider extends Model
 
         if ($this->department->id == 35) {//Hotels and hotel apartments
             $serviceIds = json_decode($this->service);
-            $service = HotelService::whereIn('id',$serviceIds)->get();
-
+            $service = isset($serviceIds) ?  HotelService::whereIn('id',$serviceIds)->get() : "";
         } else {
             $service = $this->service;
         }
@@ -137,7 +136,7 @@ class Provider extends Model
 
         return (object) [
             'info' => $this->info,
-            'service' => $service,
+            // 'service' => $service,
             'hotel_rating' => $this->getHotelRatingAttribute()
         ];
     }
@@ -200,7 +199,7 @@ class Provider extends Model
 
     public function hotelServices()
     {
-        return $this->belongsToMany(HotelService::class, 'provider_hotel_service');
+        return $this->belongsToMany(HotelService::class, 'provider_hotel_services');
     }
 
     public function getHotelRatingAttribute()
