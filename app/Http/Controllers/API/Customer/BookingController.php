@@ -37,7 +37,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['bookingDetail','provider','user','subdepartment','clinicBookings.clinic']));
+        $booking->load((['hotelBookingDetail.roomBookingDetail.room.roomType','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }
