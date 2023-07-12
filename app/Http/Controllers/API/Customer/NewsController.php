@@ -21,7 +21,7 @@ class NewsController extends Controller
     {
         $perPage = $request->header('perPage', 10);
         $news = News::with('city');
-dd(auth()->check());
+// dd(auth()->check());
         if (auth()->check()) {
             $news->where('city_id', auth()->user()->city_id);
         }

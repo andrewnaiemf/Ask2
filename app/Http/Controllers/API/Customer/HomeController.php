@@ -13,7 +13,7 @@ class HomeController extends Controller
 
 
     public function index(){
-dd(auth()->user()->id);
+// dd(auth()->user()->id);
         if(auth()->user()){
             $user = User::with('city')->find(auth()->user()->id);
         }else{
