@@ -16,7 +16,7 @@ class Provider extends Model
         'user_id', 'commercial_register', 'location', 'info', 'service', 'email',
         'latitude', 'longitude', 'facebook_link', 'instagram_link', 'twitter_link',
         'snapchat_link', 'linkedin_link', 'department_id', 'subdepartment_id',
-        'open_all_time','status'
+        'open_all_time','status', 'commercial_register_iamge'
     ];
 
     protected $dates = ['deleted_at'];

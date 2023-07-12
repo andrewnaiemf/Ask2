@@ -216,7 +216,8 @@ class AuthController extends Controller
             'location' => 'required|string',
             'city_id' => 'integer|required|exists:cities,id',
             'commercial_register' => 'required|string',
-            'profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'profile' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'commercial_register_iamge' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'terms' => 'accepted',
             'device_token' => 'required|string'
         ]);
@@ -233,13 +234,22 @@ class AuthController extends Controller
     }
 
     private function attachProviderData($request, $user){
+
+        $commercial_register_iamge = $request->file('commercial_register_iamge');
+        $path = 'Provider/' .$user->id. '/';
+
+        $imageName = $commercial_register_iamge->hashName();
+        $commercial_register_iamge->storeAs('public/'.$path,$imageName);
+        $full_path = $path.$imageName;
+
         $providerData = [
             'user_id' => $user->id,
             'commercial_register' => $request->commercial_register,
             'location' => $request->location,
             'department_id' => $request->department_id,
             'subdepartment_id' => $request->subdepartment_id,
-            'status' =>'Accepted'
+            'status' =>'Accepted',
+            'commercial_register_iamge' => $full_path
         ];
 
         $provider = Provider::create($providerData);
