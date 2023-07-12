@@ -136,31 +136,25 @@ Route::group([
 
 Route::group([
 
-    'middleware' => 'auth:api',
     'prefix' => 'auth/customer'
 
 ], function () {
 
+    // Authenticated routes
+    Route::middleware('auth:api')->group(function () {
+        Route::get('me', [CustomerUserController::class, 'me']);
+        Route::post('user', [CustomerUserController::class, 'update']);
+        Route::resource('address', AddressController::class);
+        Route::resource('booking', CustomerBookingController::class);
+        Route::resource('news', NewsController::class)->except('index');
+        Route::get('askForAddNews', [NewsController::class, 'askForAddNews']);
+        Route::resource('favorite', FavoriteController::class);
+        Route::get('provider/{id}', [ProviderController::class, 'show']);
+        Route::get('search/{word}', [CustomerHomeController::class, 'search']);
+    });
 
-    Route::get('me' ,  [CustomerUserController::class, 'me']);
-
-    Route::post('user' ,  [CustomerUserController::class, 'update']);
-
-    Route::get('homeScreen' ,  [CustomerHomeController::class, 'index']);
-
-    Route::resource('address' , AddressController::class);
-
-    Route::resource('booking', CustomerBookingController::class);
-
-    Route::resource('news', NewsController::class);
-    Route::get('askForAddNews', [NewsController::class, 'askForAddNews']);
-
-    Route::resource('favorite', FavoriteController::class);
-
-    Route::get('provider/{id}',[ProviderController::class, 'show' ]);
-
-
-    Route::get('search/{word}',[CustomerHomeController::class, 'search' ]);
-
+    // Guest routes
+    Route::get('news', [NewsController::class, 'index']);
+    Route::get('homeScreen', [CustomerHomeController::class, 'index']);
 
 });
