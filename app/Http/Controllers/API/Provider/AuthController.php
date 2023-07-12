@@ -31,7 +31,7 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
 
-        $user['provider']['clinics'] = $user->provider->subdepartment->id == '22' ?   Clinic::all() : null;
+        $user['provider']['clinics'] =  in_array($user->provider->subdepartment->id, ['22', '23']) ?   Clinic::all() : null;
 
         $user['provider']['clinics_schedule'] = $this->clinicSchedule($user);
 
@@ -251,7 +251,7 @@ class AuthController extends Controller
     {
         $subdepartmentName = Department::findOrFail($user->provider->subdepartment_id)->name_en;
 
-        if($subdepartmentName == 'Hospitals'){
+        if(in_array($subdepartmentName , ['Hospitals' , 'Private clinics'])){
             $schedules = [];
             $clinics = Clinic::all();
             $user->provider->clinics()->attach($clinics);

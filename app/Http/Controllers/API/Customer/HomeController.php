@@ -13,8 +13,12 @@ class HomeController extends Controller
 
 
     public function index(){
-
-        $user = User::with('city')->find(auth()->user()->id);
+dd(auth()->user()->id);
+        if(auth()->user()){
+            $user = User::with('city')->find(auth()->user()->id);
+        }else{
+            $user =null;
+        }
 
         $mostRate = $this->mostRate();
         $mainDepartments = $this->mainDepartments();

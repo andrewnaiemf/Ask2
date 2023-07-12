@@ -22,7 +22,7 @@ class ProviderController extends Controller
            return $this->returnError(trans('api.InvalidProvider'));
         }
 
-        if ($provider->subdepartment->id == 22) {
+        if (in_array($provider->subdepartment->id, ['22', '23'])) {
             $provider->load(['clinics' => function ($query) use ($id) {
                 $query->whereHas('schedules', function ($query) use ($id) {
                     $query->where('provider_id', $id);

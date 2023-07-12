@@ -19,10 +19,15 @@ class NewsController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->header('per_page', 10);
+        $perPage = $request->header('perPage', 10);
+        $news = News::with('city');
+dd(auth()->check());
+        if (auth()->check()) {
+            $news->where('city_id', auth()->user()->city_id);
+        }
 
-        $news = News::with('city')->where('city_id',auth()->user()->city_id)->simplePaginate($perPage);
-        return $this->returnData( $news );
+        $news = $news->simplePaginate($perPage);
+        return $this->returnData($news);
     }
 
     /**
