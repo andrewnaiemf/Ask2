@@ -60,8 +60,8 @@ class Provider extends Model
         $lang = app(Locales::class)->current();
 
         $user = User::with('city')
-        ->where('id', $this->user_id)
-        ->first();
+            ->where('id', $this->user_id)
+            ->first();
 
         $fields = [
             'facebook_link',
@@ -76,33 +76,24 @@ class Provider extends Model
             'latitude',
         ];
 
-        $isNull = true;
+        $communication = [];
 
         foreach ($fields as $field) {
             if (!is_null($this->$field)) {
-
-                $isNull = false;
-                break;
+                $communication[$field] = ($field === 'city') ? $user->city->{'name_'.$lang} : $this->$field;
+            }
+            if($field === 'email'){
+                $communication[$field] = $user->email;
             }
         }
 
-        if ($isNull) {
+        if (empty($communication)) {
             return null;
         }
 
-        return (object) [
-            'facebook_link' => $this->facebook_link,
-            'instagram_link' => $this->instagram_link,
-            'twitter_link' => $this->twitter_link,
-            'snapchat_link' => $this->snapchat_link,
-            'linkedin_link' => $this->linkedin_link,
-            'phone' => $user->phone,
-            'email' => $user->email,
-            'city' => $user->city->{'name_'.$lang},
-            'longitude' => $this->longitude,
-            'latitude' => $this->latitude,
-        ];
+        return (object) $communication;
     }
+
 
     public function getDescriptionAttribute()
     {
