@@ -44,7 +44,7 @@ class RatingController extends Controller
         $validator=Validator::make($request->all(), [
             'rate' => 'required|numeric|between:0,5',
             'feedback' => 'nullable',
-            'user_id' => 'required|exists:users,id'
+            'provider_id' => 'required|exists:users,id'
         ]);
 
         if ($validator->fails()) {
@@ -53,7 +53,7 @@ class RatingController extends Controller
 
 
         $rate = Rating::create([
-            'user_id' =>  $request->user_id,
+            'user_id' =>  $request->provider_id,
             'rate' => $request->rate,
             'feedback' => $request->feedback,
             'rated_user_id' => auth()->user()->id

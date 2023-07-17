@@ -82,12 +82,21 @@ class Provider extends Model
             if (!is_null($this->$field)) {
                 $communication[$field] = ($field === 'city') ? $user->city->{'name_'.$lang} : $this->$field;
             }
-            if($field === 'email'){
+            if ($field === 'email') {
                 $communication[$field] = $user->email;
             }
         }
 
-        if (empty($communication)) {
+        $isNull = true;
+
+        foreach ($communication as $value) {
+            if (!is_null($value)) {
+                $isNull = false;
+                break;
+            }
+        }
+
+        if ($isNull) {
             return null;
         }
 
@@ -170,7 +179,7 @@ class Provider extends Model
 
     public function ratings()
     {
-        return $this->hasMany(Rating::class, 'rated_user_id');
+        return $this->hasMany(Rating::class, 'user_id');
     }
 
     public function schedule()

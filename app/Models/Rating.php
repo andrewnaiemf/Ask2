@@ -23,11 +23,11 @@ class Rating extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Provider::class);
     }
 
     public function ratedUser()
     {
-        return $this->belongsTo(User::class, 'rated_user_id');
+        return $this->belongsTo(Provider::class, 'user_id');
     }
 }
