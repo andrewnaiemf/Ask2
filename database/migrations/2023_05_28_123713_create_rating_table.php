@@ -17,7 +17,7 @@ class CreateRatingTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('rated_user_id');
-            $table->unsignedInteger('rate');
+            $table->float('rate');
             $table->text('feedback');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('rated_user_id')->references('id')->on('users');
