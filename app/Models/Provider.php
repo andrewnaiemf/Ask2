@@ -48,11 +48,11 @@ class Provider extends Model
 
     public function getRatingAttribute()
     {
-        if (auth()->user()) {
+        // if (auth()->user()) {
             $average_rating =  $this->ratings()->avg('rate');
             return number_format($average_rating, 2);
-        }
-        return '0' ;
+        // }
+        // return '0' ;
     }
 
     public function getCommunicationsAttribute()
