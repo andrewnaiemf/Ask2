@@ -27,14 +27,18 @@ class Clinic extends Model
         $array['name'] = $this->{'name_'.$lang};
         $array['icon'] = $this['icon'];
         // $array['providers'] = $this['providers'];
-        $array['schedules'] = $this->schedules;
+        // $array['schedules'] = $this->schedules;
 
-        // if (isset($this->includeSchedules) && !$this->includeSchedules) {
-        //     $array['schedules'] = null;
-        // }else{
-        //     $array['schedules'] = $this->schedules;
-        // }
-
+        // Retrieve the provider attached to the clinic
+        $providerId = $this->pivot->provider_id; // Get the provider ID from the pivot table
+        $provider = $this->providers->where('id', $providerId)->first();
+        // Check if the provider is available and has clinic schedules
+        if ($provider && $provider->clinicSchedules->isNotEmpty()) {
+            $providerSchedules = $provider->clinicSchedules;
+            $array['schedules'] = $providerSchedules->toArray();
+        } else {
+            $array['schedules'] = null;
+        }
         return $array;
     }
 

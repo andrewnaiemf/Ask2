@@ -40,8 +40,15 @@ class AuthController extends Controller
         //         $clinic->includeSchedules = false;
         //     });
         // }
-        $user['provider']['clinics'] =  in_array($user->provider->subdepartment->id, ['22', '23']) ?   Clinic::all() : null;
+        // $user['provider']['clinics'] =  in_array($user->provider->subdepartment->id, ['22', '23']) ?
+        //                                     Clinic::where('id', '<>', 0)->get() :
+        //                                     ($user->provider->subdepartment->id == 24 ?
+        //                                     Clinic::where('id', 0)->get() : null);
 
+        if( in_array($user->provider->subdepartment->id, ['22', '23','24']) ){
+            $this->clinicSchedule($user);
+        }
+        $user->load(['provider.clinics']);
 
         $credentials = $request->only(['phone','password']);
 
@@ -102,6 +109,7 @@ class AuthController extends Controller
         $providerData['provider']['clinics'] = [];
 
         foreach ($user->provider->clinics as $clinic) {
+
             $clinicData = $clinic->toArray();
             $clinicData['schedules'] = [];
 
@@ -269,8 +277,10 @@ class AuthController extends Controller
         $subdepartmentName = Department::findOrFail($user->provider->subdepartment_id)->name_en;
 
         if(in_array($subdepartmentName , ['Hospitals' , 'Private clinics'])){
-            $schedules = [];
-            $clinics = Clinic::all();
+            $clinics = Clinic::where('id', '<>', 0)->get();
+            $user->provider->clinics()->attach($clinics);
+        }elseif( $subdepartmentName == 'Veterinary clinics'){
+            $clinics =  Clinic::where('id', 0)->get();
             $user->provider->clinics()->attach($clinics);
         }
         return;

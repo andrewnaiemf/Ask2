@@ -141,6 +141,11 @@ class Provider extends Model
         ];
     }
 
+    public function getClinicSchedulesAttribute()
+    {
+        return ClinicSchedule::where('provider_id', $this->id)->get();
+    }
+
     public function toArray()
     {
         $array = parent::toArray();
