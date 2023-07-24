@@ -63,24 +63,15 @@ class BookingController extends Controller
         $booking = Booking::create( $data);
 
         if ($request->filled(['year', 'month', 'day', 'time'])) {
-            $bookingDetails = new BookingDetails();
-            $bookingDetails->year = $request->input('year');
-            $bookingDetails->month = $request->input('month');
-            $bookingDetails->day = $request->input('day');
-            $bookingDetails->time = $request->input('time');
-            $booking->bookingDetail()->save($bookingDetails);
+            $this->bookingDetail($request, $booking);
         }
 
         if ($request['clinic_id']) {
-            $clinic = Clinic::find($request['clinic_id']);
-            if ($clinic) {
-                $clinic_boooking = ClinicBooking::create([
-                    'booking_id' => $booking->id,
-                    'doctor_name' => $request->doctor_name,
-                    'cost' => $request->cost,
-                    'clinic_id' => $clinic->id,
-                ]);
-            }
+            $this->clinicBooking($request, $booking->id);
+        }
+
+        if ($request['room_numbers']) {
+            $this->hotelBooking($request, $booking);
         }
 
         PushNotification::create($booking->user_id ,$provider->user->id ,$booking ,'booking');
@@ -88,19 +79,45 @@ class BookingController extends Controller
         return $this->returnSuccessMessage( trans("api.bookingSentSuccessfully") );
     }
 
+    public function bookingDetail($request, $booking){
+        $bookingDetails = new BookingDetails();
+            $bookingDetails->year = $request->input('year');
+            $bookingDetails->month = $request->input('month');
+            $bookingDetails->day = $request->input('day');
+            $bookingDetails->time = $request->input('time');
+            $booking->bookingDetail()->save($bookingDetails);
+    }
+
+    public function clinicBooking($request, $booking_id){
+        $clinic = Clinic::find($request['clinic_id']);
+            if ($clinic) {
+                $clinic_boooking = ClinicBooking::create([
+                    'booking_id' => $booking_id,
+                    'doctor_name' => $request->doctor_name,
+                    'cost' => $request->cost,
+                    'clinic_id' => $clinic->id,
+                ]);
+            }
+    }
+
+    public function hotelBooking($request, $booking){
+       dd('a');
+    }
 
     public function validateBookingData ( $request ) {
 
-        $validator = Validator::make($request->all(), [
 
+        // Common validation rules for both clinic and hotel booking
+        $commonRules = [
             'provider_id' => 'required|exists:providers,id',
-            'note' => 'nullable|string',
-            'year' => 'nullable|integer|date_format:Y|in:'.date('Y'),
-            // 'month' => 'required|digits:2|integer|between:1,12',
-            // 'day' => 'required|integer|between:1,31',
-            'time' => 'nullable|date_format:H:i',
+            'notes' => 'nullable|string',
+        ];
+
+        // Validation rules for clinic booking
+        $clinicRules = [
+            'year' => 'required|integer|date_format:Y|in:' . date('Y'),
             'month' => [
-                'nullable',
+                'required',
                 'digits:2',
                 'between:01,12',
                 function ($attribute, $value, $fail) {
@@ -111,7 +128,7 @@ class BookingController extends Controller
                 }
             ],
             'day' => [
-                'nullable',
+                'required',
                 'integer',
                 'between:01,31',
                 function ($attribute, $value, $fail) {
@@ -121,11 +138,37 @@ class BookingController extends Controller
                     }
                 }
             ],
+            'time' => 'required|date_format:H:i',
+            'cost' => 'required',
+            'doctor_name' => 'required|string',
+            'clinic_id' => 'required|exists:clinics,id',
+        ];
 
-        ]);
+         // Validation rules for hotel booking
+        $hotelRules = [
+            'year' => 'required_with:arrival_month,departure_month|integer|date_format:Y|in:' . date('Y'),
+            'arrival_month' => 'required_with:year|digits:2|between:01,12',
+            'arrival_day' => 'required_with:year|integer|between:01,31',
+            'arrival_time' => 'required_with:year|date_format:H:i',
+            'departure_month' => 'required_with:year|digits:2|between:01,12',
+            'departure_day' => 'required_with:year|integer|between:01,31',
+            'departure_time' => 'required_with:year|date_format:H:i',
+            'adults' => 'required_with:year|integer|min:1',
+            'kids' => 'required_with:year|integer|min:0',
+            'room_numbers' => 'required_with:year|integer|min:1',
+        ];
+
+        // Determine the booking type and merge the appropriate rules
+        $rules = $request->filled('room_numbers')
+        ? array_merge($commonRules, $hotelRules)
+        : ($request->filled('clinic_id') ? array_merge($commonRules, $clinicRules) : $commonRules);
+
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError(401, $validator->errors()->all());
         }
     }
 
