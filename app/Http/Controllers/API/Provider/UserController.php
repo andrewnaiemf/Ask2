@@ -238,10 +238,10 @@ class UserController extends Controller
         $provider = Provider::where('user_id',$userId)->first();
 
         $hotelSchedule = new HotelSchedule([
-            'arrival_start_time' => $schedules['arrival_start_time'],
-            'arrival_end_time' => $schedules['arrival_end_time'],
-            'departure_start_time' => $schedules['departure_start_time'],
-            'departure_end_time' => $schedules['departure_end_time']
+            'arrival_start_time' => $schedules['arrival']['start_time'],
+            'arrival_end_time' => $schedules['arrival']['end_time'],
+            'departure_start_time' => $schedules['departure']['start_time'],
+            'departure_end_time' => $schedules['departure']['end_time']
         ]);
 
         $provider->hotelSchedule()->save($hotelSchedule);;

@@ -11,7 +11,7 @@ class HotelRating extends Model
 
     protected $table = 'provider_hotel_rating';
 
-    public $fillable = ['rating'];
+    public $fillable = ['rating','provider_id'];
 
     protected $hidden = [
 		'created_at',
