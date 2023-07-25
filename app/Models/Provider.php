@@ -125,10 +125,11 @@ class Provider extends Model
         if ($isNull) {
             return null;
         }
-
+        $hotel_service = null;
+        $service = null;
         if ($this->department->id == 35) {//Hotels and hotel apartments
             $serviceIds = json_decode($this->service);
-            $service = isset($serviceIds) ?  HotelService::whereIn('id',$serviceIds)->get() : "";
+            $hotel_service = isset($serviceIds) ?  HotelService::whereIn('id',$serviceIds)->get() : "";
         } else {
             $service = $this->service;
         }
@@ -137,7 +138,8 @@ class Provider extends Model
         return (object) [
             'info' => $this->info,
             'service' => $service,
-            'hotel_rating' => $this->getHotelRatingAttribute()
+            'hotel_rating' => $this->getHotelRatingAttribute(),
+            'hotel_service' => $hotel_service
         ];
     }
 

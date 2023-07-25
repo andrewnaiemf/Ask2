@@ -118,11 +118,13 @@ class UserController extends Controller
 
 
         if ( $user->provider->department->id == 35) {
-            $providerData['schedule'] = $user->provider->hotelSchedule;
+            $providerData['hotel_schedule'] = $user->provider->hotelSchedule;
+            $providerData['schedule'] = null;
         }else{
             $scheduleService = new ScheduleService();
             $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
             $providerData['schedule'] =  $workTime ;
+            $providerData['hotel_schedule'] = null;
         }
         return $this->returnData(['user' => $providerData]);
     }
