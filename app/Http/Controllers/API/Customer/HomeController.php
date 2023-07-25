@@ -8,17 +8,25 @@ use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 class HomeController extends Controller
 {
 
 
-    public function index(){
-// dd(auth()->user()->id);
-        if(auth()->user()){
-            $user = User::with('city')->find(auth()->user()->id);
-        }else{
-            $user =null;
+    public function index(Request $request){
+
+        $token = $request->bearerToken(); // Retrieve the token from the header
+
+        try {
+            // Decode the token and retrieve the user data
+            $user = JWTAuth::parseToken()->authenticate();
+        } catch (JWTException $e) {
+            // If the token is invalid or expired, $user will be null
+            $user = null;
+        }
+        if ($user) {
+            $user = User::with('city')->find($user->id);
         }
 
         $mostRate = $this->mostRate();
