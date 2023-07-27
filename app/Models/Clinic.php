@@ -30,7 +30,7 @@ class Clinic extends Model
         // $array['schedules'] = $this->schedules;
 
         // Retrieve the provider attached to the clinic
-        $providerId = $this->pivot->provider_id; // Get the provider ID from the pivot table
+        $providerId = $this->pivot ? $this->pivot->provider_id : null; // Get the provider ID from the pivot table
         $provider = $this->providers->where('id', $providerId)->first();
         // Check if the provider is available and has clinic schedules
         if ($provider && $provider->clinicSchedules->isNotEmpty()) {
