@@ -279,10 +279,10 @@ class AuthController extends Controller
         $subdepartmentName = Department::findOrFail($user->provider->subdepartment_id)->name_en;
 
         if(in_array($subdepartmentName , ['Hospitals' , 'Private clinics'])){
-            $clinics = Clinic::where('id', '<>', 0)->get();
+            $clinics = Clinic::where('id', '<>', 100)->get();
             $user->provider->clinics()->attach($clinics);
         }elseif( $subdepartmentName == 'Veterinary clinics'){
-            $clinics =  Clinic::where('id', 0)->get();
+            $clinics =  Clinic::where('id', 100)->get();
             $user->provider->clinics()->attach($clinics);
         }
         return;
