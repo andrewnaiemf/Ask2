@@ -129,7 +129,7 @@ class BookingController extends Controller
             ],
             'day' => [
                 'required',
-                'integer',
+                'digits:2',
                 'between:01,31',
                 function ($attribute, $value, $fail) {
                     $currentDay = date('d');
