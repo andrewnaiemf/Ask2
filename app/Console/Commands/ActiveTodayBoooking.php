@@ -13,7 +13,7 @@ class ActiveTodayBoooking extends Command
      *
      * @var string
      */
-    protected $signature = 'active:boooking';
+    protected $signature = 'active:booking';
 
     /**
      * The console command description.
