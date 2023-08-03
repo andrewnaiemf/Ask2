@@ -20,9 +20,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('expire:booking')->daily();
-        $schedule->command('active:booking')->dailyAt('00:00');
-
+        $schedule->command('status:booking')->dailyAt('00:00');
     }
 
     /**

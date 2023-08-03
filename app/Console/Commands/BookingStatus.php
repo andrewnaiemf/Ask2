@@ -13,7 +13,7 @@ class ExpireBoooking extends Command
      *
      * @var string
      */
-    protected $signature = 'expire:booking';
+    protected $signature = 'status:booking';
 
     /**
      * The console command description.
@@ -43,16 +43,21 @@ class ExpireBoooking extends Command
 
         $currentDateTime = Carbon::now();
 
+        $currentDateTime = Carbon::now()->startOfDay();
+
         foreach ($bookings as $booking) {
             if ($booking->department->id != 35) {//35 is Hotels and hotel apartments main department
                 $bookingDateTime = Carbon::create(
                     $booking->bookingDetail->year,
                     $booking->bookingDetail->month,
                     $booking->bookingDetail->day,
-                );
+                )->startOfDay();
 
                 if ($currentDateTime > $bookingDateTime ) {
                     $booking->update(['status' => 'Expired']);
+                }
+                if($currentDateTime->eq($bookingDateTime)){
+                    $booking->update(['status' => 'Today']);
                 }
             }
 
