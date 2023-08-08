@@ -28,8 +28,11 @@ class Room extends Model
         'created_at',
         'updated_at',
     ];
-    protected $casts = ['images' => 'json'];
 
+    public function getImagesAttribute($value)
+    {
+        return json_decode($value, true);
+    }
     //بعدين ابقا اعملها بال ترانس او اتنين اندر سكول بحيث تكون ترجمة بالتلات لغات
     public function getOutdoorAttribute($value)
     {

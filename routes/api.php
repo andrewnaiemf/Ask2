@@ -108,6 +108,8 @@ Route::group([
     Route::resource('room', RoomController::class);
     Route::post('room/update/{id}', [RoomController::class , 'update_room']);
 
+    Route::delete('room/{id}/image', [RoomController::class , 'deleteImage']);
+
 });
 
 

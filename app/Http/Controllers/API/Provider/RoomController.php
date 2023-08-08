@@ -73,14 +73,10 @@ class RoomController extends Controller
 
     public function updateRoomImages($room, $images){
 
-        foreach ($room->images as $image_path) {
-            Storage::delete('public/'.$image_path);
-        }
-
         $userId = auth()->user()->id;
 
         $path = 'Provider/' .$userId. '/rooms/';
-        $pathes = [];
+        $pathes = (array)$room->images;
        foreach ($images as $image) {
 
             $imageName = $image->hashName();
@@ -88,7 +84,7 @@ class RoomController extends Controller
             $full_path = $path.$imageName;
             array_push($pathes , $full_path);
         }
-        $room->update(['images' => $pathes]);
+        $room->update(['images' => json_encode($pathes)]);
     }
 
 
@@ -177,5 +173,20 @@ class RoomController extends Controller
         $room->delete();
 
         return $this->returnSuccessMessage(trans("api.room.deletedSuccessfully"));
+    }
+
+    public function deleteImage(Request $request , $id) {
+        $room = Room::findOrFail($id);
+
+        // Remove the image path from the images array
+        $pathes = array_values(array_diff($room->images, [$request->image_path]));
+
+        // Delete the image from storage
+        Storage::delete('public/' . $request->image_path);
+
+        // Convert the array to JSON and then back to an array
+        $room->update(['images' => json_encode($pathes)]);
+
+        return $this->returnSuccessMessage(trans("api.room.imagedeletedSuccessfully"));
     }
 }
