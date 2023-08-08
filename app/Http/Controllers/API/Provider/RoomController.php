@@ -7,6 +7,7 @@ use App\Models\Bed;
 use App\Models\Provider;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
@@ -71,6 +72,10 @@ class RoomController extends Controller
     }
 
     public function updateRoomImages($room, $images){
+
+        foreach ($room->images as $image_path) {
+            Storage::delete('public/'.$image_path);
+        }
 
         $userId = auth()->user()->id;
 
