@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Provider;
+use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class HotelController extends Controller
 {
@@ -29,7 +33,71 @@ class HotelController extends Controller
 
     public function filter(Request $request)
     {
-        dd($request->all());
+        $validation = $this->validateFilterData($request);
+
+        if ( $validation) {
+            return $validation;
+        }
+        $filteredRooms = Room::filterRooms($request->all())->get();
+
+        $filteredRooms->each(function ($room) use ($request) {
+            $room->total_cost = $room->calculateTotalCost($request->all());
+        });
+
+        // Sort rooms based on suitability (adjust conditions as needed)
+        $suitableRooms = $filteredRooms->filter(function ($room) {
+            return $room->adults >= 4 && $room->kids >= 3;
+        });
+
+        $unsuitableRooms = $filteredRooms->filter(function ($room) {
+            return !($room->adults >= 4 && $room->kids >= 3);
+        });
+
+        // Combine suitable and unsuitable rooms while preserving the order
+        $sortedRooms = $suitableRooms->concat($unsuitableRooms);
+
+
+        // Paginate the combined rooms
+        $perPage = $request->get('per_page', 10); // You can adjust the per_page value
+        $currentPage = $request->get('page', 1);
+
+        // Convert each room object to an array
+        $roomArrayData = $sortedRooms->map(function ($room) {
+            return $room->toArray();
+        })->toArray();
+
+        // Create a paginator instance
+        $paginator = new LengthAwarePaginator(
+            array_slice($roomArrayData, ($currentPage - 1) * $perPage, $perPage),
+            count($roomArrayData),
+            $perPage,
+            $currentPage
+        );
+
+        return $this->returnData($paginator);
+    }
+
+    public function validateFilterData ( $request ) {
+
+        $validator = Validator::make($request->all(), [
+            'adults' => 'integer',
+            'kids' => 'integer',
+            'year' => 'required|digits:4',
+            'arrival_month' => 'required|digits:2',
+            'arrival_day' => 'required|digits:2',
+            'arrival_time' => 'required|date_format:H:i:s',
+            'departure_month' => 'required|digits:2',
+            'departure_day' => 'required|digits:2',
+            'departure_time' => 'required|date_format:H:i:s',
+        ]);
+
+        $validator->sometimes(['adults', 'kids'], 'required_without_all:adults,kids', function ($input) {
+            return empty($input->adults) && empty($input->kids);
+        });
+
+        if ($validator->fails()) {
+            return $this->returnValidationError(401,$validator->errors()->all());
+        }
     }
 
     /**

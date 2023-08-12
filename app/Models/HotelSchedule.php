@@ -13,7 +13,7 @@ class HotelSchedule extends Model
     protected $table = 'hotel_schedules';
 
     protected $fillable = [
-        'provider_id','arrival_start_time','arrival_end_time','departure_start_time','departure_end_time'
+        'provider_id','arrival_start_time','departure_end_time'
     ];
 
     protected $hidden =[

@@ -241,8 +241,6 @@ class UserController extends Controller
 
         $hotelSchedule = new HotelSchedule([
             'arrival_start_time' => $schedules['arrival']['start_time'],
-            'arrival_end_time' => $schedules['arrival']['end_time'],
-            'departure_start_time' => $schedules['departure']['start_time'],
             'departure_end_time' => $schedules['departure']['end_time']
         ]);
 
