@@ -6,7 +6,7 @@ use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
-class ExpireBooking extends Command
+class BookingStatus extends Command
 {
     /**
      * The name and signature of the console command.
