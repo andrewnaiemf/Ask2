@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::extend('exists_with_keys', function ($attribute, $value, $parameters, $validator) {
+            $table = $parameters[0];
+            $ids = array_keys(data_get($validator->getData(), $attribute));
+            return \DB::table($table)->whereIn('id', $ids)->count() === count($ids);
+        });
     }
 }

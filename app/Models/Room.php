@@ -34,26 +34,26 @@ class Room extends Model
         return json_decode($value, true);
     }
     //بعدين ابقا اعملها بال ترانس او اتنين اندر سكول بحيث تكون ترجمة بالتلات لغات
-    public function getOutdoorAttribute($value)
-    {
-        $lang = app(Locales::class)->current();
-        if ($lang == 'ar') {
-            switch ($value) {
-                case 'Balcony':
-                    $translate_name = 'بلكونة';
-                    break;
-                case 'Head':
-                    $translate_name = 'تراس';
-                    break;
-                default:
-                    $translate_name = 'اطلالة';
-                    break;
-            }
-            return $translate_name;
-        }
+    // public function getOutdoorAttribute($value)
+    // {
+    //     $lang = app(Locales::class)->current();
+    //     if ($lang == 'ar') {
+    //         switch ($value) {
+    //             case 'Balcony':
+    //                 $translate_name = 'بلكونة';
+    //                 break;
+    //             case 'Head':
+    //                 $translate_name = 'تراس';
+    //                 break;
+    //             default:
+    //                 $translate_name = 'اطلالة';
+    //                 break;
+    //         }
+    //         return $translate_name;
+    //     }
 
-        return $value;
-    }
+    //     return $value;
+    // }
 
 
     public function roomType()
@@ -63,7 +63,7 @@ class Room extends Model
 
     public function beds()
     {
-        return $this->belongsToMany(Bed::class, 'bed_room')->withTimestamps();
+        return $this->belongsToMany(Bed::class, 'bed_room')->withTimestamps()->withPivot('numbers');
     }
 
     public function provider()

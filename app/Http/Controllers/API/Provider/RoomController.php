@@ -59,10 +59,11 @@ class RoomController extends Controller
 
         $room = Room::create($roomData);
 
-        $beds = Bed::whereIn('id',$request['beds'])->get();
-        foreach ($beds as $bed) {
-            $room->beds()->attach($bed);
+        $beds = [];
+        foreach ($request->beds as $bedId => $bedData) {
+            $beds[$bedId] = ['numbers' => $bedData['numbers']];
         }
+        $room->beds()->attach($beds);
 
         if ($request['images']) {
             $this->updateRoomImages($room, $request['images']);
@@ -94,7 +95,8 @@ class RoomController extends Controller
 
             'room_type_id' => 'required|exists:room_types,id',
             'beds' => 'array|required',
-            'beds.*' => 'exists:beds,id',
+            'beds' => 'array|required|exists_with_keys:beds',
+            'beds.*.numbers' => 'required|integer',
             'numbers' => 'integer|required',
             'adults' => 'integer|required',
             'kids' => 'integer|required',
@@ -151,7 +153,10 @@ class RoomController extends Controller
         $roomData = $request->except('images');
         $room->update($roomData);
 
-        $beds = Bed::whereIn('id', $request['beds'])->get();
+        $beds = [];
+        foreach ($request->beds as $bedId => $bedData) {
+            $beds[$bedId] = ['numbers' => $bedData['numbers']];
+        }
         $room->beds()->sync($beds);
 
         if ($request['images']) {

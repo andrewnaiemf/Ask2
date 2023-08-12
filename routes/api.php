@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\API\Customer\BookingController as CustomerBookingController;
 use App\Http\Controllers\API\Customer\FavoriteController;
 use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
+use App\Http\Controllers\API\Customer\HotelController;
 use App\Http\Controllers\API\Customer\NewsController;
 use App\Http\Controllers\API\Customer\ProviderController;
 use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
@@ -150,6 +151,7 @@ Route::group([
         Route::get('askForAddNews', [NewsController::class, 'askForAddNews']);
         Route::resource('favorite', FavoriteController::class);
         Route::get('search/{word}', [CustomerHomeController::class, 'search']);
+        Route::post('room/filter', [HotelController::class, 'filter']);
     });
 
     // Guest routes
