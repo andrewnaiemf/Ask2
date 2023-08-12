@@ -58,7 +58,7 @@ class HotelController extends Controller
 
 
         // Paginate the combined rooms
-        $perPage = $request->get('per_page', 10); // You can adjust the per_page value
+        $perPage = $request->header('per_page', 10); // You can adjust the per_page value
         $currentPage = $request->get('page', 1);
 
         // Convert each room object to an array
