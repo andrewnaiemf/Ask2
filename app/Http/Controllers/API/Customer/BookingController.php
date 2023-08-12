@@ -70,7 +70,7 @@ class BookingController extends Controller
             $this->clinicBooking($request, $booking->id);
         }
 
-        if ($request['room_numbers']) {
+        if ($request['booking_type'] == 'Hotel') {
             $this->hotelBooking($request, $booking);
         }
 
@@ -155,14 +155,17 @@ class BookingController extends Controller
             'departure_time' => 'required_with:year|date_format:H:i',
             'adults' => 'required_with:year|integer|min:1',
             'kids' => 'required_with:year|integer|min:0',
-            'room_numbers' => 'required_with:year|integer|min:1',
+            'booking_type' => 'required_with:year|in:Hotel',
         ];
 
         // Determine the booking type and merge the appropriate rules
-        $rules = $request->filled('room_numbers')
+        $rules = $request->booking_type == 'Hotel'
         ? array_merge($commonRules, $hotelRules)
         : ($request->filled('clinic_id') ? array_merge($commonRules, $clinicRules) : $commonRules);
 
+        if ($request->provider_id &&  $request->booking_type != 'Hotel') {
+            return $this->returnError('invalid booking type');
+        }
 
         // Validate the request data
         $validator = Validator::make($request->all(), $rules);
