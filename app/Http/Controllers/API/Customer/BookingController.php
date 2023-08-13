@@ -250,7 +250,7 @@ class BookingController extends Controller
         ? array_merge($commonRules, $hotelRules)
         : ($request->filled('clinic_id') ? array_merge($commonRules, $clinicRules) : $commonRules);
 
-        if ($request->provider_id &&  $request->booking_type != 'Hotel') {
+        if ($request->provider_id && $request->booking_type && $request->booking_type != 'Hotel') {
             return $this->returnError('invalid booking type');
         }
 
