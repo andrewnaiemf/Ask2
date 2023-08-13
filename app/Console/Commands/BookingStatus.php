@@ -39,7 +39,7 @@ class BookingStatus extends Command
      */
     public function handle()
     {
-       $bookings = Booking::whereIn('status', ['Today', 'New'])->get();
+       $bookings = Booking::whereIn('status', ['Today', 'New', 'Completed'])->get();
 
         $currentDateTime = Carbon::now();
 
@@ -56,6 +56,34 @@ class BookingStatus extends Command
                 if ($currentDateTime > $bookingDateTime ) {
                     $booking->update(['status' => 'Expired']);
                 }
+                if($currentDateTime->eq($bookingDateTime)){
+                    $booking->update(['status' => 'Today']);
+                }
+            }elseif ($booking->department->id == 35) {
+                $bookingDateTime = Carbon::create(
+                    $booking->hotelBookingDetail->year,
+                    $booking->hotelBookingDetail->arrival_month,
+                    $booking->hotelBookingDetail->arrival_day,
+                )->startOfDay();
+
+                if ($currentDateTime > $bookingDateTime ) {
+                    $room = $booking->hotelBookingDetail->roomBookingDetail->room;
+
+                    if($booking->status == 'Completed'){
+                        $bookingLeaveDateTime = Carbon::create(
+                            $booking->hotelBookingDetail->year,
+                            $booking->hotelBookingDetail->departure_month,
+                            $booking->hotelBookingDetail->departure_day,
+                        )->startOfDay();
+                        if($currentDateTime > $bookingLeaveDateTime){
+                            $room->update(['busy_numbers' => $room->busy_numbers > 0 ? $room->busy_numbers - 1 : 0]);
+                        }
+                    }else{
+                        $booking->update(['status' => 'Expired']);
+                        $room->update(['busy_numbers' => $room->busy_numbers > 0 ? $room->busy_numbers - 1 : 0]);
+                    }
+                }
+
                 if($currentDateTime->eq($bookingDateTime)){
                     $booking->update(['status' => 'Today']);
                 }
