@@ -56,6 +56,9 @@ class HotelController extends Controller
         // Combine suitable and unsuitable rooms while preserving the order
         $sortedRooms = $suitableRooms->concat($unsuitableRooms);
 
+        // Eager load room type and beds information
+        $sortedRooms->load(['roomType', 'beds']);
+
 
         // Paginate the combined rooms
         $perPage = $request->header('per_page', 10); // You can adjust the per_page value
