@@ -239,12 +239,20 @@ class UserController extends Controller
     public function providerHotelSchedule($userId, $schedules){
         $provider = Provider::where('user_id',$userId)->first();
 
-        $hotelSchedule = new HotelSchedule([
-            'arrival_start_time' => $schedules['arrival']['start_time'],
-            'departure_end_time' => $schedules['departure']['end_time']
-        ]);
-
-        $provider->hotelSchedule()->save($hotelSchedule);;
+        if ($provider->hotelSchedule) {
+            // If a hotel schedule exists, update its attributes
+            $provider->hotelSchedule->update([
+                'arrival_start_time' => $schedules['arrival']['start_time'],
+                'departure_end_time' => $schedules['departure']['end_time'],
+            ]);
+        } else {
+            // If a hotel schedule doesn't exist, create a new one
+            $hotelSchedule = new HotelSchedule([
+                'arrival_start_time' => $schedules['arrival']['start_time'],
+                'departure_end_time' => $schedules['departure']['end_time'],
+            ]);
+            $provider->hotelSchedule()->save($hotelSchedule);
+        }
     }
 
     public function updateProfilePicture($request, $user, $path)
