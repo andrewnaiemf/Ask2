@@ -39,7 +39,7 @@ class BookingStatus extends Command
      */
     public function handle()
     {
-       $bookings = Booking::where(['status' => 'New'])->get();
+       $bookings = Booking::whereIn('status', ['Today', 'New'])->get();
 
         $currentDateTime = Carbon::now();
 
