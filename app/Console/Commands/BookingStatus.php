@@ -84,7 +84,7 @@ class BookingStatus extends Command
                     }
                 }
 
-                if($currentDateTime->eq($bookingDateTime)){
+                if($currentDateTime->eq($bookingDateTime) && $booking->status != 'Completed'){
                     $booking->update(['status' => 'Today']);
                 }
             }
