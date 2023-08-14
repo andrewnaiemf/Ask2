@@ -166,9 +166,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentMonth = date('m');
                     if ($value < $currentMonth || $value > $currentMonth + 1) {
-                        $fail('The '.$attribute.' must be the current month or the next month.');
+                        $fail(trans('validation.month.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_month' => $currentMonth,
+                        ]));
                     }
-                }
+                },
             ],
             'day' => [
                 'required',
@@ -177,9 +180,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentDay = date('d');
                     if ($value < $currentDay) {
-                        $fail('The '.$attribute.' must be today or a future date.');
+                        $fail(trans('validation.day.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_day' => $currentDay,
+                        ]));
                     }
-                }
+                },
             ],
             'time' => 'required|date_format:H:i',
             'cost' => 'required',
@@ -197,9 +203,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentMonth = date('m');
                     if ($value < $currentMonth || $value > $currentMonth + 1) {
-                        $fail('The '.$attribute.' must be the current month or the next month.');
+                        $fail(trans('validation.month.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_month' => $currentMonth,
+                        ]));
                     }
-                }
+                },
             ],
             'arrival_day' => [
                 'required',
@@ -208,9 +217,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentDay = date('d');
                     if ($value < $currentDay) {
-                        $fail('The '.$attribute.' must be today or a future date.');
+                        $fail(trans('validation.day.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_day' => $currentDay,
+                        ]));
                     }
-                }
+                },
             ],
             'arrival_time' => 'required_with:year|date_format:H:i',
             'departure_month' => [
@@ -221,9 +233,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentMonth = date('m');
                     if ($value < $currentMonth || $value > $currentMonth + 1) {
-                        $fail('The '.$attribute.' must be the current month or the next month.');
+                        $fail(trans('validation.month.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_month' => $currentMonth,
+                        ]));
                     }
-                }
+                },
             ],
             'departure_day' => [
                 'required',
@@ -233,9 +248,12 @@ class BookingController extends Controller
                 function ($attribute, $value, $fail) {
                     $currentDay = date('d');
                     if ($value < $currentDay) {
-                        $fail('The '.$attribute.' must be today or a future date.');
+                        $fail(trans('validation.day.custom_validation', [
+                            'attribute' => trans("validation.attributes.$attribute"),
+                            'current_day' => $currentDay,
+                        ]));
                     }
-                }
+                },
             ],
             'departure_time' => 'required_with:year|date_format:H:i',
             'adults' => 'required_with:year|integer|min:1',

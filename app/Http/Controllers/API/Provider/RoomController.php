@@ -192,6 +192,6 @@ class RoomController extends Controller
         // Convert the array to JSON and then back to an array
         $room->update(['images' => json_encode($pathes)]);
 
-        return $this->returnSuccessMessage(trans("api.room.imagedeletedSuccessfully"));
+        return $this->returnSuccessMessage(trans("api.imgeDeletedSuccessfully"));
     }
 }

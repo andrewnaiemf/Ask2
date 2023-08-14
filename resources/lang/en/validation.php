@@ -12,7 +12,18 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
+    'month' => [
+        'required' => 'The :attribute field is required.',
+        'digits' => 'The :attribute must be exactly :digits digits.',
+        'between' => 'The :attribute must be between :min and :max.',
+        'custom_validation' => 'The :attribute must be the :current_month or the next month.',
+    ],
+    'day' => [
+        'required' => 'The :attribute field is required.',
+        'digits' => 'The :attribute must be exactly :digits digits.',
+        'between' => 'The :attribute must be between :min and :max.',
+        'custom_validation' => 'The :attribute must be today or a future date.',
+    ],
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',
     'active_url' => 'The :attribute is not a valid URL.',

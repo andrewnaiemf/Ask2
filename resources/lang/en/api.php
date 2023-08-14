@@ -30,7 +30,7 @@ return [
     'cannotstarttripnow' => 'You can not start a new trip now',
     'pleaseContactWithAdministrator' => 'Please contact with administrator',
     'suggestion_sent_successfully' => 'suggestion sent successfully',
-    'imgeDeletedSuccessfully' => 'The imge is deleted successfully',
+    'imgeDeletedSuccessfully' => 'The image is deleted successfully',
 
     'clinic' => [
         'scheduleUpdatedSuccessfully' => 'Schedule updated successfully'
@@ -39,4 +39,15 @@ return [
     'addressAddedSuccessfully' => 'Address added successfully',
     'bookingSentSuccessfully' => 'booking sent successfully',
     'InvalidProvider' => 'Invalid Provider',
+    'AddedToFavoriteSuccessfully' => 'added to favorite Successfully',
+    'RemovedFromFavoriteSuccessfully' => 'removed to favorite Successfully',
+    'newsCreatedSuccessfully' => 'news created successfully',
+    'newsRequestSentSuccessfully' => 'news request sent successfully',
+    'bookingUpdatedSuccessfully' => 'booking status updated successfully',
+
+    'room' =>[
+        'createdSuccessfully' => 'room created successfully',
+        'updatedSuccessfully' => 'room updated successfully',
+        'deletedSuccessfully' => 'room deleted successfully',
+    ],
 ];

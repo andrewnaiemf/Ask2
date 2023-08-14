@@ -12,6 +12,18 @@ return [
 		|
 	*/
 
+    'month' => [
+        'required' => 'حقل :attribute مطلوب.',
+        'digits' => 'يجب أن يحتوي حقل :attribute على :digits أرقام.',
+        'between' => 'يجب أن يكون حقل :attribute بين :min و :max.',
+        'custom_validation' => 'يجب أن يكون حقل :attribute هو الشهر الحالي أو الشهر التالي.',
+    ],
+    'day' => [
+        'required' => 'حقل :attribute مطلوب.',
+        'digits' => 'يجب أن يحتوي حقل :attribute على :digits أرقام.',
+        'between' => 'يجب أن يكون حقل :attribute بين :min و :max.',
+        'custom_validation' => 'يجب أن يكون حقل :attribute اليوم الحالي أو تاريخ مستقبلي.',
+    ],
 	'docx' => 'يجب :attribute ان يكون ملف من نوع Microsoft Office .docx او doc',
 	'potm' => 'يجب :attribute ان يكون ملف من نوع Microsoft Office .potm',
 	'ppsm' => 'يجب :attribute ان يكون ملف من نوع Microsoft Office .ppsm',
