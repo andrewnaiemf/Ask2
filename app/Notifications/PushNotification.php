@@ -11,9 +11,6 @@ class PushNotification
 {
     public static function send($reciever, $screen, $message, $notification_data = null, $type = null)
     {
-        $friendLocale = $reciever->lng;
-        app()->setLocale($friendLocale);
-
         $url = 'https://fcm.googleapis.com/fcm/send';
         $serverKey = env('FCM_KEY') ?? 'AAAA62Qu0eY:APA91bFfbQiUIwr8Fnm7PapT9frKtOW1yTC-xZDWwtSu5hr1fZsD2Hme_Ki42Ygh41ciaIr_rYKAZ5ofjzm8pNtPVJXamPYRJYXA7d-2c4LcJ52mnDc3uMGssAiHfyGTGc5XaEtbnF7s';
         $devs=[];
@@ -80,16 +77,42 @@ class PushNotification
 
 
 
-    public static function create($sender_id, $resciever_id, $data, $type){
+    public static function create($sender_id, $resciever_id, $data, $screen)
+    {
+        $reciever = User::find($resciever_id);
+        $sender = User::find($sender_id);
+
+        $friendLocale = $reciever->lng;
+        app()->setLocale($friendLocale);
 
         Notification::create([
             'user_id' =>  $sender_id,
             'notified_user_id' =>  $resciever_id,
-            'type' =>  $type,
-            'screen' =>  $type,
+            'type' =>  $screen,
+            'screen' =>  $screen,
             'data' =>$data
         ]);
 
-        PushNotification::send([$resciever_id], $type, $data);
+        switch ($screen) {
+            case 'rating':
+                $message = $sender->name . ' ' . __('messages.rating_message', ['stars' => $data->rate]);
+                break;
+
+            case 'booking':
+                $message = $sender->name . ' ' . __('messages.New_booking');
+                break;
+
+            case 'booking_status':
+                $status = $data->status;
+                $statusTranslationKey = 'provider_' . $status . '_booking';
+                $actionMessage = __('messages.' . $statusTranslationKey);
+                $message = $sender->name . ' ' . $actionMessage;
+                break;
+
+            default:
+                $message = '';
+                break;
+        }
+        PushNotification::send($reciever, $screen, $message, $data = null, $type = null);
     }
 }

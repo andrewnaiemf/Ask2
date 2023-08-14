@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\Provider;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\User;
+use App\Notifications\PushNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -120,6 +121,7 @@ class BookingController extends Controller
         $validatedData = $validator->validated();
 
         $booking->update($validatedData);
+        PushNotification::create($booking->user_id ,$provider->user->id ,$booking ,'booking_status');
 
         return $this->returnSuccessMessage( trans("api.bookingUpdatedSuccessfully") );
 

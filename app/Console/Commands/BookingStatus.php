@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Booking;
+use App\Notifications\PushNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -55,9 +56,11 @@ class BookingStatus extends Command
 
                 if ($currentDateTime > $bookingDateTime ) {
                     $booking->update(['status' => 'Expired']);
+                    PushNotification::create($booking->user_id ,$booking->provider->user->id ,$booking ,'booking_status');
                 }
                 if($currentDateTime->eq($bookingDateTime)){
                     $booking->update(['status' => 'Today']);
+                    PushNotification::create($booking->user_id ,$booking->provider->user->id ,$booking ,'booking_status');
                 }
             }elseif ($booking->department->id == 35) {
                 $bookingDateTime = Carbon::create(
@@ -80,12 +83,15 @@ class BookingStatus extends Command
                         }
                     }else{
                         $booking->update(['status' => 'Expired']);
+                        PushNotification::create($booking->user_id ,$booking->provider->user->id ,$booking ,'booking_status');
+
                         $room->update(['busy_numbers' => $room->busy_numbers > 0 ? $room->busy_numbers - 1 : 0]);
                     }
                 }
 
                 if($currentDateTime->eq($bookingDateTime) && $booking->status != 'Completed'){
                     $booking->update(['status' => 'Today']);
+                    PushNotification::create($booking->user_id ,$booking->provider->user->id ,$booking ,'booking_status');
                 }
             }
 
