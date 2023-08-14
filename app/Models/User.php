@@ -30,7 +30,8 @@ class User extends Authenticatable  implements JWTSubject
         'device_token',
         'uuid',
         'email',
-        'can_share_news'
+        'can_share_news',
+        'lng'
 	];
 
 	protected $deleted_at = 'deleted_at';

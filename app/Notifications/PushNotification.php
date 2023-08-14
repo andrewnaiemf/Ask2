@@ -9,35 +9,22 @@ use Illuminate\Support\Facades\Http;
 
 class PushNotification
 {
-    public function send($ids ,$message, $notification_data = null)
+    public static function send($reciever, $screen, $message, $notification_data = null, $type = null)
     {
-        $screen = '';
-        switch ($message) {
-            case 'rating':
-                $screen  = 'rating';
-                $message = 'Someone rate you';
-            break;
-
-            case 'booking':
-                $screen  = 'booking';
-                $message = 'You have new booking';
-            break;
-
-            default:
-                $screen  = 'home_screen';
-            break;
-        }
+        $friendLocale = $reciever->lng;
+        app()->setLocale($friendLocale);
 
         $url = 'https://fcm.googleapis.com/fcm/send';
-        $serverKey = env('FCM_KEY') ?? '';
+        $serverKey = env('FCM_KEY') ?? 'AAAA62Qu0eY:APA91bFfbQiUIwr8Fnm7PapT9frKtOW1yTC-xZDWwtSu5hr1fZsD2Hme_Ki42Ygh41ciaIr_rYKAZ5ofjzm8pNtPVJXamPYRJYXA7d-2c4LcJ52mnDc3uMGssAiHfyGTGc5XaEtbnF7s';
         $devs=[];
-
-        $devices = User::whereIn('id',$ids)->pluck('device_token');
+        $devices = $reciever->device_token;
         foreach ($devices as $tokens) {
-            if( $tokens){
+            if( is_array($tokens) ){
                 foreach ($tokens as $token){
                     array_push($devs, $token);
                 }
+            }else{
+                array_push($devs, $tokens);
             }
         }
 
@@ -45,12 +32,16 @@ class PushNotification
             "registration_ids" =>$devs,
             "notification" => [
                 "body" => $message,
-                "title" => 'Captain ask',
+                "title" => 'Private Me',
                 "sound" => "notify.mp3",
+                "tag" => "notification"
             ],
             "data" => [
                 'screen' => $screen,
-                'notification_data' => json_encode($notification_data)
+                'notification_data' => json_encode($notification_data),
+                "body" => $message,
+                "title" => 'Private Me',
+                "type" => $type
             ]
         ];
 
@@ -86,6 +77,7 @@ class PushNotification
         // FCM response
         return json_decode($result);
     }
+
 
 
     public static function create($sender_id, $resciever_id, $data, $type){
