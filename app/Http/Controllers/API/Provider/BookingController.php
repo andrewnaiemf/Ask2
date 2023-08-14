@@ -121,7 +121,7 @@ class BookingController extends Controller
         $validatedData = $validator->validated();
 
         $booking->update($validatedData);
-        PushNotification::create($booking->user_id ,$provider->user->id ,$booking ,'booking_status');
+        PushNotification::create($provider->user->id, $booking->user_id, $booking ,'booking_status');
 
         return $this->returnSuccessMessage( trans("api.bookingUpdatedSuccessfully") );
 

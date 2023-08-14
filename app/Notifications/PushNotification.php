@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 class PushNotification
 {
     public static function send($reciever, $screen, $message, $notification_data = null, $type = null)
-    {
+    {dd($message);
         $url = 'https://fcm.googleapis.com/fcm/send';
         $serverKey = env('FCM_KEY') ?? 'AAAA62Qu0eY:APA91bFfbQiUIwr8Fnm7PapT9frKtOW1yTC-xZDWwtSu5hr1fZsD2Hme_Ki42Ygh41ciaIr_rYKAZ5ofjzm8pNtPVJXamPYRJYXA7d-2c4LcJ52mnDc3uMGssAiHfyGTGc5XaEtbnF7s';
         $devs=[];
@@ -29,7 +29,7 @@ class PushNotification
             "registration_ids" =>$devs,
             "notification" => [
                 "body" => $message,
-                "title" => 'Private Me',
+                "title" => 'Ask',
                 "sound" => "notify.mp3",
                 "tag" => "notification"
             ],
@@ -37,7 +37,7 @@ class PushNotification
                 'screen' => $screen,
                 'notification_data' => json_encode($notification_data),
                 "body" => $message,
-                "title" => 'Private Me',
+                "title" => 'Ask',
                 "type" => $type
             ]
         ];
