@@ -28,11 +28,31 @@ class Notification extends Model
 
         if ($messageTemplateKey) {
             $sender = data_get($data, 'sender', '');
-            $data['message'] = data_get($sender, 'name', '') .' '. __('messages.' . $messageTemplateKey, []);
+            $data['message'] = $this->generateMessage($messageTemplateKey, $sender, $data);
         }
+
 
         return $data;
     }
+
+    protected function generateMessage($messageTemplateKey, $sender, $data)
+    {
+        $message = '';
+
+        switch ($messageTemplateKey) {
+            case 'rating_message':
+                $data = data_get($data, 'data', '');
+                $stars = data_get($data, 'rate', '');
+                $message = str_replace(':sender_name', $sender['name'], __('messages.' . $messageTemplateKey, ['stars' => $stars]));
+                break;
+            default:
+                $message = str_replace(':sender_name', $sender['name'], __('messages.' . $messageTemplateKey, []));
+                break;
+        }
+
+        return $message;
+    }
+
 
 
     public function user()

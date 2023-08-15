@@ -59,7 +59,7 @@ class RatingController extends Controller
             'rated_user_id' => auth()->user()->id
         ]);
 
-        PushNotification::create($rate->user_id ,$rate->rated_user_id ,$rate ,'rating');
+        PushNotification::create($rate->rated_user_id,$rate->user_id ,$rate ,'rating');
 
         return $this->returnSuccessMessage( trans("api.ratingSetSuccessfully") );
 
