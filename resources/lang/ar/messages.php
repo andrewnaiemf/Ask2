@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'rating_message' => ' قدم لك :stars نجمة/نجمات',
-    'New_booking' => '  قام بحجز جديد ',
+    'rating_message' => ':sender_name قدم لك :stars نجمة :stars',
+    'New_booking' => ':sender_name  قام بحجز جديد ',
     'provider_accepted_booking' => ' قبل حجزك',
     'provider_rejected_booking' => ' رفض حجزك',
 ];
