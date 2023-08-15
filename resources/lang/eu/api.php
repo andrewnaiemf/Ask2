@@ -50,5 +50,7 @@ return [
         'updatedSuccessfully' => 'کمرے کامیابی سے اپ ڈیٹ ہوگیے',
         'deletedSuccessfully' => 'کمرے کامیابی سے حذف کردیے گئے',
     ],
+    'newsRequestAlreadySentBefore' => 'خبر کی درخواست پہلے ہی بھیج دی گئی ہے',
+
 ];
 

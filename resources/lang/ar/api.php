@@ -50,4 +50,5 @@ return [
         'updatedSuccessfully' => 'تم تحديث الغرفة بنجاح',
         'deletedSuccessfully' => 'تم حذف الغرفة بنجاح',
     ],
+    'newsRequestAlreadySentBefore' => 'تم ارسال الطلب من قبل',
 ];

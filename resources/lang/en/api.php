@@ -50,4 +50,5 @@ return [
         'updatedSuccessfully' => 'room updated successfully',
         'deletedSuccessfully' => 'room deleted successfully',
     ],
+    'newsRequestAlreadySentBefore' => 'news request already sent before',
 ];
