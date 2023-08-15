@@ -85,13 +85,17 @@ class PushNotification
         $friendLocale = $reciever->lng;
         app()->setLocale($friendLocale);
 
+        $messageTemplateKey = '';
+
         switch ($screen) {
             case 'rating':
                 $message = $sender->name . ' ' . __('messages.rating_message', ['stars' => $data->rate]);
+                $messageTemplateKey = 'rating_message';
                 break;
 
             case 'booking':
                 $message = $sender->name . ' ' . __('messages.New_booking');
+                $messageTemplateKey = 'New_booking';
                 break;
 
             case 'booking_status':
@@ -99,6 +103,8 @@ class PushNotification
                 $statusTranslationKey = 'provider_' . $status . '_booking';
                 $actionMessage = __('messages.' . $statusTranslationKey);
                 $message = $sender->name . ' ' . $actionMessage;
+
+                $messageTemplateKey = $actionMessage;
                 break;
 
             default:
@@ -106,17 +112,18 @@ class PushNotification
                 break;
         }
 
-        $data['sender'] = $sender;
-        $data['data'] = date('Y-m-d');
-        $data['time'] = date('H:i:s');
-        $data['message'] = $message;
-
         Notification::create([
             'user_id' =>  $sender_id,
             'notified_user_id' =>  $resciever_id,
             'type' =>  $screen,
             'screen' =>  $screen,
-            'data' =>$data
+            'data' =>json_encode( [
+                'sender' => $sender,
+                'date' => date('Y-m-d'),
+                'time' => date('H:i:s'),
+                'message_template' => $messageTemplateKey,
+                'data' => $data
+            ])
         ]);
 
 

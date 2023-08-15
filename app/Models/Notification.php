@@ -20,9 +20,18 @@ class Notification extends Model
         'updated_at',
     ];
 
-    public function getDataAttribute($data){
+    public function getDataAttribute($data)
+    {
+        $data = json_decode($data, true);
 
-        return json_decode($data);
+        $messageTemplateKey = data_get($data, 'message_template', '');
+
+        if ($messageTemplateKey) {
+            $sender = data_get($data, 'sender', '');
+            $data['message'] = data_get($sender, 'name', '') .' '. __('messages.' . $messageTemplateKey, []);
+        }
+
+        return $data;
     }
 
 
