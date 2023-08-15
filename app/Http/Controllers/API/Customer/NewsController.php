@@ -124,6 +124,12 @@ class NewsController extends Controller
         $resciever_id = User::where('account_type','admin')->first()->id;
         $type = 'addNews';
 
+        $askForNews = Notification::where(['user_id' => $sender_id,  'notified_user_id' =>  $resciever_id])->first();
+
+        if ($askForNews) {
+            return $this->returnError(trans("api.newsRequestAlreadySentBefore"));
+        }
+
         Notification::create([
             'user_id' =>  $sender_id,
             'notified_user_id' =>  $resciever_id,

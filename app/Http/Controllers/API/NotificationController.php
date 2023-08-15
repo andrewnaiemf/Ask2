@@ -18,6 +18,7 @@ class NotificationController extends Controller
         $perPage = $request->header('per_page', 10);
 
         $notifications = Notification::where('notified_user_id', auth()->user()->id)
+        ->where('type', '!=', 'addNews')
         ->orderBy('id', 'desc')
         ->with('user','notifiedUser')
         ->simplePaginate($perPage);
