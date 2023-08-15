@@ -85,14 +85,6 @@ class PushNotification
         $friendLocale = $reciever->lng;
         app()->setLocale($friendLocale);
 
-        Notification::create([
-            'user_id' =>  $sender_id,
-            'notified_user_id' =>  $resciever_id,
-            'type' =>  $screen,
-            'screen' =>  $screen,
-            'data' =>$data
-        ]);
-
         switch ($screen) {
             case 'rating':
                 $message = $sender->name . ' ' . __('messages.rating_message', ['stars' => $data->rate]);
@@ -113,6 +105,21 @@ class PushNotification
                 $message = '';
                 break;
         }
+
+        $data['sender'] = $sender;
+        $data['data'] = date('Y-m-d');
+        $data['time'] = date('H:i:s');
+        $data['message'] = $message;
+
+        Notification::create([
+            'user_id' =>  $sender_id,
+            'notified_user_id' =>  $resciever_id,
+            'type' =>  $screen,
+            'screen' =>  $screen,
+            'data' =>$data
+        ]);
+
+
         PushNotification::send($reciever, $screen, $message, $data = null, $type = null);
     }
 }
