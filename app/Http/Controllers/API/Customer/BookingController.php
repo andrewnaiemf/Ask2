@@ -124,8 +124,8 @@ class BookingController extends Controller
             $hotelBookingDetails->departure_day = $request->input('departure_day');
             $hotelBookingDetails->departure_time = $request->input('departure_time');
             $hotelBookingDetails->total_cost = $request->input('total_cost');
-            $hotelBookingDetails->adults = $request->input('adults');
-            $hotelBookingDetails->kids = $request->input('kids');
+            $hotelBookingDetails->adults =  $room->adults;
+            $hotelBookingDetails->kids =  $room->kids;
 
             $booking->hotelBookingDetail()->save($hotelBookingDetails);
 
