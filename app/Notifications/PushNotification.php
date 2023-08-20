@@ -126,6 +126,8 @@ class PushNotification
             ])
         ]);
 
+        $placeholder = " :sender_name";
+        $message = str_replace($placeholder, '', $message);
 
         PushNotification::send($reciever, $screen, $message, $data = null, $type = null);
     }
