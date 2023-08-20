@@ -48,8 +48,14 @@ class BookingController extends Controller
                                     ->whereRaw("departure_day >= ?", [$request->day]);
                             });
                         })
-                        ->where('status', $request->status)
-                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                        // Conditional query: If the request status is 'New', filter by 'New' status.
+                        ->when($request->status == 'New', function ($query) use ($request) {
+                            return $query->where('status', $request->status);
+                        })
+                        // Conditional query: If the request status is not 'New', get all statuses.
+                        ->when($request->status != 'New', function ($query) use ($request) {
+                            return $query->whereNotIn('status', ['New']);
+                        })                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
                         ->orderBy('id', 'desc')
                         ->simplePaginate($perPage);
 
