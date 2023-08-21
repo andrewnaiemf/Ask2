@@ -78,7 +78,7 @@ class BookingStatus extends Command
                             $booking->hotelBookingDetail->departure_month,
                             $booking->hotelBookingDetail->departure_day,
                         )->startOfDay();
-                        if($currentDateTime > $bookingLeaveDateTime){
+                        if($currentDateTime > $bookingLeaveDateTime && $room){
                             $room->update(['busy_numbers' => $room->busy_numbers > 0 ? $room->busy_numbers - 1 : 0]);
                         }
                     }else{

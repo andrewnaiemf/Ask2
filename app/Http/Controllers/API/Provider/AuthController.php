@@ -83,9 +83,11 @@ class AuthController extends Controller
 
         $user = User::find(auth()->user()->id);
 
-        $user_status = $user->provider->status;
-        if($user_status  != 'Accepted') {
-            return $this->returnError(__('api.pleaseContactWithAdministrator'));
+        if ($user->provider) {
+            $user_status = $user->provider->status;
+            if($user_status  != 'Accepted') {
+                return $this->returnError(__('api.pleaseContactWithAdministrator'));
+            }
         }
 
         $providerId = $user->provider->id; // Assign the provider ID to $providerId
