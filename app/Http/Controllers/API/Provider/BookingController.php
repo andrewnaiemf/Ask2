@@ -48,8 +48,8 @@ class BookingController extends Controller
                                     ->whereRaw("departure_day >= ?", [$request->day]);
                             });
                         })
-                        // Conditional query: If the request status is 'New', filter by 'New' status.
-                        ->when($request->status == 'New', function ($query) use ($request) {
+                        // Conditional query: If the request status is 'New,Today', filter by 'New,Today' status.
+                        ->when(in_array($request->status, ['New', 'Today']), function ($query) use ($request) {
                             return $query->where('status', $request->status);
                         })
                         // Conditional query: If the request status is 'Completed', filter by 'Completed' status.
@@ -57,7 +57,7 @@ class BookingController extends Controller
                             return $query->where('status', $request->status);
                         })
                         // Conditional query: If the request status is not 'New,Completed', get all statuses.
-                        ->when(!in_array($request->status, ['New', 'Completed']), function ($query) use ($request) {
+                        ->when(!in_array($request->status, ['New', 'Completed', 'Today']), function ($query) use ($request) {
                             return $query->whereNotIn('status', ['New','Completed']);
                         })
                         ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
