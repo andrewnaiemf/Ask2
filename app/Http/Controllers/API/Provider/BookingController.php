@@ -52,10 +52,15 @@ class BookingController extends Controller
                         ->when($request->status == 'New', function ($query) use ($request) {
                             return $query->where('status', $request->status);
                         })
-                        // Conditional query: If the request status is not 'New', get all statuses.
-                        ->when($request->status != 'New', function ($query) use ($request) {
-                            return $query->whereNotIn('status', ['New']);
-                        })                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                        // Conditional query: If the request status is 'Completed', filter by 'Completed' status.
+                        ->when($request->status == 'Completed', function ($query) use ($request) {
+                            return $query->where('status', $request->status);
+                        })
+                        // Conditional query: If the request status is not 'New,Completed', get all statuses.
+                        ->when(!in_array($request->status, ['New', 'Completed']), function ($query) use ($request) {
+                            return $query->whereNotIn('status', ['New','Completed']);
+                        })
+                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
                         ->orderBy('id', 'desc')
                         ->simplePaginate($perPage);
 
