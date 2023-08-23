@@ -3,6 +3,6 @@
 return [
     'rating_message' => ':sender_name gave you :stars stars',
     'New_booking' => ':sender_name make new booking',
-    'provider_Completed_booking' => 'accepted your booking',
-    'provider_Rejected_booking' => 'rejected your booking',
+    'provider_Completed_booking' => 'complete your booking',
+    'provider_Rejected_booking' => 'rejecte your booking',
 ];
