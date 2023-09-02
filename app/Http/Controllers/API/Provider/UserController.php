@@ -333,7 +333,7 @@ class UserController extends Controller
             'linkedin_link' => ['nullable','string', 'max:255', 'url'],
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'is_active' => 'nullable|boolean'
+            'is_online' => 'nullable|boolean'
         ]);
 
         if ($validator->fails()) {

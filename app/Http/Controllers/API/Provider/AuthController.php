@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Clinic;
 use App\Models\ClinicSchedule;
 use App\Models\Department;
@@ -48,7 +49,12 @@ class AuthController extends Controller
         if( in_array($user->provider->subdepartment->id, ['22', '23','24']) ){
             $this->clinicSchedule($user);
         }
-        $user->load(['provider.clinics']);
+
+        if( in_array($user->provider->subdepartment->id, ['38']) ){//e-commerc
+            $this->attachCategories($user);
+        }
+
+        $user->load(['provider.clinics', 'provider.categories']);
 
         $credentials = $request->only(['phone','password']);
 
@@ -288,6 +294,11 @@ class AuthController extends Controller
             $user->provider->clinics()->attach($clinics);
         }
         return;
+    }
+
+    public function attachCategories($user){
+        $categories = Category::where(['department_id' => $user->provider->subdepartment_id])->get();
+        $user->provider->categories()->attach($categories);
     }
 
 }
