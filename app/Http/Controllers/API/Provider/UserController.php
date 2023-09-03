@@ -9,6 +9,7 @@ use App\Models\DocumentProvider;
 use App\Models\HotelRating;
 use App\Models\HotelSchedule;
 use App\Models\Provider;
+use App\Models\ProviderOffering;
 use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -182,6 +183,33 @@ class UserController extends Controller
             }
         }
 
+        if( in_array($provider->subdepartment->id, ['38']) ){///e-commerce
+
+
+            $offering = ProviderOffering::where('provider_id', $provider->id)->first();
+
+            if ( $offering ) {
+                $offering_data = [
+                    'provider_id' => $provider->id,
+                    'delivery_time' => $request->delivery_time ?? $offering->delivery_time,
+                    'coupon_name' => $request->coupon_name ?? $offering->coupon_name,
+                    'coupon_value' => $request->coupon_value ?? $offering->coupon_value,
+                    'delivery_fees' => $request->delivery_fees ?? $offering->delivery_fees
+                ];
+                $offering->update($offering_data);
+            }else{
+                $offering_data = [
+                    'provider_id' => $provider->id,
+                    'delivery_time' => $request->delivery_time,
+                    'coupon_name' => $request->coupon_name,
+                    'coupon_value' => $request->coupon_value,
+                    'delivery_fees' => $request->delivery_fees
+                ];
+                ProviderOffering::create($offering_data);
+            }
+
+        }
+
         if (!empty($providerData)) {
             $provider = Provider::where('user_id',$userId)->first();
             $provider->update($providerData);
@@ -333,7 +361,11 @@ class UserController extends Controller
             'linkedin_link' => ['nullable','string', 'max:255', 'url'],
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'is_online' => 'nullable|boolean'
+            'is_online' => 'nullable|boolean',
+            'delivery_fees' => 'nullable|integer',
+            'coupon_name' => 'nullable|string|max:255',
+            'coupon_value' => 'nullable|string|max:255',
+            'delivery_fees' => 'nullable|string|max:255'
         ]);
 
         if ($validator->fails()) {

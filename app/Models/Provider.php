@@ -110,7 +110,8 @@ class Provider extends Model
         $fields = [
             'info',
             'service',
-            'hotel_rating'
+            'hotel_rating',
+            'offering'
         ];
 
         $isNull = true;
@@ -134,12 +135,18 @@ class Provider extends Model
             $service = $this->service;
         }
 
+        $offering = null;
+        if (in_array($this->subdepartment->id, ['38'])) {//e-commerce offerings
+            $offering = $this->offering;
+        }
+
 
         return (object) [
             'info' => $this->info,
             'service' => $service,
             'hotel_rating' => $this->getHotelRatingAttribute(),
-            'hotel_service' => $hotel_service
+            'hotel_service' => $hotel_service,
+            'offering' => $offering
         ];
     }
 
@@ -235,6 +242,11 @@ class Provider extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function offering()
+    {
+        return $this->hasOne(ProviderOffering::class, 'provider_id');
     }
 
 }
