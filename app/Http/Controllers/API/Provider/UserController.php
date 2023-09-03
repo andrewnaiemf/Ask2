@@ -183,7 +183,7 @@ class UserController extends Controller
             }
         }
 
-        if( in_array($provider->subdepartment->id, ['38']) ){///e-commerce
+        if( in_array($provider->subdepartment->id, ['40']) ){///e-commerce
 
 
             $offering = ProviderOffering::where('provider_id', $provider->id)->first();

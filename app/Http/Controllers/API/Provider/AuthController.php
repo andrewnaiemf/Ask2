@@ -50,7 +50,7 @@ class AuthController extends Controller
             $this->clinicSchedule($user);
         }
 
-        if( in_array($user->provider->subdepartment->id, ['38']) ){//e-commerc
+        if( in_array($user->provider->subdepartment->id, ['40']) ){//e-commerc
             $this->attachCategories($user);
         }
 

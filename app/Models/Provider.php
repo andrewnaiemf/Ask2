@@ -136,7 +136,7 @@ class Provider extends Model
         }
 
         $offering = null;
-        if (in_array($this->subdepartment->id, ['38'])) {//e-commerce offerings
+        if (in_array($this->subdepartment->id, ['40'])) {//e-commerce offerings
             $offering = $this->offering;
         }
 
