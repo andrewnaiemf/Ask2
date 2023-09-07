@@ -15,12 +15,13 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price', 10, 2); // Assuming you want to store a decimal value for price
+            $table->decimal('price', 10, 2);
+            $table->integer('stock')->default(0);
             $table->text('info');
             $table->text('description');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('provider_id');
-            $table->json('images'); // Store images as a JSON array
+            $table->json('images')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

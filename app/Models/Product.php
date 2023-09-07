@@ -11,7 +11,20 @@ class Product extends Model
 {
     use HasFactory,SoftDeletes,Translatable;
 
-    protected $fillable = ['price', 'info', 'description', 'category_id', 'provider_id', 'images'];
+    protected $fillable = ['price', 'info', 'description', 'category_id', 'provider_id', 'images', 'stock'];
+
+    public $translatedAttributes = ['name'];
+
+    public function getImagesAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    protected $hidden =[
+        'deleted_at',
+        'created_at',
+        'updated_at',
+    ];
 
     public function category()
     {
@@ -21,11 +34,6 @@ class Product extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class);
-    }
-
-    public function translations()
-    {
-        return $this->hasMany(ProductTranslation::class);
     }
 
 }

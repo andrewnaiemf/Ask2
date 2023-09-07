@@ -17,6 +17,7 @@ use App\Http\Controllers\API\Provider\BookingController;
 use App\Http\Controllers\API\Provider\ClinicSceduleController;
 use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
+use App\Http\Controllers\API\Provider\ProductController;
 use App\Http\Controllers\API\Provider\RoomController;
 use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
@@ -110,6 +111,9 @@ Route::group([
     Route::post('room/update/{id}', [RoomController::class , 'update_room']);
 
     Route::delete('room/{id}/image', [RoomController::class , 'deleteImage']);
+
+    Route::resource('product', ProductController::class);
+    Route::post('product/update/{id}', [ProductController::class , 'update_product']);
 
 });
 

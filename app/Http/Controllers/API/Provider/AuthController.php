@@ -109,8 +109,8 @@ class AuthController extends Controller
                         'provider.subdepartment',
                         'provider.images',
                         'provider.ratings',
-                        'provider.clinics.schedules.clinicScheduleDoctors'
-
+                        'provider.clinics.schedules.clinicScheduleDoctors',
+                        'provider.products'
                     ]);
 
         $providerData = $user->toArray();

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProductTranslation extends Model
 {
     use HasFactory;
+
+    protected $table = 'product_translations';
+
     protected $fillable = ['locale', 'name'];
 
     public function product()
