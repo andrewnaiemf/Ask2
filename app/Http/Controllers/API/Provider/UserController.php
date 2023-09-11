@@ -93,7 +93,9 @@ class UserController extends Controller
                         'provider.subdepartment',
                         'provider.images',
                         'provider.ratings',
-                        'provider.clinics.schedules.clinicScheduleDoctors'
+                        'provider.clinics.schedules.clinicScheduleDoctors',
+                        'provider.categories',
+                        'provider.products'
                     ]);
 
         $providerData = $user->toArray();
