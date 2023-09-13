@@ -8,6 +8,7 @@ use App\Http\Controllers\API\Customer\FavoriteController;
 use App\Http\Controllers\API\Customer\HomeController as CustomerHomeController;
 use App\Http\Controllers\API\Customer\HotelController;
 use App\Http\Controllers\API\Customer\NewsController;
+use App\Http\Controllers\API\Customer\OrderController;
 use App\Http\Controllers\API\Customer\ProviderController;
 use App\Http\Controllers\API\Customer\UserController as CustomerUserController;
 use App\Http\Controllers\API\HotelServiceController;
@@ -156,6 +157,11 @@ Route::group([
         Route::resource('favorite', FavoriteController::class);
         Route::get('search/{word}', [CustomerHomeController::class, 'search']);
         Route::post('room/filter', [HotelController::class, 'filter']);
+        Route::resource('order', OrderController::class);
+        Route::post('cart', [OrderController::class, 'cart']);
+        Route::post('edit/cart/{id}', [OrderController::class, 'updateCart']);
+        Route::get('cart/{id}', [OrderController::class, 'showCart']);
+
     });
 
     // Guest routes
