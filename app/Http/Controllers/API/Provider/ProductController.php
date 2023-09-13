@@ -63,7 +63,7 @@ class ProductController extends Controller
         $userId = auth()->user()->id;
 
         $path = 'Provider/' .$userId. '/products/';
-        $product_images = json_decode($product->images);
+        $product_images = $product->images;
         if ( isset($product_images)) {
             foreach ( $product_images as $existingImagePath) {
                 if (Storage::disk('public')->exists($existingImagePath)) {
@@ -156,7 +156,8 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'description' => 'required|string',
-            'info' => 'required|string',
+            'ar.info' => 'required|string',
+            'en.info' => 'required|string',
             'ar.name' => 'required|string',
             'en.name' => 'required|string',
             'category_id' => 'required|exists:categories,id',

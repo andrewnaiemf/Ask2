@@ -17,7 +17,6 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
-            $table->text('info');
             $table->text('description');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('provider_id');

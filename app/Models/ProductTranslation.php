@@ -11,7 +11,7 @@ class ProductTranslation extends Model
 
     protected $table = 'product_translations';
 
-    protected $fillable = ['locale', 'name'];
+    protected $fillable = ['locale', 'name','info'];
 
     public function product()
     {

@@ -17,7 +17,8 @@ class CreateProductTranslationsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->string('locale')->index();
-            $table->string('name'); // Store the translated name
+            $table->string('name');
+            $table->text('info');
             $table->timestamps();
 
             $table->unique(['product_id', 'locale']); // Unique constraint on product_id and locale

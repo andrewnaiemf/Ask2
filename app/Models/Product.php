@@ -11,9 +11,9 @@ class Product extends Model
 {
     use HasFactory,SoftDeletes,Translatable;
 
-    protected $fillable = ['price', 'info', 'description', 'category_id', 'provider_id', 'images', 'stock'];
+    protected $fillable = ['price', 'description', 'category_id', 'provider_id', 'images', 'stock'];
 
-    public $translatedAttributes = ['name'];
+    public $translatedAttributes = ['name','info'];
 
     public function getImagesAttribute($value)
     {
