@@ -115,6 +115,7 @@ Route::group([
 
     Route::resource('product', ProductController::class);
     Route::post('product/update/{id}', [ProductController::class , 'update_product']);
+    Route::delete('product/{id}/image', [ProductController::class , 'deleteImage']);
 
 });
 

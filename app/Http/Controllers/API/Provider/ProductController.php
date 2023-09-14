@@ -54,18 +54,19 @@ class ProductController extends Controller
             $this->productImage($request->image, $product);
         }
 
-        return $this->returnSuccessMessage( trans("api.product.createdSuccessfully") );
+        return $this->returnSuccessMessage(trans("api.product.createdSuccessfully"));
 
     }
 
-    public function productImage($images,$product){
+    public function productImage($images, $product)
+    {
 
         $userId = auth()->user()->id;
 
         $path = 'Provider/' .$userId. '/products/';
         $product_images = $product->images;
-        if ( isset($product_images)) {
-            foreach ( $product_images as $existingImagePath) {
+        if (isset($product_images)) {
+            foreach ($product_images as $existingImagePath) {
                 if (Storage::disk('public')->exists($existingImagePath)) {
 
                     $product_images = array_filter($product_images, function ($pathItem) use ($existingImagePath) {
@@ -74,15 +75,15 @@ class ProductController extends Controller
                     Storage::disk('public')->delete($existingImagePath);
                 }
             }
-        }else{
+        } else {
             $product_images = [];
         }
 
         foreach ($images as $image) {
             $imageName = $image->hashName();
-            $image->storeAs('public/'.$path,$imageName);
+            $image->storeAs('public/'.$path, $imageName);
             $full_path = $path.$imageName;
-            array_push($product_images , $full_path);
+            array_push($product_images, $full_path);
         }
 
         $product->update(['images' => json_encode($product_images)]);
@@ -133,7 +134,7 @@ class ProductController extends Controller
             $this->productImage($request->image, $product);
         }
 
-        return $this->returnSuccessMessage( trans("api.product.updatedSuccessfully") );
+        return $this->returnSuccessMessage(trans("api.product.updatedSuccessfully"));
     }
 
     /**
@@ -144,11 +145,28 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $room = Product::findOrFail($id);
-        $room->delete();
+        $product = Product::findOrFail($id);
+        $product->delete();
 
         return $this->returnSuccessMessage(trans("api.product.deletedSuccessfully"));
     }
+
+    public function deleteImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Remove the image path from the images array
+        $pathes = array_values(array_diff($product->images, [$request->image_path]));
+
+        if (Storage::disk('public')->exists($request->image_path)) {
+            Storage::delete('public/' . $request->image_path);
+        }
+        // Convert the array to JSON and then back to an array
+        $product->update(['images' => json_encode($pathes)]);
+
+        return $this->returnSuccessMessage(trans("api.imgeDeletedSuccessfully"));
+    }
+
 
     protected function validateProductRequest(Request $request)
     {
