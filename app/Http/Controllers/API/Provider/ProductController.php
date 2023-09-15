@@ -66,19 +66,6 @@ class ProductController extends Controller
 
         $path = 'Provider/' .$userId. '/products/';
         $product_images = $product->images;
-        if (isset($product_images)) {
-            foreach ($product_images as $existingImagePath) {
-                if (Storage::disk('public')->exists($existingImagePath)) {
-
-                    $product_images = array_filter($product_images, function ($pathItem) use ($existingImagePath) {
-                        return $pathItem !== $existingImagePath;
-                    });
-                    Storage::disk('public')->delete($existingImagePath);
-                }
-            }
-        } else {
-            $product_images = [];
-        }
 
         foreach ($images as $image) {
             $imageName = $image->hashName();
