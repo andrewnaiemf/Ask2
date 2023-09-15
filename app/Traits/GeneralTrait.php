@@ -4,18 +4,17 @@ namespace App\Traits;
 
 trait GeneralTrait
 {
-
     public function getCurrentLang()
     {
         return app()->getLocale();
     }
 
-    public function returnError( $msg ,$code = 422)
+    public function returnError($msg, $code = 422)
     {
         return response()->json([
             'status' => false,
             'msg' => is_array($msg) ? implode(', ', $msg) : $msg
-        ],$code);
+        ], $code);
     }
 
     public function unauthorized()
@@ -26,7 +25,7 @@ trait GeneralTrait
         ], 401);
     }
 
-    public function returnSuccessMessage ( $msg = "", $code = 200 )
+    public function returnSuccessMessage($msg = "", $code = 200)
     {
         return [
             'status' => $code >= 200 && $code < 300,
@@ -35,7 +34,7 @@ trait GeneralTrait
         ];
     }
 
-    public function returnData ( $data, $msg =null ,$code = 200 )
+    public function returnData($data, $msg =null, $code = 200)
     {
         $response = [
             'status' => $code >= 200 && $code < 300,
@@ -50,17 +49,16 @@ trait GeneralTrait
 
 
     //////////////////
-    public function returnValidationError($code = "E001", $validator)
+    public function returnValidationError($validator)
     {
-        return $this->returnError( $validator);
+        return $this->returnError($validator);
     }
 
 
     public function returnCodeAccordingToInput($validator)
     {
         $inputs = array_keys($validator->errors()->toArray());
-        $code = $this->getErrorCode($inputs[0]);
-        return $code;
+        return $this->getErrorCode($inputs[0]);
     }
 
 

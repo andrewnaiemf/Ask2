@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    public const VALIDATE_REQUIRE_STRING = 'required|string';
     /**
      * Display a listing of the resource.
      *
@@ -173,11 +174,11 @@ class ProductController extends Controller
         return Validator::make($request->all(), [
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'ar.info' => 'required|string',
-            'en.info' => 'required|string',
-            'ar.name' => 'required|string',
-            'en.name' => 'required|string',
+            'description' => $this::VALIDATE_REQUIRE_STRING,
+            'ar.info' => $this::VALIDATE_REQUIRE_STRING,
+            'en.info' => $this::VALIDATE_REQUIRE_STRING,
+            'ar.name' => $this::VALIDATE_REQUIRE_STRING,
+            'en.name' => $this::VALIDATE_REQUIRE_STRING,
             'category_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
