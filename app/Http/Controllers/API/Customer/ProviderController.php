@@ -15,7 +15,7 @@ class ProviderController extends Controller
     {
         $provider = Provider::where('id', $id)
         ->where('status', 'Accepted')
-        ->with('department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule')
+        ->with('department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule', 'products')
         ->first();
 
         if (!$provider) {
