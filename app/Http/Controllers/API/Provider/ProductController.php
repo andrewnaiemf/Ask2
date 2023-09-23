@@ -65,7 +65,7 @@ class ProductController extends Controller
         $userId = auth()->user()->id;
 
         $path = 'Provider/' .$userId. '/products/';
-        $product_images = $product->images;
+        $product_images = $product->images ?? [];
 
         foreach ($images as $image) {
             $imageName = $image->hashName();
