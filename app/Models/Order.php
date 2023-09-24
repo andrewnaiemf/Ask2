@@ -17,6 +17,7 @@ class Order extends Model
         'sub_total_price',
         'coupon_amount',
         'total_amount',
+        'type',
         'status',
         'payment_status',
         'shipping_status',

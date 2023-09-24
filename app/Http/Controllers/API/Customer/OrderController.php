@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Provider;
+use App\Models\ProviderOffering;
+use App\Models\User;
 use App\Rules\ValidateStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,9 +20,22 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $perPage = $request->header('per_page', 10);
+
+        $orders = User::find(auth()->user()->id)->orders()->where(['type' => 'Order'])
+        ->when($request->status == 'New', function ($query) {
+            return $query->whereIn('status', ['Accepted','Pending']);
+        })
+        ->unless($request->status == 'New', function ($query) {
+            return $query->whereNotIn('status', ['Accepted','Pending']);
+        })
+        ->with(['orderItems','provider','address'])
+        ->orderBy('updated_at', 'desc')
+        ->simplePaginate($perPage);
+
+        return $this->returnData($orders);
     }
 
     /**
@@ -55,7 +71,7 @@ class OrderController extends Controller
         $order = Order::create([
             'user_id' => auth()->user()->id,
             'provider_id' => $request->provider_id,
-            'status' => "Cart",
+            'type' => "Cart",
             'address_id' => Null,
             'sub_total_price' => Null,
             'coupon_amount' => Null,
@@ -114,23 +130,99 @@ class OrderController extends Controller
 
         $order = Order::findOrFail($id);
 
-        if ($order->status !== 'Cart') {
+        if ($order->type !== 'Cart') {
             return $this->returnError('api.Cannot_update-order.');
         }
 
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'nullable|exists:products,id',
             'qty' => [
-                'required',
+                'nullable',
                 'integer',
                 new ValidateStock(),
             ],
+            'shipping_method' => 'nullable|In:Pickup,OurDelivery',
+            'address_id' => 'nullable|exists:addresses,id',
+            'type' => 'nullable|In:Order',
+
         ]);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError($validator->errors()->all());
         }
 
+        if ($request->qty) {
+            $this->updateQty($request, $order);
+        }
+
+        if ($request->coupon) {
+            $validCoupon = $this->applyCoupon($request->coupon, $order);
+            if (!$validCoupon) {
+                return $this->returnError('api.InvalidCoupon');
+            }
+        }
+
+        if ($request->shipping_method) {
+            $this->updateShipping($request, $order);
+        }
+
+        if ($request->address_id) {
+            $order->address_id = $request->address_id;
+        }
+
+
+
+        // Recalculate the sub_total_price for the order based on updated order items
+        $order->sub_total_price = $order->orderItems->sum(function ($item) {
+            return $item->qty * $item->unit_price;
+        });
+
+        // Recalculate the total_amount
+        $order->total_amount = $order->sub_total_price - $order->coupon_amount;
+
+        $order->save();
+
+        if ($request->type) {
+            $order->update(['type' => $request->type, 'status' => 'Accepted']);
+            return $this->returnSuccessMessage('api.orderCreatedSuccessfully');
+        }
+
+        return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
+    }
+
+    public function updateShipping($request, $order){
+
+        // if ($request->shipping_method == 'OurDelivery') {
+        //     $offer = ProviderOffering::where('provider_id', $order->provider_id)->first();
+
+        //     $delivey_fees = $offer->delivey_fees;
+        // }
+        $order->update([
+            'shipping_method' => $request->shipping_method,
+            'shipping_status' => 'Pending'
+        ]);
+    }
+
+    public function applyCoupon($coupon, $order){
+        $offer = ProviderOffering::where('provider_id', $order->provider_id)->first();
+
+        if ( $offer && $offer->coupon_name == $coupon) {
+            $total_amount = $order->total_amount - $offer->coupon_value;
+            if (!$order->coupon_amount) {
+                $order->update([
+                    'coupon_amount' => $offer->coupon_value,
+                ]);
+                return true;
+            }
+
+        }else{
+            return false;
+        }
+
+    }
+
+
+    public function updateQty($request, $order){
         $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
 
         if ($request->qty !== 0) {
@@ -153,25 +245,13 @@ class OrderController extends Controller
         }else{
             $orderItem->delete();
         }
-
-        // Recalculate the sub_total_price for the order based on updated order items
-        $order->sub_total_price = $order->orderItems->sum(function ($item) {
-            return $item->qty * $item->unit_price;
-        });
-
-        // Recalculate the total_amount
-        $order->total_amount = $order->sub_total_price;
-
-        $order->save();
-
-        return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
     }
 
     public function showCart($id){
 
         $order = Order::with('orderItems')->findOrFail($id);
 
-        if ($order->status !== 'Cart') {
+        if ($order->type !== 'Cart') {
             return $this->returnError('api.Cannot_update-order.');
         }
 
@@ -186,7 +266,10 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::where(['id' => $id,'type' => 'Order'])
+        ->with(['orderItems','user','provider','address'])->first();
+
+        return $this->returnData($order);
     }
 
     /**

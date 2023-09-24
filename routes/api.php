@@ -19,6 +19,7 @@ use App\Http\Controllers\API\Provider\ClinicSceduleController;
 use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
 use App\Http\Controllers\API\Provider\ProductController;
+use App\Http\Controllers\API\Customer\ProductController as CustomerProductController;
 use App\Http\Controllers\API\Provider\RoomController;
 use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
@@ -162,6 +163,7 @@ Route::group([
         Route::post('cart', [OrderController::class, 'cart']);
         Route::post('edit/cart/{id}', [OrderController::class, 'updateCart']);
         Route::get('cart/{id}', [OrderController::class, 'showCart']);
+        Route::get('product/{id}', [CustomerProductController::class , 'show']);
 
     });
 
