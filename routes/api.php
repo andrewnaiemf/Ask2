@@ -60,19 +60,19 @@ Route::group([
 
     Route::post('reset_password', [AuthController::class, 'reset']);
 
-    Route::get('cities',[CityController::class, 'index' ]);
+    Route::get('cities', [CityController::class, 'index' ]);
 
-    Route::get('departments',[DepartmentController::class, 'index' ]);
+    Route::get('departments', [DepartmentController::class, 'index' ]);
 
-    Route::get('hotel_services',[HotelServiceController::class, 'hotel_services' ]);
-    Route::get('room_type',[HotelServiceController::class, 'hotel_room_type' ]);
-    Route::get('bed_type',[HotelServiceController::class, 'hotel_bed_type' ]);
+    Route::get('hotel_services', [HotelServiceController::class, 'hotel_services' ]);
+    Route::get('room_type', [HotelServiceController::class, 'hotel_room_type' ]);
+    Route::get('bed_type', [HotelServiceController::class, 'hotel_bed_type' ]);
 
-    Route::get('/verify/{id}', function ($id){
+    Route::get('/verify/{id}', function ($id) {
 
-       $provider =  Provider::where('user_id', $id)->first();
+        $provider =  Provider::where('user_id', $id)->first();
 
-       $provider->update(['status' => 'Accepted']);
+        $provider->update(['status' => 'Accepted']);
     });
 
 
@@ -87,27 +87,27 @@ Route::group([
 
 ], function () {
 
-    Route::get('logout',  [AuthController::class, 'logout']);
-    Route::post('refresh',  [AuthController::class, 'refresh']);
+    Route::get('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
 
-    Route::get('me' ,  [UserController::class, 'me']);
-    Route::post('user' ,  [UserController::class, 'update']);
+    Route::get('me', [UserController::class, 'me']);
+    Route::post('user', [UserController::class, 'update']);
 
-    Route::get('document/destroy/{id}' ,  [DocumentController::class, 'destroy']);
+    Route::get('document/destroy/{id}', [DocumentController::class, 'destroy']);
 
     Route::resource('booking', BookingController::class);
 
-    Route::post('clinic/schedule',[ClinicSceduleController::class, 'store' ]);
-    Route::get('clinic/schedule/{id}',[ClinicSceduleController::class, 'show' ]);
+    Route::post('clinic/schedule', [ClinicSceduleController::class, 'store' ]);
+    Route::get('clinic/schedule/{id}', [ClinicSceduleController::class, 'show' ]);
 
-    Route::get('notifications',[NotificationController::class, 'index' ]);
-    Route::get('notification/{id}',[NotificationController::class, 'show' ]);
+    Route::get('notifications', [NotificationController::class, 'index' ]);
+    Route::get('notification/{id}', [NotificationController::class, 'show' ]);
 
-    Route::get('questions',[QuestionController::class, 'index' ]);
+    Route::get('questions', [QuestionController::class, 'index' ]);
 
-    Route::post('suggestion',[SuggestionController::class, 'store' ]);
+    Route::post('suggestion', [SuggestionController::class, 'store' ]);
 
-    Route::post('rate',[RatingController::class, 'store' ]);
+    Route::post('rate', [RatingController::class, 'store' ]);
 
     Route::resource('room', RoomController::class);
     Route::post('room/update/{id}', [RoomController::class , 'update_room']);
@@ -162,7 +162,7 @@ Route::group([
         Route::resource('order', OrderController::class);
         Route::post('cart', [OrderController::class, 'cart']);
         Route::post('edit/cart/{id}', [OrderController::class, 'updateCart']);
-        Route::get('cart/{id}', [OrderController::class, 'showCart']);
+        Route::get('cart', [OrderController::class, 'showCart']);
         Route::get('product/{id}', [CustomerProductController::class , 'show']);
 
     });
