@@ -64,7 +64,7 @@ class OrderController extends Controller
 
         $validation = $this->validateCartData($request);
 
-        if ( $validation) {
+        if ($validation) {
             return $validation;
         }
 
@@ -72,13 +72,13 @@ class OrderController extends Controller
             'user_id' => auth()->user()->id,
             'provider_id' => $request->provider_id,
             'type' => "Cart",
-            'address_id' => Null,
-            'sub_total_price' => Null,
-            'coupon_amount' => Null,
-            'total_amount' => Null,
+            'address_id' => null,
+            'sub_total_price' => null,
+            'coupon_amount' => null,
+            'total_amount' => null,
             'payment_status' => 'Pending',
-            'shipping_status' => Null,
-            'shipping_method' =>Null,
+            'shipping_status' => null,
+            'shipping_method' =>null,
         ]);
 
 
@@ -102,7 +102,8 @@ class OrderController extends Controller
 
     }
 
-    public function validateCartData($request){
+    public function validateCartData($request)
+    {
 
         $validator = Validator::make($request->all(), [
             'provider_id' => 'required|exists:providers,id',
@@ -122,11 +123,12 @@ class OrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError(401, $validator->errors()->all());
         }
     }
 
-    public function updateCart(Request $request, $id){
+    public function updateCart(Request $request, $id)
+    {
 
         $order = Order::findOrFail($id);
 
@@ -190,7 +192,8 @@ class OrderController extends Controller
         return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
     }
 
-    public function updateShipping($request, $order){
+    public function updateShipping($request, $order)
+    {
 
         // if ($request->shipping_method == 'OurDelivery') {
         //     $offer = ProviderOffering::where('provider_id', $order->provider_id)->first();
@@ -203,10 +206,11 @@ class OrderController extends Controller
         ]);
     }
 
-    public function applyCoupon($coupon, $order){
+    public function applyCoupon($coupon, $order)
+    {
         $offer = ProviderOffering::where('provider_id', $order->provider_id)->first();
 
-        if ( $offer && $offer->coupon_name == $coupon) {
+        if ($offer && $offer->coupon_name == $coupon) {
             $total_amount = $order->total_amount - $offer->coupon_value;
             if (!$order->coupon_amount) {
                 $order->update([
@@ -215,14 +219,15 @@ class OrderController extends Controller
                 return true;
             }
 
-        }else{
+        } else {
             return false;
         }
 
     }
 
 
-    public function updateQty($request, $order){
+    public function updateQty($request, $order)
+    {
         $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
 
         if ($request->qty !== 0) {
@@ -231,7 +236,7 @@ class OrderController extends Controller
                 $orderItem->qty = $request->input('qty');
                 $orderItem->save();
 
-            }else{
+            } else {
 
                 $product = Product::find($request->product_id);
                 $newOrderItem = new OrderItem([
@@ -242,19 +247,15 @@ class OrderController extends Controller
 
                 $order->orderItems()->save($newOrderItem);
             }
-        }else{
+        } else {
             $orderItem->delete();
         }
     }
 
-    public function showCart($id){
+    public function showCart($id)
+    {
 
-        $order = Order::with('orderItems')->findOrFail($id);
-
-        if ($order->type !== 'Cart') {
-            return $this->returnError('api.Cannot_update-order.');
-        }
-
+        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems')->first();
         return $this->returnData($order);
     }
 
