@@ -68,6 +68,11 @@ class OrderController extends Controller
             return $validation;
         }
 
+        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->first();
+        if ($order) {
+            return $this->returnError('You already have cart');
+        }
+
         $order = Order::create([
             'user_id' => auth()->user()->id,
             'provider_id' => $request->provider_id,
@@ -252,6 +257,10 @@ class OrderController extends Controller
     {
 
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems.product')->first();
+
+        if(count($order->orderItems) == 0){
+            return $this->returnData(null);
+        }
         return $this->returnData($order);
     }
 
