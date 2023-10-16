@@ -127,14 +127,10 @@ class OrderController extends Controller
         }
     }
 
-    public function updateCart(Request $request, $id)
+    public function updateCart(Request $request)
     {
 
-        $order = Order::findOrFail($id);
-
-        if ($order->type !== 'Cart') {
-            return $this->returnError('api.Cannot_update-order.');
-        }
+        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->first();
 
         $validator = Validator::make($request->all(), [
             'product_id' => 'nullable|exists:products,id',

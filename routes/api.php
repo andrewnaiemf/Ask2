@@ -161,7 +161,7 @@ Route::group([
         Route::post('room/filter', [HotelController::class, 'filter']);
         Route::resource('order', OrderController::class);
         Route::post('cart', [OrderController::class, 'cart']);
-        Route::post('edit/cart/{id}', [OrderController::class, 'updateCart']);
+        Route::post('edit/cart', [OrderController::class, 'updateCart']);
         Route::get('cart', [OrderController::class, 'showCart']);
         Route::get('product/{id}', [CustomerProductController::class , 'show']);
 
