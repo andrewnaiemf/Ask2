@@ -255,7 +255,7 @@ class OrderController extends Controller
     public function showCart()
     {
 
-        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems')->first();
+        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems.product')->first();
         return $this->returnData($order);
     }
 
