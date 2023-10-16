@@ -149,7 +149,7 @@ class OrderController extends Controller
             return $this->returnValidationError($validator->errors()->all());
         }
 
-        if ($request->qty) {
+        if (isset($request->qty)) {
             $this->updateQty($request, $order);
         }
 
