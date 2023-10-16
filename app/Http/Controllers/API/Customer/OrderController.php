@@ -249,7 +249,13 @@ class OrderController extends Controller
                 $order->orderItems()->save($newOrderItem);
             }
         } else {
-            $orderItem->delete();
+            if (isset( $orderItem)) {
+                $orderItem->delete();
+            }
+        }
+
+        if (count($order->orderItems) == 0) {
+            $order->delete();
         }
     }
 
@@ -258,7 +264,7 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems.product')->first();
 
-        if(count($order->orderItems) == 0){
+        if(isset($order->orderItems) && count($order->orderItems) == 0){
             return $this->returnData(null);
         }
         return $this->returnData($order);
