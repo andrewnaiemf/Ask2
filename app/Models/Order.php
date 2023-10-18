@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -29,6 +30,19 @@ class Order extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $appends = ['delivery_fees'];
+
+    public function getDeliveryFeesAttribute()
+    {
+        if($this->shipping_method == 'OurDelivery') {
+            $provider = $this->provider;
+            $delivery_fees = $provider ? $provider->offering->delivery_fees : null;
+
+            return $delivery_fees ?? 0;
+        }
+        return 0;
+    }
 
     public function orderItems()
     {
