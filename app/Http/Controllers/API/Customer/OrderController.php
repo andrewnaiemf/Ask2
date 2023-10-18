@@ -182,6 +182,9 @@ class OrderController extends Controller
 
         // Recalculate the total_amount
         $order->total_amount = $order->sub_total_price - $order->coupon_amount;
+        if (isset($request->shipping_method) && $request->shipping_method == 'OurDelivery') {
+            $order->total_amount += $order->delivery_fees;
+        }
 
         $order->save();
 
@@ -249,7 +252,7 @@ class OrderController extends Controller
                 $order->orderItems()->save($newOrderItem);
             }
         } else {
-            if (isset( $orderItem)) {
+            if (isset($orderItem)) {
                 $orderItem->delete();
             }
         }
@@ -264,7 +267,7 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with('orderItems.product')->first();
 
-        if(isset($order->orderItems) && count($order->orderItems) == 0){
+        if(isset($order->orderItems) && count($order->orderItems) == 0) {
             return $this->returnData(null);
         }
         return $this->returnData($order);

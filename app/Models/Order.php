@@ -39,9 +39,9 @@ class Order extends Model
             $provider = $this->provider;
             $delivery_fees = $provider ? $provider->offering->delivery_fees : null;
 
-            return $delivery_fees ?? 0;
+            return $delivery_fees ?? "0";
         }
-        return 0;
+        return "0";
     }
 
     public function orderItems()
