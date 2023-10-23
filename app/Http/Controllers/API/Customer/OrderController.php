@@ -31,7 +31,7 @@ class OrderController extends Controller
         ->unless($request->status == 'New', function ($query) {
             return $query->whereNotIn('status', ['Accepted','Pending']);
         })
-        ->with(['orderItems','provider','address'])
+        ->with(['orderItems','provider.user','address'])
         ->orderBy('updated_at', 'desc')
         ->simplePaginate($perPage);
 
