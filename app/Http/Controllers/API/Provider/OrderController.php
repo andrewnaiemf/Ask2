@@ -118,7 +118,7 @@ class OrderController extends Controller
 
     private function updateStatus($order, $status){
 
-        $orderStatus = ['Accepted', 'Pending', 'Pending', 'Rejected' ,'Rejected', 'Completed'];
+        $orderStatus = ['Accepted', 'Pending', 'Pending', 'Rejected', 'Completed'];
         $shippingStatus = ['ReadyForShipping', 'Shipped', 'Delivered'];
 
         if (in_array($status ,$orderStatus))
@@ -129,7 +129,6 @@ class OrderController extends Controller
 
         if (in_array($status ,$shippingStatus))
         {
-            $this->updateOrderPaymentStatus($order, $status);
             $this->updateOrderShippingStatus($order, $status);
         }
     }
@@ -164,7 +163,7 @@ class OrderController extends Controller
 
     private function updateOrderPaymentStatus($order, $status)
     {
-        if ($status == 'Completed' || $status == 'Shipped') {
+        if ($status == 'Completed' || ($status == 'Shipped' &&  $order->shipping_method == 'Pickup')) {
             $order->payment_status = 'Paid';
         }
         $order->save();
