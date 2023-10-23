@@ -205,8 +205,7 @@ class OrderController extends Controller
         //     $delivey_fees = $offer->delivey_fees;
         // }
         $order->update([
-            'shipping_method' => $request->shipping_method,
-            'shipping_status' => 'Pending'
+            'shipping_method' => $request->shipping_method
         ]);
     }
 

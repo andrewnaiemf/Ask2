@@ -254,4 +254,9 @@ class Provider extends Model
         return $this->hasMany(Product::class, 'provider_id');
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'provider_id');
+    }
+
 }
