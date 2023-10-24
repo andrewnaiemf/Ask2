@@ -35,6 +35,7 @@ class User extends Authenticatable  implements JWTSubject
 	];
 
 	protected $deleted_at = 'deleted_at';
+    protected $appends = ['rating'];
 
     //to arrange the user aattribute and push the id to the beginning of the array
     public function toArray()
@@ -127,6 +128,13 @@ class User extends Authenticatable  implements JWTSubject
 		return empty($date) ? null : date('Y-m-d', strtotime($date));
 	}
 
+    public function getRatingAttribute()
+    {
+        $average_rating =  $this->ratings()->avg('rate');
+        return number_format($average_rating, 2);
+
+    }
+
 	public function admingroup() {
 		return $this->belongsTo(AdminGroup::class, 'admin_group_id');
 	}
@@ -152,6 +160,10 @@ class User extends Authenticatable  implements JWTSubject
 
     public function orders(){
         return $this->hasMany(Order::class, 'user_id');
+    }
+
+    public function addresses(){
+        return $this->hasMany(Address::class, 'user_id');
     }
 
 }

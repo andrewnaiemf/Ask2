@@ -144,8 +144,10 @@ class OrderController extends Controller
         if ($order->status == 'Pending' && $order->shipping_method == 'CaptainAsk') {
 
             if ($status == 'Pending') {
-                AskOrderTrait::makeOrder($order);
-                //////////////////////////////  captain ask order market
+                $response_status = AskOrderTrait::makeOrder($order);
+                if ($response_status != 200) {
+                    return $this->returnError('There is something wrong');
+                }
             }
 
             if ($status == 'Shipped') {
