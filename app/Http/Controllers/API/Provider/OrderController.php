@@ -36,7 +36,7 @@ class OrderController extends Controller
         ->when($request->status == 'Rejected', function ($query) {
             return $query->where('status', 'Rejected');
         })
-        ->with(['orderItems','user','address'])
+        ->with(['orderItems.product','user','address'])
         ->orderBy('updated_at', 'desc')
         ->simplePaginate($perPage);
 
