@@ -23,7 +23,7 @@ trait AskOrderTrait
             "end_lat" => $customerr_address->lat,
             "end_lng" => $customerr_address->lng,
 
-            "customer_profile" => env('APP_URL') ?? 'http://askshopsa.com/'.'/storage/'.$customer->profile,
+            "customer_profile" => env('APP_URL') ?? 'http://askshopsa.com'.'/storage/'.$customer->profile,
             "name" => $customer->name,
             "rate" => $customer->rating,
 
