@@ -10,11 +10,13 @@ use App\Models\Provider;
 use App\Models\ProviderOffering;
 use App\Models\User;
 use App\Rules\ValidateStock;
+use App\Traits\AskOrderTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+    use AskOrderTrait;
     /**
      * Display a listing of the resource.
      *
@@ -142,6 +144,7 @@ class OrderController extends Controller
         if ($order->status == 'Pending' && $order->shipping_method == 'CaptainAsk') {
 
             if ($status == 'Pending') {
+                AskOrderTrait::makeOrder($order);
                 //////////////////////////////  captain ask order market
             }
 
