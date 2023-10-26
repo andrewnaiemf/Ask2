@@ -43,8 +43,13 @@ class Provider extends Model
     ];
 
 
-    protected $appends = ['communications', 'description', 'rating'];
+    protected $appends = ['communications', 'description', 'rating', 'name'];
 
+    public function getNameAttribute()
+    {
+        return $this->user->name;
+
+    }
 
     public function getRatingAttribute()
     {

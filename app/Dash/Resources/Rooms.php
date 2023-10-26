@@ -2,13 +2,13 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class Beds extends Resource {
+class Rooms extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Bed::class ;
+	public static $model = \App\Models\Room::class ;
 
 
 	/**
@@ -68,7 +68,7 @@ class Beds extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-		return  __('dash.beds.beds');
+		return  __('dash.rooms.rooms');
 	}
 
 	/**
@@ -86,17 +86,14 @@ class Beds extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            text() ->make(__('dash.beds.name'), 'name')->translatable([
-                'ar' => __('dash.ar'),
-                'en' => 'English'
-            ])->showInShow(),
-            image()
-            ->make(__('dash.images'),'icon_url')
-                ->path(('beds'))
-                ->accept('image/*')
-                ->rule('required','image'),
-            number() ->make(__('dash.beds.length'), 'length')->showInShow(),
-            number() ->make(__('dash.beds.width'), 'width')->showInShow(),
+            belongsTo()->make( __('dash.rooms.provider'), 'provider', Users::class)->rule('required'),
+            belongsTo()->make( __('dash.rooms.room_type'), 'room_type', RoomTypes::class)->rule('required'),
+            number()->make(__('dash.rooms.numbers'), 'numbers')->showInShow(),
+            number()->make(__('dash.rooms.busy_numbers'), 'busy_numbers')->showInShow(),
+            number()->make(__('dash.rooms.adults'), 'adults')->showInShow(),
+            number()->make(__('dash.rooms.kids'), 'kids')->showInShow(),
+            text()->make(__('dash.rooms.outdoor'), 'outdoor')->showInShow(),
+            number()->make(__('dash.rooms.cost'), 'cost')->showInShow(),
 		];
 	}
 

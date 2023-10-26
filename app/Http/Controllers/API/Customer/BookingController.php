@@ -29,7 +29,7 @@ class BookingController extends Controller
                 ->unless($request->status == 'New', function ($query) {
                     return $query->whereNotIn('status', ['New']);
                 })
-                ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                ->with(['hotelBookingDetail.roomBookingDetail.room.room_type','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($perPage);
 
@@ -39,7 +39,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['hotelBookingDetail.roomBookingDetail.room.roomType','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic']));
+        $booking->load((['hotelBookingDetail.roomBookingDetail.room.room_type','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic']));
 
         return $this->returnData($booking);
     }

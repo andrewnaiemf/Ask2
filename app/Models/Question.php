@@ -10,7 +10,10 @@ class Question extends Model
 {
     use HasFactory;
 
-
+    protected $fillable = [
+        'question_ar','question_en','question_eu',
+        'answer_ar','answer_en','answer_eu'
+    ];
 
     protected $hidden =[
         'deleted_at',
@@ -22,7 +25,7 @@ class Question extends Model
     {
 
         $lang = app(Locales::class)->current();
-
+        $array['id'] =$this['id'];
         $array['question'] =$this->{'question_'.$lang};
         $array['answer'] =$this->{'answer_'.$lang};
 

@@ -16,7 +16,7 @@ return [
 	 * The key to getting updates
 	 * @param string
 	 */
-	'DASH_ACCESS_KEY' => env('DASH_ACCESS_KEY', ''),
+	'DASH_ACCESS_KEY' => env('DASH_ACCESS_KEY', 'a3NaRUxsTkRYZ3RtTDBjZ1NvRjhhbmRyZXduYWllbWZAZ21haWwuY29t'),
 
 	/**
 	 * DASHBOARD ICON you can put url or leave it empty

@@ -2,13 +2,13 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class Beds extends Resource {
+class HotelServices extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Bed::class ;
+	public static $model = \App\Models\HotelService::class ;
 
 
 	/**
@@ -68,7 +68,7 @@ class Beds extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-		return  __('dash.beds.beds');
+		return __('dash.hotelServices.hotelServices');
 	}
 
 	/**
@@ -86,17 +86,15 @@ class Beds extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            text() ->make(__('dash.beds.name'), 'name')->translatable([
+            text() ->make(__('dash.hotelServices.name'), 'name')->translatable([
                 'ar' => __('dash.ar'),
                 'en' => 'English'
             ])->showInShow(),
             image()
             ->make(__('dash.images'),'icon_url')
-                ->path(('beds'))
+                ->path(('hotel/services'))
                 ->accept('image/*')
                 ->rule('required','image'),
-            number() ->make(__('dash.beds.length'), 'length')->showInShow(),
-            number() ->make(__('dash.beds.width'), 'width')->showInShow(),
 		];
 	}
 

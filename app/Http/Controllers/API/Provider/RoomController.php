@@ -22,7 +22,7 @@ class RoomController extends Controller
         $perPage = $request->header('per_page', 10);
         $provider = Provider::where('user_id',auth()->user()->id)->first();
 
-        $rooms = Room::with(['roomType','beds'])
+        $rooms = Room::with(['room_type','beds'])
                 ->where('provider_id', $provider->id)
                 ->simplePaginate($perPage);
 
@@ -118,7 +118,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        $room = Room::with(['roomType','beds'])->findOrFail($id);
+        $room = Room::with(['room_type','beds'])->findOrFail($id);
 
         return $this->returnData($room);
     }

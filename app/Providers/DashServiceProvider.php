@@ -6,6 +6,11 @@ use App\Dash\Resources\AdminGroupRoles;
 use App\Dash\Resources\AdminGroups;
 use App\Dash\Resources\Admins;
 use App\Dash\Resources\Beds;
+use App\Dash\Resources\Cities;
+use App\Dash\Resources\HotelServices;
+use App\Dash\Resources\Questions;
+use App\Dash\Resources\Rooms;
+use App\Dash\Resources\RoomTypes;
 use App\Dash\Resources\Users;
 use Dash\DashServiceProviderInit;
 
@@ -29,9 +34,14 @@ class DashServiceProvider extends DashServiceProviderInit {
 		return [
 			Users::class,
 			Beds::class,
-			// Admins::class,
-			// AdminGroups::class,
-			// AdminGroupRoles::class,
+			Cities::class,
+            HotelServices::class,
+            Questions::class,
+            Rooms::class,
+            RoomTypes::class,
+			Admins::class,
+			AdminGroups::class,
+			AdminGroupRoles::class,
 		];
 	}
 

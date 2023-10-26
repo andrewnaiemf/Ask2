@@ -7,8 +7,23 @@ return [
     'images' => 'Images',
     'beds' => [
         'beds' => 'Beds',
-        'name' => 'name',
-        'length' => 'length',
-        'width' => 'width',
-    ]
+        'name' => 'Name',
+        'length' => 'Length',
+        'width' => 'Width',
+    ],
+    'cities' => [
+        'cities' => 'Cities',
+        'name' => ' Name  ',
+        'name_ar' => 'Arabic Name',
+        'name_en' => 'English Name',
+        'name_eu' => 'Eurdo Name',
+    ],
+    'hotelServices' => [
+        'hotelServices' => 'Hotel Services',
+        'name' => 'Name',
+    ],
+    'roomTypes' => [
+        'roomTypes' => 'Rooms Type',
+        'name' => 'Name',
+    ],
 ];

@@ -60,7 +60,7 @@ class BookingController extends Controller
                         ->when(!in_array($request->status, ['New', 'Completed', 'Today']), function ($query) use ($request) {
                             return $query->whereNotIn('status', ['New','Completed']);
                         })
-                        ->with(['hotelBookingDetail.roomBookingDetail.room.roomType','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                        ->with(['hotelBookingDetail.roomBookingDetail.room.room_type','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
                         ->orderBy('id', 'desc')
                         ->simplePaginate($perPage);
 

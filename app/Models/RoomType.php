@@ -21,4 +21,5 @@ class RoomType extends Model
 		'created_at',
         'updated_at',
         'deleted_at',
-	];}
+	];
+}
