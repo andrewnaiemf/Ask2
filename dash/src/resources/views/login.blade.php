@@ -72,7 +72,7 @@
                       <a href="{{ url('dashboard') }}/pages/sign-up.html" class="text-primary text-gradient font-weight-bold">Sign up</a>
                     </p>  --}}
                     <p class="mt-4 text-sm text-center">
-                        <a href="{{ route('captainAsk.forgetpassword') }}" class="text-primary text-gradient font-weight-bold">   {{ __('dash::dash.forgetpassword') }}
+                        <a href="{{ route('ask.forgetpassword') }}" class="text-primary text-gradient font-weight-bold">   {{ __('dash::dash.forgetpassword') }}
                         </a>
                     </p>
               {{--  @if(!empty($DASHBOARD_LANGUAGES) && count($DASHBOARD_LANGUAGES) > 1)

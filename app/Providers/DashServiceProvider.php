@@ -5,6 +5,7 @@ use App\Dash\Dashboard\Help;
 use App\Dash\Resources\AdminGroupRoles;
 use App\Dash\Resources\AdminGroups;
 use App\Dash\Resources\Admins;
+use App\Dash\Resources\Beds;
 use App\Dash\Resources\Users;
 use Dash\DashServiceProviderInit;
 
@@ -27,9 +28,10 @@ class DashServiceProvider extends DashServiceProviderInit {
 	public function resources() {
 		return [
 			Users::class,
-			Admins::class,
-			AdminGroups::class,
-			AdminGroupRoles::class,
+			Beds::class,
+			// Admins::class,
+			// AdminGroups::class,
+			// AdminGroupRoles::class,
 		];
 	}
 

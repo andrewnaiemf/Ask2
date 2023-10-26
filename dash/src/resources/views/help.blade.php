@@ -1,4 +1,4 @@
-<div class="container-fluid">
+{{--  <div class="container-fluid">
   <div class="row justify-content-md-center">
     <div class="p-6">
       <div class="row">
@@ -40,4 +40,4 @@
 
   </div>
 </div>
-</div>
+</div>  --}}

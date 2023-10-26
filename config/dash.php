@@ -30,7 +30,7 @@ return [
 	 */
 	'DASHBOARD_LANGUAGES' => [
 		'en'                 => 'English',
-		//'ar'                 => 'العربية',
+		'ar'                 => 'العربية',
 	],
 	/**
 	 * DEFAULT LANGUAGE IN DASHBOARD

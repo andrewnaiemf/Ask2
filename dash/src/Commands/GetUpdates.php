@@ -147,7 +147,7 @@ class GetUpdates extends Command {
 
 	public function extractNow($url) {
 		$savePath = 'dashupdates/dash.zip';
-		if (!\File::exists(storage_path('app/public/dashupdates'))) {
+		if (!\File::exists(_path('app/pstorageublic/dashupdates'))) {
 			\File::makeDirectory(storage_path('app/public/dashupdates'), 0755, true);
 		}
 

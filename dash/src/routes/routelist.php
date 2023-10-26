@@ -26,8 +26,8 @@ Route::group(['middleware' => ['web']],
 
 
         Route::any('forgetpassword', [ResetPassword::class, 'forgetpassword'])->name($DASHBOARD_PATH . '.forgetpassword')->middleware('dash.guest');
-        Route::get('/reset-password/{token}', [ResetPassword::class, 'showResetForm'])->name('captainAsk.resetPassword')->middleware('dash.guest');
-        Route::post('/reset-password',  [ResetPassword::class, 'submitResetPasswordForm'])->name('captainAsk.submitResetPasswordForm')->middleware('dash.guest');
+        Route::get('/reset-password/{token}', [ResetPassword::class, 'showResetForm'])->name($DASHBOARD_PATH .'.resetPassword')->middleware('dash.guest');
+        Route::post('/reset-password',  [ResetPassword::class, 'submitResetPasswordForm'])->name($DASHBOARD_PATH .'.submitResetPasswordForm')->middleware('dash.guest');
 
 
         Route::any('logout', [Authentication::class, 'logout'])->name($DASHBOARD_PATH . '.logout')->middleware('dash.auth');
