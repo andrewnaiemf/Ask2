@@ -69,7 +69,7 @@ class ProductController extends Controller
 
         foreach ($images as $image) {
             $imageName = $image->hashName();
-            $image->storeAs('public/'.$path, $imageName);
+            $image->storeAs($path, $imageName);
             $full_path = $path.$imageName;
             array_push($product_images, $full_path);
         }
@@ -147,7 +147,7 @@ class ProductController extends Controller
         $pathes = array_values(array_diff($product->images, [$request->image_path]));
 
         if (Storage::disk('public')->exists($request->image_path)) {
-            Storage::delete('public/' . $request->image_path);
+            Storage::delete( $request->image_path);
         }
         // Convert the array to JSON and then back to an array
         $product->update(['images' => json_encode($pathes)]);

@@ -98,7 +98,7 @@ class NewsController extends Controller
     public function saveNewsImages($news, $images){
 
         $userId = auth()->user()->id;
-        $imagePath = 'public/news/' . $userId;
+        $imagePath = 'news/' . $userId;
 
         // Create the directory if it doesn't exist
         if (!Storage::exists($imagePath)) {

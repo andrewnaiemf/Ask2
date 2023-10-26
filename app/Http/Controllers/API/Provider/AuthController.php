@@ -253,7 +253,7 @@ class AuthController extends Controller
         $path = 'Provider/' .$user->id. '/';
 
         $imageName = $profile->hashName();
-        $profile->storeAs('public/'.$path,$imageName);
+        $profile->storeAs($path,$imageName);
         $full_path = $path.$imageName;
         $user->update(['profile'=> $full_path]);
     }
@@ -264,7 +264,7 @@ class AuthController extends Controller
         $path = 'Provider/' .$user->id. '/';
 
         $imageName = $commercial_register_iamge->hashName();
-        $commercial_register_iamge->storeAs('public/'.$path,$imageName);
+        $commercial_register_iamge->storeAs($path,$imageName);
         $full_path = $path.$imageName;
 
         $providerData = [

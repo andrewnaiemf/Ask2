@@ -116,7 +116,7 @@ class UserController extends Controller
             if ($profile) {
                 // Update the profile picture
                 $imageName = $profile->hashName();
-                $profile->storeAs('public/'.$path, $imageName);
+                $profile->storeAs($path, $imageName);
                 $fullPath = $path.$imageName;
 
                 $user->update([
@@ -134,7 +134,7 @@ class UserController extends Controller
 
         if ($userProfile) {
             // Remove the picture from storage
-            Storage::delete('public/'.$userProfile);
+            Storage::delete($userProfile);
 
             // Delete the picture from the database
             $user->update([

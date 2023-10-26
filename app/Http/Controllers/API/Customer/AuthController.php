@@ -167,7 +167,7 @@ class AuthController extends Controller
         $path = 'Customer/' .$user->id. '/';
 
         $imageName = $profile->hashName();
-        $profile->storeAs('public/'.$path,$imageName);
+        $profile->storeAs($path,$imageName);
         $full_path = $path.$imageName;
         $user->update(['profile'=> $full_path]);
     }

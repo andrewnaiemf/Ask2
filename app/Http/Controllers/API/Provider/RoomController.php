@@ -81,7 +81,7 @@ class RoomController extends Controller
        foreach ($images as $image) {
 
             $imageName = $image->hashName();
-            $image->storeAs('public/'.$path,$imageName);
+            $image->storeAs($path,$imageName);
             $full_path = $path.$imageName;
             array_push($pathes , $full_path);
         }
@@ -187,7 +187,7 @@ class RoomController extends Controller
         $pathes = array_values(array_diff($room->images, [$request->image_path]));
 
         // Delete the image from storage
-        Storage::delete('public/' . $request->image_path);
+        Storage::delete($request->image_path);
 
         // Convert the array to JSON and then back to an array
         $room->update(['images' => json_encode($pathes)]);
