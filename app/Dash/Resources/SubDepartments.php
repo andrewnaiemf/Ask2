@@ -2,14 +2,18 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class Rooms extends Resource {
+class SubDepartments extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Room::class ;
+	public static $model = \App\Models\Department::class ;
 
+    public function query($model)
+    {
+        return $model->whereNotNull('parent_id');
+    }
 
 	/**
 	 * Policy Permission can handel
@@ -25,7 +29,7 @@ class Rooms extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Hotel';
+	public static $group = 'Categories';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
@@ -68,7 +72,7 @@ class Rooms extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-		return  __('dash.rooms.rooms');
+        return __('dash.sub_departments.sub_departments');
 	}
 
 	/**
@@ -86,14 +90,19 @@ class Rooms extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            belongsTo()->make( __('dash.rooms.provider'), 'provider', Providers::class)->rule('required'),
-            belongsTo()->make( __('dash.rooms.room_type'), 'room_type', RoomTypes::class)->rule('required'),
-            number()->make(__('dash.rooms.numbers'), 'numbers')->showInShow(),
-            number()->make(__('dash.rooms.busy_numbers'), 'busy_numbers')->showInShow(),
-            number()->make(__('dash.rooms.adults'), 'adults')->showInShow(),
-            number()->make(__('dash.rooms.kids'), 'kids')->showInShow(),
-            text()->make(__('dash.rooms.outdoor'), 'outdoor')->showInShow(),
-            number()->make(__('dash.rooms.cost'), 'cost')->showInShow(),
+            belongsTo()->make( __('dash.sub_departments.main_department'), 'parent', MainDepartments::class)
+            ->query(function ($model){
+                return $model::whereNull('parent_id');
+            }),
+
+            text()->make(__('dash.sub_departments.name_ar'), 'name_ar')->hideInIndex(),
+            text()->make(__('dash.sub_departments.name_en'), 'name_en')->hideInIndex(),
+            text()->make(__('dash.sub_departments.name_eu'), 'name_eu')->hideInIndex(),
+            text()->make(__('dash.sub_departments.name'), 'name')->onlyIndex(),
+            image()->make(__('dash.images'), 'icon')
+                ->path(('Frontend/img/departments'))
+                ->accept('image/*')
+                ->rule('required', 'image'),
 		];
 	}
 

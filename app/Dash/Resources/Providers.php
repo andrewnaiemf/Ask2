@@ -2,13 +2,13 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class Rooms extends Resource {
-
+class Providers extends Resource {
+	
 	/**
 	 * define Model of resource
 	 * @param Model Class
-	 */
-	public static $model = \App\Models\Room::class ;
+	 */ 
+	public static $model = \App\Models\Provider::class ;
 
 
 	/**
@@ -25,7 +25,7 @@ class Rooms extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Hotel';
+	public static $group = 'Providers'; 
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
@@ -68,7 +68,7 @@ class Rooms extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-		return  __('dash.rooms.rooms');
+		return 'Providers';
 	}
 
 	/**
@@ -86,14 +86,6 @@ class Rooms extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            belongsTo()->make( __('dash.rooms.provider'), 'provider', Providers::class)->rule('required'),
-            belongsTo()->make( __('dash.rooms.room_type'), 'room_type', RoomTypes::class)->rule('required'),
-            number()->make(__('dash.rooms.numbers'), 'numbers')->showInShow(),
-            number()->make(__('dash.rooms.busy_numbers'), 'busy_numbers')->showInShow(),
-            number()->make(__('dash.rooms.adults'), 'adults')->showInShow(),
-            number()->make(__('dash.rooms.kids'), 'kids')->showInShow(),
-            text()->make(__('dash.rooms.outdoor'), 'outdoor')->showInShow(),
-            number()->make(__('dash.rooms.cost'), 'cost')->showInShow(),
 		];
 	}
 

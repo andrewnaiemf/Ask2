@@ -3,13 +3,16 @@
 
 return [
     'ar' => 'العربية',
-	'users' => 'المستخدمين',
-	'admin_groups' => 'مجموعات المشرفين',
-	'admin_group_roles' => 'صلاحيات المجموعات',
+    'users' => 'المستخدمين',
+    'admin_groups' => 'مجموعات المشرفين',
+    'admin_group_roles' => 'صلاحيات المجموعات',
     'images' => 'الصور',
     'Hotel' => 'الفنادق',
     'Cities' =>  'المدن',
     'Questions' =>  'الاسئلة و الاجابات',
+    'Categories' => ' الاقسام',
+    'PharmacyCategories' => ' فئات الصيدلية',
+    'Health' => 'الصحة',
     'beds' => [
         'beds' => 'الاسرة',
         'name' =>  'الاسم' ,
@@ -55,4 +58,33 @@ return [
         'provider' => 'اسم الفندق',
     ],
 
+    'departments' => [
+        'pharmacy_departments' => 'افسام الصيدلية ',
+        'providers' => 'الصيدلية',
+        'department' =>  'اسم القسم' ,
+        'name' => 'الاسم',
+        'pharmacies' => 'الصيدليات'
+    ],
+    'main_departments' => [
+        'main_departments' => 'الاقسام الرئيسية  ',
+        'name' =>  'الاسم' ,
+        'name_ar' => ' الاسم باللغة العربية',
+        'name_en' =>  ' الاسم باللغة الانجليزية',
+        'name_eu' =>  ' الاسم باللغة الاوردية',
+    ],
+    'sub_departments' => [
+        'sub_departments' => 'الاقسام الفرعية  ',
+        'main_department' => 'القسم الرئيسي  ',
+        'name' =>  'الاسم' ,
+        'name_ar' => ' الاسم باللغة العربية',
+        'name_en' =>  ' الاسم باللغة الانجليزية',
+        'name_eu' =>  ' الاسم باللغة الاوردية',
+    ],
+    'clinics' => [
+        'clinics' => ' اقسام العيادات  ',
+        'name' =>  'الاسم' ,
+        'name_ar' => ' الاسم باللغة العربية',
+        'name_en' =>  ' الاسم باللغة الانجليزية',
+        'name_eu' =>  ' الاسم باللغة الاوردية',
+    ],
 ];

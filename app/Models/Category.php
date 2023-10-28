@@ -21,6 +21,11 @@ class Category extends Model implements TranslatableContract
         'deleted_at',
 	];
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     public function providers()
     {
         return $this->belongsToMany(Provider::class);

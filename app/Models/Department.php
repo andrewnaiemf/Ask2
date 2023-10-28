@@ -12,8 +12,16 @@ class Department extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'name', 'parent_id','icon'
+        'name_ar', 'name_en', 'name_eu', 'parent_id','icon'
     ];
+
+    protected $append = ['name'];
+
+    public function getNameAttribute(){
+
+        $lang = app(Locales::class)->current();
+        return  $this->{'name_'.$lang};
+    }
 
     protected $hidden = [
 		'deleted_at',
@@ -40,6 +48,10 @@ class Department extends Model
             return array_merge($subdepartment->toArray(), ['providers' => $subdepartmentProviders]);
         })->toArray();
     }
+    if ($this->relationLoaded('parent')) {
+        $array['parent'] = $this->parent;
+    }
+
 
 
 

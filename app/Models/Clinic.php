@@ -18,6 +18,14 @@ class Clinic extends Model
         'updated_at',
     ];
 
+    protected $append = ['name'];
+
+    public function getNameAttribute(){
+
+        $lang = app(Locales::class)->current();
+        return  $this->{'name_'.$lang};
+    }
+
     public function toArray()
     {
 
@@ -25,7 +33,7 @@ class Clinic extends Model
 
         $array['id'] = $this['id'];
         $array['name'] = $this->{'name_'.$lang};
-        $array['icon'] = $this['icon'];
+        $array['icon'] = $this['icon'] ?? '';
         // $array['providers'] = $this['providers'];
         // $array['schedules'] = $this->schedules;
 
