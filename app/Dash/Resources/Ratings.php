@@ -25,7 +25,7 @@ class Ratings extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	// public static $group = 'Ratings';
+	public static $group = 'users';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
