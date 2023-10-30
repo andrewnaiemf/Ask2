@@ -5,11 +5,11 @@
     </a>
     <a class="navbar-brand m-0" href="{{ url($DASHBOARD_PATH) }}" >
       @if(!empty($DASHBOARD_ICON))
-      <img src="{{asset('dashboard//assets/img/captainAsk.png')}}" class="navbar-brand-img h-100" alt="main_logo">
+      {{--  <img src="{{asset('dashboard//assets/img/captainAsk.png')}}" class="navbar-brand-img h-100" alt="main_logo">  --}}
       @else
       <i class="fa fa-dashboard text-white {{ request()->segment(2) == 'dashboard'?'opacity-10':'opacity-5' }}"></i>
       @endif
-      <span class="me-1 font-weight-bold text-white">{{ $APP_NAME }}</span>
+      <span class="me-1 font-weight-bold text-white">Ask</span>
     </a>
   </div>
   <hr class="horizontal light mt-0 mb-2">

@@ -1,4 +1,4 @@
 @extends('dash::app')
 @section('content')
-{!! $content !!}
+{{--  {!! $content !!}  --}}
 @endsection

@@ -27608,6 +27608,7 @@ pre[class*="language-"] {
   transition: background-color .2s linear, width .2s ease-in-out;
   -webkit-transition: background-color .2s linear, width .2s ease-in-out;
   width: 6px;
+  display: none;
   /* there must be 'right' for ps__thumb-y */
   right: 2px;
   /* please don't change 'position' */
@@ -27645,7 +27646,7 @@ pre[class*="language-"] {
  table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td{
       text-align: right;
     }
- 
+
     .dt-buttons{
       display: none;
     }

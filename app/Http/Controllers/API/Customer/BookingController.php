@@ -49,7 +49,7 @@ class BookingController extends Controller
         $validation =  $this->validateBookingData( $request );
 
         if ( $validation) {
-            return $validation;
+            return $this->returnError($validation);
         }
 
         $provider = Provider::find($request->provider_id);
@@ -275,7 +275,7 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $validator->errors()->all();
         }
     }
 

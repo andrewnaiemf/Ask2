@@ -94,11 +94,12 @@ class Categories extends Resource
             belongsToMany()->make(__('dash.departments.providers'), 'providers', Providers::class)
             ->query(function ($model) {
                 return $model::where('subdepartment_id', 40);
-            }),
+            })
+            ,
             select()->make(__('dash.departments.department'), 'department_id')->options([
             '40' => __('dash.departments.pharmacies')
             ])->selected(40),
-            text() ->make(__('dash.departments.name'), 'name')->translatable([
+            text()->make(__('dash.departments.name'), 'name')->translatable([
             'ar' => __('dash.ar'),
             'en' => 'English'
             ])->showInShow(),

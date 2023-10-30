@@ -3,20 +3,34 @@
 namespace App\Providers;
 
 use App\Dash\Dashboard\Help;
+use App\Dash\Resources\Addresses;
 use App\Dash\Resources\AdminGroupRoles;
 use App\Dash\Resources\AdminGroups;
 use App\Dash\Resources\Admins;
 use App\Dash\Resources\Beds;
+use App\Dash\Resources\BookingDetails;
 use App\Dash\Resources\Categories;
 use App\Dash\Resources\Cities;
+use App\Dash\Resources\ClinicBookings;
+use App\Dash\Resources\ClinicBookingsDetails;
 use App\Dash\Resources\Clinics;
 use App\Dash\Resources\Departments;
+use App\Dash\Resources\Documents;
+use App\Dash\Resources\HotelBookings;
+use App\Dash\Resources\HotelBookingsDetails;
 use App\Dash\Resources\HotelServices;
 use App\Dash\Resources\MainDepartments;
+use App\Dash\Resources\OrderItems;
+use App\Dash\Resources\Orders;
+use App\Dash\Resources\OtherServiceBookings;
+use App\Dash\Resources\PharmacyProducts;
+use App\Dash\Resources\Providers;
 use App\Dash\Resources\Questions;
+use App\Dash\Resources\Ratings;
 use App\Dash\Resources\Rooms;
 use App\Dash\Resources\RoomTypes;
 use App\Dash\Resources\SubDepartments;
+use App\Dash\Resources\Suggestions;
 use App\Dash\Resources\Users;
 use Dash\DashServiceProviderInit;
 
@@ -41,16 +55,30 @@ class DashServiceProvider extends DashServiceProviderInit
     {
         return [
             Users::class,
+            Providers::class,
+            Documents::class,
+            Addresses::class,
+            Ratings::class,
+            HotelBookingsDetails::class,
+            HotelBookings::class,
             Beds::class,
-            Cities::class,
             HotelServices::class,
-            Questions::class,
             Rooms::class,
             RoomTypes::class,
+            OtherServiceBookings::class,
+            BookingDetails::class,
             Categories::class,
+            PharmacyProducts::class,
+            ClinicBookings::class,
+            ClinicBookingsDetails::class,
+            OrderItems::class,
+            Orders::class,
             MainDepartments::class,
             SubDepartments::class,
             Clinics::class,
+            Suggestions::class,
+            Questions::class,
+            Cities::class,
             // Admins::class,
             // AdminGroups::class,
             // AdminGroupRoles::class,
