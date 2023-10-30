@@ -26,7 +26,7 @@ class AuthController extends Controller
         $validator = $this->validateRegistrationRequest($request);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $this->returnError($validator->errors()->all());
         }
 
         $user = $this->createUser($request);
