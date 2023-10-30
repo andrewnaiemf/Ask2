@@ -51,7 +51,7 @@ class RoomController extends Controller
         $validation =  $this->validateRoomData( $request );
 
         if ( $validation) {
-            return $validation;
+            return $this->returnValidationError(401,$validation);
         }
 
         $request['provider_id'] = auth()->user()->provider->id;
@@ -95,7 +95,6 @@ class RoomController extends Controller
 
             'room_type_id' => 'required|exists:room_types,id',
             'beds' => 'array|required',
-            'beds' => 'array|required|exists_with_keys:beds',
             'beds.*.numbers' => 'required|integer',
             'numbers' => 'integer|required',
             'adults' => 'integer|required',
@@ -104,9 +103,8 @@ class RoomController extends Controller
             'cost' => 'string|required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $validator->errors()->all();
         }
     }
 
