@@ -46,9 +46,9 @@ class Users extends Resource
                    ->columnWhenCreate(6)
                    ->showInShow(),
             text()->make(__('dash.user.phone'), 'phone') ,
-            text()->make(__('dash.user.rating'), 'rating'),
+            text()->make(__('dash.user.rating'), 'rating')->hideInUpdate(),
             hasMany()->make(__('dash.user.addresses'),'addresses', Addresses::class),
-
+            checkbox()->make(__('dash.user.can_share_news'), 'can_share_news')->trueVal(1)->falseVal(0)
         ];
     }
 

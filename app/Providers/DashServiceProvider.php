@@ -7,6 +7,7 @@ use App\Dash\Resources\Addresses;
 use App\Dash\Resources\AdminGroupRoles;
 use App\Dash\Resources\AdminGroups;
 use App\Dash\Resources\Admins;
+use App\Dash\Resources\AskForNews;
 use App\Dash\Resources\Beds;
 use App\Dash\Resources\BookingDetails;
 use App\Dash\Resources\Categories;
@@ -20,6 +21,7 @@ use App\Dash\Resources\HotelBookings;
 use App\Dash\Resources\HotelBookingsDetails;
 use App\Dash\Resources\HotelServices;
 use App\Dash\Resources\MainDepartments;
+use App\Dash\Resources\News;
 use App\Dash\Resources\OrderItems;
 use App\Dash\Resources\Orders;
 use App\Dash\Resources\OtherServiceBookings;
@@ -73,6 +75,8 @@ class DashServiceProvider extends DashServiceProviderInit
             ClinicBookingsDetails::class,
             OrderItems::class,
             Orders::class,
+            AskForNews::class,
+            News::class,
             MainDepartments::class,
             SubDepartments::class,
             Clinics::class,
