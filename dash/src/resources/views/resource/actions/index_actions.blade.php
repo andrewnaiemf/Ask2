@@ -70,14 +70,16 @@ $(document).ready(function(){
       $options = array_values($value)[0];
       $field = searchInFields($column,$fields);
       @endphp
-      {{-- {{ dd($column,$value[$column],$field['options'],$options) }} --}}
+      {{--  {{ dd($column,$value[$column],$options) }}  --}}
       <option value="none" selected disabled>{{ __('dash::dash.action') }}</option>
+      {{--  {{ dump($options) }}  --}}
+
       <optgroup label="{{ $field['name'] }}">
         @foreach($options as $key=>$value)
         <option value="{{ json_encode([
           'column'=>$column,
           'value'=>$key
-        ]) }}">{{ $field['options'][$key] }}</option>
+        ]) }}">{{ $key }}</option>
         @endforeach
       </optgroup>
       @endforeach

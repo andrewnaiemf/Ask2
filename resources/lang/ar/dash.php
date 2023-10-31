@@ -105,6 +105,9 @@ return [
         'subdepartment' =>  'القسم الفرعي  ',
         'rating' => ' التفييم',
         'documents' =>  'المستندات' ,
+        'status' => 'الحالة',
+        'Accepted' => 'قبول',
+        'Rejected' => 'رفض',
     ],
     'documents' => [
         'documents' => 'الممستندات'

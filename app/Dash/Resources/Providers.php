@@ -2,6 +2,7 @@
 
 namespace App\Dash\Resources;
 
+use App\Dash\Actions\ProviderStatu;
 use App\Models\Department;
 use Dash\Resource;
 use Illuminate\Validation\Rule;
@@ -97,7 +98,9 @@ class Providers extends Resource
             belongsTo()->make(__('dash.providers.mainDepartment'), 'department', MainDepartments::class),
             belongsTo()->make(__('dash.providers.subdepartment'), 'subdepartment', SubDepartments::class),
             text()->make(__('dash.providers.rating'), 'rating'),
-            hasMany()->make(__('dash.providers.documents'),'documents', Documents::class),
+            hasMany()->make(__('dash.providers.documents'), 'documents', Documents::class),
+            text()->make(__('dash.providers.status'), 'status'),
+
             // hasMany()->make('Ratings','ratings', Ratings::class)
 
         ];
@@ -110,7 +113,9 @@ class Providers extends Resource
      */
     public function actions()
     {
-        return [];
+        return [
+            ProviderStatu::class,
+        ];
     }
 
     /**

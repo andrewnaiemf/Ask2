@@ -66,9 +66,9 @@ $(document).ready(function(){
       <optgroup label="{{ $field['name'] }}">
         @foreach($options as $key=>$value)
         <option value="{{ json_encode([
-          'column'=>$column,
-          'value'=>$key
-        ]) }}">{{ $field['options'][$key] }}</option>
+            'column'=>$column,
+            'value'=>$key
+          ]) }}">{{ $key }}</option>
         @endforeach
       </optgroup>
       @endforeach
