@@ -20,12 +20,15 @@ use App\Http\Controllers\API\Provider\DepartmentController;
 use App\Http\Controllers\API\Provider\DocumentController;
 use App\Http\Controllers\API\Provider\ProductController;
 use App\Http\Controllers\API\Customer\ProductController as CustomerProductController;
+use App\Http\Controllers\API\Provider\AddonController;
+use App\Http\Controllers\API\Provider\CategoryController;
 use App\Http\Controllers\API\Provider\OrderController as ProviderOrderController;
 use App\Http\Controllers\API\Provider\RoomController;
 use App\Http\Controllers\API\Provider\UserController;
 use App\Http\Controllers\API\QuestionController;
 use App\Http\Controllers\API\RatingController;
 use App\Http\Controllers\API\SuggestionController;
+use App\Models\Category;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -118,6 +121,10 @@ Route::group([
     Route::resource('product', ProductController::class);
     Route::post('product/update/{id}', [ProductController::class , 'update_product']);
     Route::delete('product/{id}/image', [ProductController::class , 'deleteImage']);
+
+    Route::resource('category', CategoryController::class);
+
+    Route::resource('addon', AddonController::class);
 
     Route::resource('order', ProviderOrderController::class);
 

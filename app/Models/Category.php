@@ -14,6 +14,7 @@ class Category extends Model implements TranslatableContract
 
     public $translatedAttributes = ['name'];
 
+    protected $fillable = ['department_id'];
 
     protected $hidden = [
 		'created_at',
@@ -24,6 +25,14 @@ class Category extends Model implements TranslatableContract
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
+
+    public function addons(){
+        return $this->hasMany(Addon::class);
     }
 
     public function providers()

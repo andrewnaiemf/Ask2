@@ -103,11 +103,6 @@ class Categories extends Resource
             'ar' => __('dash.ar'),
             'en' => 'English'
             ])->showInShow(),
-            image()
-            ->make(__('dash.images'), 'icon')
-                ->path(('categories'))
-                ->accept('image/*')
-                ->rule('required', 'image'),
         ];
     }
 

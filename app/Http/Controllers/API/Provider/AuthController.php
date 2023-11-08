@@ -32,29 +32,11 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
 
-        // $user['provider']['clinics'] = in_array($user->provider->subdepartment->id, ['22', '23'])
-        // ? Clinic::select('id', 'name_ar', 'name_en', 'name_eu', 'icon')->get()
-        // : null;
-
-        // if ($user['provider']['clinics']) {
-        //         $user['provider']['clinics']->each(function ($clinic) {
-        //         $clinic->includeSchedules = false;
-        //     });
-        // }
-        // $user['provider']['clinics'] =  in_array($user->provider->subdepartment->id, ['22', '23']) ?
-        //                                     Clinic::where('id', '<>', 0)->get() :
-        //                                     ($user->provider->subdepartment->id == 24 ?
-        //                                     Clinic::where('id', 0)->get() : null);
-
-        if( in_array($user->provider->subdepartment->id, ['22', '23','24']) ){
-            $this->clinicSchedule($user);
-        }
-
         if( in_array($user->provider->subdepartment->id, ['40']) ){//e-commerc
             $this->attachCategories($user);
         }
 
-        $user->load(['provider.clinics', 'provider.categories']);
+        $user->load(['provider.categories']);
 
         $credentials = $request->only(['phone','password']);
 
