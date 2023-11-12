@@ -46,7 +46,7 @@ class ProductController extends Controller
         $validator = $this->validateProductRequest($request);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $this->returnError($validator->errors()->all());
         }
         $product_data = $request->except('image');
         $product = Product::create($product_data);
@@ -111,7 +111,7 @@ class ProductController extends Controller
         $validator = $this->validateProductRequest($request);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $this->returnError($validator->errors()->all());
         }
 
         $product_data = $request->except('image');
@@ -159,9 +159,9 @@ class ProductController extends Controller
     protected function validateProductRequest(Request $request)
     {
         return Validator::make($request->all(), [
-            'stock' => 'required|integer|min:0',
+            'stock' => 'optional|integer|min:0',
             'price' => 'required|numeric|min:0',
-            'description' => $this::VALIDATE_REQUIRE_STRING,
+            'description' =>  'optional|string',
             'ar.info' => $this::VALIDATE_REQUIRE_STRING,
             'en.info' => $this::VALIDATE_REQUIRE_STRING,
             'ar.name' => $this::VALIDATE_REQUIRE_STRING,

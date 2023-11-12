@@ -43,12 +43,17 @@ class Provider extends Model
     ];
 
 
-    protected $appends = ['communications', 'description', 'rating', 'name'];
+    protected $appends = ['communications', 'description', 'rating', 'name','profile_cover'];
 
     public function getNameAttribute()
     {
         return $this->user->name;
 
+    }
+
+    public function getProfileCoverAttribute()
+    {
+        return $this->profileCover()->path ?? '';
     }
 
     public function getRatingAttribute()
@@ -193,6 +198,11 @@ class Provider extends Model
     public function images()
     {
         return $this->hasMany(DocumentProvider::class)->where('name','describe_image');
+    }
+
+    public function profileCover()
+    {
+        return $this->hasMany(DocumentProvider::class)->where('name','profile_cover')->first();
     }
 
 

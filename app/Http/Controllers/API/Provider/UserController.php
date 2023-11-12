@@ -185,8 +185,7 @@ class UserController extends Controller
             }
         }
 
-        if( in_array($provider->subdepartment->id, ['40']) ){///e-commerce
-
+        if( in_array($provider->subdepartment->name_en, ['Restaurants']) ){///e-commerce
 
             $offering = ProviderOffering::where('provider_id', $provider->id)->first();
 
@@ -202,10 +201,10 @@ class UserController extends Controller
             }else{
                 $offering_data = [
                     'provider_id' => $provider->id,
-                    'delivery_time' => $request->delivery_time,
-                    'coupon_name' => $request->coupon_name,
-                    'coupon_value' => $request->coupon_value,
-                    'delivery_fees' => $request->delivery_fees
+                    'delivery_time' => $request->delivery_time ?? '',
+                    'coupon_name' => $request->coupon_name ?? '',
+                    'coupon_value' => $request->coupon_value ?? 0,
+                    'delivery_fees' => $request->delivery_fees ?? 0
                 ];
                 ProviderOffering::create($offering_data);
             }
@@ -325,7 +324,7 @@ class UserController extends Controller
 
         $path = 'Provider/' .$user->id. '/placeImages/';
 
-       foreach ($images as $image) {
+       foreach ($images as $type => $image) {
 
             $imageName = $image->hashName();
             $image->storeAs($path,$imageName);
@@ -333,7 +332,7 @@ class UserController extends Controller
 
             DocumentProvider::create([
                 'provider_id' => $user->provider->id,
-                'name' => 'describe_image',
+                'name' => $type ?? 'describe_image',
                 'path' => $full_path,
             ]);
 
