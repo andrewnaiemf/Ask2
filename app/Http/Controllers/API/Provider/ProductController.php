@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -55,8 +56,32 @@ class ProductController extends Controller
             $this->productImage($request->image, $product);
         }
 
+        $this->productAttribute($request, $product);
+
         return $this->returnSuccessMessage(trans("api.product.createdSuccessfully"));
 
+    }
+
+    public function productAttribute($request, $product)
+    {
+        $productAttribute = new ProductAttribute();
+        if ($request->color_id) {
+            $this->productColorAttribute($request, $product, $productAttribute);
+        }
+
+        if ($request->size) {
+            $this->productSizeAttribute($request, $productAttribute);
+        }
+        $productAttribute->save();
+    }
+
+    public function productColorAttribute($request, $product, $productAttribute){
+        $productAttribute['product_id'] = $product->id;
+        $productAttribute['color_id'] = $request->color_id;
+    }
+
+    public function productSizeAttribute($request, $productAttribute){
+        $productAttribute['size'] = $request->size;
     }
 
     public function productImage($images, $product)
@@ -159,13 +184,15 @@ class ProductController extends Controller
     protected function validateProductRequest(Request $request)
     {
         return Validator::make($request->all(), [
-            'stock' => 'optional|integer|min:0',
+            'stock' => 'nullable|integer|min:0',
+            'size' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'description' =>  'optional|string',
+            'description' =>  'nullable|string',
             'ar.info' => $this::VALIDATE_REQUIRE_STRING,
             'en.info' => $this::VALIDATE_REQUIRE_STRING,
             'ar.name' => $this::VALIDATE_REQUIRE_STRING,
             'en.name' => $this::VALIDATE_REQUIRE_STRING,
+            'color_id' => 'nullable|exists:colors,id',
             'category_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',

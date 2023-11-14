@@ -1,15 +1,23 @@
 <?php
 namespace App\Dash\Resources;
+
+use App\Models\ProductAttribute;
 use Dash\Resource;
 
-class Orders extends Resource {
+class Products extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Order::class ;
+	public static $model = \App\Models\Product::class ;
 
+    // public function query($model)
+    // {
+    //     return $model->whereHas('provider', function ($query) {
+    //         $query->where('subdepartment_id', 40);
+    //     });
+    // }
 
 	/**
 	 * Policy Permission can handel
@@ -68,7 +76,7 @@ class Orders extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-        return __('dash.orders.orders');
+		return __('dash.product.Products');
 	}
 
 	/**
@@ -86,15 +94,30 @@ class Orders extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            hasMany()->make(__('dash.orders.orderItems'),'orderItems', OrderItems::class)->hideInIndex(),
-            belongsTo()->make(__('dash.orders.user'), 'user', Users::class),
-            belongsTo()->make(__('dash.orders.provider'), 'provider', Providers::class),
-            belongsTo()->make(__('dash.orders.address'), 'address', Addresses::class)->hideInIndex(),
-            text()->make(__('dash.orders.status'), 'status'),
-            number()->make(__('dash.orders.total_amount'), 'total_amount'),
-            number()->make(__('dash.orders.coupon_amount'), 'coupon_amount'),
-            text()->make(__('dash.orders.shipping_status'), 'shipping_status'),
-            text()->make(__('dash.orders.shipping_method'), 'shipping_method'),
+            belongsTo()->make( __('dash.product.provider'), 'provider', Providers::class)->rule('required'),
+            belongsTo()->make( __('dash.product.category'), 'category', Categories::class)->rule('required'),
+            text() ->make(__('dash.product.name'), 'name')->translatable([
+                'ar' => __('dash.ar'),
+                'en' => 'English'
+                ])->showInShow(),
+            text() ->make(__('dash.product.info'), 'info')->translatable([
+                'ar' => __('dash.ar'),
+                'en' => 'English'
+                ])->showInShow(),
+            // text() ->make(__('dash.product.description'), 'description'),
+            number()->make(__('dash.product.price'), 'price'),
+            // number()->make(__('dash.product.stock'), 'stock'),
+            belongsTo()->make(__('dash.product.attributes'), 'attribute', ProductAttributes::class)->showInShow()->hideInIndex(),
+            // text() ->make(__('dash.product.size'), 'size')->showInShow(),
+
+            // image()
+            // ->make(__('dash.images'), 'path')
+            //     ->path(function($model){
+            //         $providerId = $model->provider->id;
+            //         return ('Provider/'.$providerId.'/productImages/');
+            //     })
+            //     ->accept('image/*')
+
 		];
 	}
 

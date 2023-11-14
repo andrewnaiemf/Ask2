@@ -2,20 +2,14 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class PharmacyProducts extends Resource {
+class ProductAttributes extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Product::class ;
+	public static $model = \App\Models\ProductAttribute::class ;
 
-    public function query($model)
-    {
-        return $model->whereHas('provider', function ($query) {
-            $query->where('subdepartment_id', 40);
-        });
-    }
 
 	/**
 	 * Policy Permission can handel
@@ -31,13 +25,13 @@ class PharmacyProducts extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Health';
+	public static $group = 'order';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
 	 * @param static property string
 	 */
-	public static $displayInMenu = true;
+	public static $displayInMenu = false;
 
 	/**
 	 * change icon in navigation menu
@@ -74,7 +68,7 @@ class PharmacyProducts extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-		return __('dash.product.PharmacyProducts');
+		return __('dash.productattribute.productattribute');
 	}
 
 	/**
@@ -92,27 +86,8 @@ class PharmacyProducts extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            belongsTo()->make( __('dash.product.provider'), 'provider', Providers::class)->rule('required'),
-            belongsTo()->make( __('dash.product.category'), 'category', Categories::class)->rule('required'),
-            text() ->make(__('dash.product.name'), 'name')->translatable([
-                'ar' => __('dash.ar'),
-                'en' => 'English'
-                ])->showInShow(),
-            text() ->make(__('dash.product.info'), 'info')->translatable([
-                'ar' => __('dash.ar'),
-                'en' => 'English'
-                ])->showInShow(),
-            text() ->make(__('dash.product.description'), 'description'),
-            number()->make(__('dash.product.numbers'), 'price'),
-            number()->make(__('dash.product.stock'), 'stock'),
-            // image()
-            // ->make(__('dash.images'), 'path')
-            //     ->path(function($model){
-            //         $providerId = $model->provider->id;
-            //         return ('Provider/'.$providerId.'/productImages/');
-            //     })
-            //     ->accept('image/*')
-
+            text() ->make(__('dash.productattribute.size'), 'size'),
+            belongsTo()->make(__('dash.productattribute.color'), 'color', Colors::class)->showInShow(),
 		];
 	}
 

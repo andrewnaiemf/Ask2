@@ -25,7 +25,7 @@ class BookingDetails extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Hotel';
+	public static $group = 'Booking';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false

@@ -25,7 +25,8 @@ use App\Dash\Resources\News;
 use App\Dash\Resources\OrderItems;
 use App\Dash\Resources\Orders;
 use App\Dash\Resources\OtherServiceBookings;
-use App\Dash\Resources\PharmacyProducts;
+use App\Dash\Resources\ProductAttributes;
+use App\Dash\Resources\Products;
 use App\Dash\Resources\Providers;
 use App\Dash\Resources\Questions;
 use App\Dash\Resources\Ratings;
@@ -61,25 +62,26 @@ class DashServiceProvider extends DashServiceProviderInit
             Documents::class,
             Addresses::class,
             Ratings::class,
-            HotelBookingsDetails::class,
-            HotelBookings::class,
-            Beds::class,
-            HotelServices::class,
-            Rooms::class,
-            RoomTypes::class,
+            // HotelBookingsDetails::class,
+            // HotelBookings::class,
+            // Beds::class,
+            // HotelServices::class,
+            // Rooms::class,
+            // RoomTypes::class,
             OtherServiceBookings::class,
             BookingDetails::class,
             Categories::class,
-            PharmacyProducts::class,
-            ClinicBookings::class,
-            ClinicBookingsDetails::class,
+            Products::class,
+            ProductAttributes::class,
+            // ClinicBookings::class,
+            // ClinicBookingsDetails::class,
             OrderItems::class,
             Orders::class,
             AskForNews::class,
             News::class,
             MainDepartments::class,
             SubDepartments::class,
-            Clinics::class,
+            // Clinics::class,
             Suggestions::class,
             Questions::class,
             Cities::class,

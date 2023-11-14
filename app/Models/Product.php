@@ -36,4 +36,9 @@ class Product extends Model
         return $this->belongsTo(Provider::class);
     }
 
+    public function attribute()
+    {
+        return $this->hasOne(ProductAttribute::class);
+    }
+
 }

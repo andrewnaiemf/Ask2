@@ -8,9 +8,16 @@ $resourceName   = resourceShortName($field['resource']);
 <bdi>{{ $field['name'] }}</bdi> :
 
 @if(!empty($resourceName) && !empty($OneRelationData) && is_object($OneRelationData))
-<a href="{{ url(app('dash')['DASHBOARD_PATH'].'/resource/'. $resourceName.'/'.$OneRelationData->id) }}">
-	# {{ $OneRelationData->{$columnName} }}
-</a>
+    @if ( get_class($OneRelationData) == 'App\Models\Color')
+        <div style="height:20px;border-radius: 50%;display: inline-block;width:20px;background: {{ $OneRelationData->value }}"> </div>
+    @else
+    <a href="{{ url(app('dash')['DASHBOARD_PATH'].'/resource/'. $resourceName.'/'.$OneRelationData->id) }}">
+
+            # {{ $OneRelationData->{$columnName} ??  __('dash.clickhere')  }}
+    </a>
+
+    @endif
+
 
 @elseif(!empty($OneRelationData)  && is_object($OneRelationData))
 {{ $OneRelationData->{$columnName} }}

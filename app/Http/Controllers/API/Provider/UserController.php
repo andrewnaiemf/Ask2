@@ -185,7 +185,9 @@ class UserController extends Controller
             }
         }
 
-        if( in_array($provider->subdepartment->name_en, ['Restaurants']) ){///e-commerce
+        if( in_array($provider->subdepartment->name_en,
+        ['Restaurants', 'Craft works', 'Food and sweets', 'Cafes', 'Furniture and electrical appliances', 'Second hand stores', 'Household supplies', 'Sweets and nuts', 'Food and perfume materials', 'Beauty corner', 'clothes and shoes']
+        ) ){///e-commerce
 
             $offering = ProviderOffering::where('provider_id', $provider->id)->first();
 

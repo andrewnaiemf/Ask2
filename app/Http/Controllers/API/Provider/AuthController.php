@@ -32,9 +32,6 @@ class AuthController extends Controller
         $user = $this->createUser($request);
         $user->load(['provider.department','provider.subdepartment','provider.images','provider.schedule']);
 
-        if( in_array($user->provider->subdepartment->id, ['40']) ){//e-commerc
-            $this->attachCategories($user);
-        }
 
         $user->load(['provider.categories']);
 
@@ -277,10 +274,4 @@ class AuthController extends Controller
         }
         return;
     }
-
-    public function attachCategories($user){
-        $categories = Category::where(['department_id' => $user->provider->subdepartment_id])->get();
-        $user->provider->categories()->attach($categories);
-    }
-
 }

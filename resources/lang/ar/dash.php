@@ -13,6 +13,7 @@ return [
         'can_share_news' => ' القدرة على نشر الاخبار',
 
     ],
+    'clickhere' => 'اضغط هنا لرؤية تفاصيل المنتج',
     'admin_groups' => 'مجموعات المشرفين',
     'admin_group_roles' => 'صلاحيات المجموعات',
     'images' => 'الصور',
@@ -25,7 +26,9 @@ return [
     'Documents' => 'المستندات',
     'Suggestions' => 'الافتراحات',
     'Booking' => 'الحجوزات',
+    'categories' => 'الفئات',
     'Newss' => 'الاخبار',
+    'order' => 'الطلبات',
     'beds' => [
         'beds' => 'الاسرة',
         'name' =>  'الاسم' ,
@@ -127,7 +130,7 @@ return [
     ],
     'product' => [
         'PharmacyProducts' => 'منتجات الصيدلية',
-        'product' => 'الافتراحات',
+        'Products' => 'المنتجات',
         'provider' => 'مقدم الخدمة',
         'category' => 'القسم',
         'name' => 'المنتج',
@@ -136,6 +139,7 @@ return [
         'price' => 'السعر',
         'stock' => 'المتاح',
         'description' => 'الوصف',
+        'attributes' => 'مواصفات'
     ],
     'orders' => [
         'orders' => 'الطلبات',
@@ -210,5 +214,17 @@ return [
         'title' => 'العنوان',
         'whatsapp_phone' => 'الواتساب',
         'phone' => 'الهاتف',
+    ],
+    'category' => [
+        'categories' => 'الفئات',
+        'name' => 'الاسم',
+        'provider' => 'مقدم الخدمة',
+        'department' => 'الفسم الرئيسي',
+        'subdepartment' => 'الفسم الفرعي',
+    ],
+    'productattribute' => [
+        'productattribute' => 'سمات المنتج',
+        'size' => 'الحجم',
+        'color' => 'اللون'
     ]
 ];
