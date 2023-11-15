@@ -107,9 +107,8 @@ class Products extends Resource {
             // text() ->make(__('dash.product.description'), 'description'),
             number()->make(__('dash.product.price'), 'price'),
             // number()->make(__('dash.product.stock'), 'stock'),
-            belongsTo()->make(__('dash.product.attributes'), 'attribute', ProductAttributes::class)->showInShow()->hideInIndex(),
-            // text() ->make(__('dash.product.size'), 'size')->showInShow(),
-
+            belongsTo()->make(__('dash.product.size'), 'attribute', ProductAttributes::class)->showInShow()->hideInIndex(),
+            hasMany()->make(__('dash.product.colors'), 'colors', Colors::class)
             // image()
             // ->make(__('dash.images'), 'path')
             //     ->path(function($model){

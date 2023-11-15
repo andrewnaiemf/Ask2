@@ -139,7 +139,11 @@ return [
         'price' => 'السعر',
         'stock' => 'المتاح',
         'description' => 'الوصف',
-        'attributes' => 'مواصفات'
+        'attributes' => 'مواصفات',
+        'size' => 'الحجم',
+        'color' => 'اللون',
+        'colors' => 'الالوان',
+
     ],
     'orders' => [
         'orders' => 'الطلبات',

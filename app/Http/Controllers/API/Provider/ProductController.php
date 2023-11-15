@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ProductController extends Controller
     {
         $perPage = $request->header('per_page', 10);
 
-        $products = Product::where(['provider_id' => auth()->user()->provider->id])
+        $products = Product::with(['category','attribute','colors'])->where(['provider_id' => auth()->user()->provider->id])
         ->simplePaginate($perPage);
         return $this->returnData($products);
     }
@@ -65,6 +66,7 @@ class ProductController extends Controller
     public function productAttribute($request, $product)
     {
         $productAttribute = new ProductAttribute();
+        $productAttribute->product_id = $product->id;
         if ($request->color_id) {
             $this->productColorAttribute($request, $product, $productAttribute);
         }
@@ -76,12 +78,13 @@ class ProductController extends Controller
     }
 
     public function productColorAttribute($request, $product, $productAttribute){
-        $productAttribute['product_id'] = $product->id;
-        $productAttribute['color_id'] = $request->color_id;
+        $colors = Color::whereIn('id', $request->color_id)->get();
+        $product->colors()->sync($colors);
     }
 
     public function productSizeAttribute($request, $productAttribute){
         $productAttribute['size'] = $request->size;
+         $productAttribute->save();
     }
 
     public function productImage($images, $product)
@@ -192,7 +195,7 @@ class ProductController extends Controller
             'en.info' => $this::VALIDATE_REQUIRE_STRING,
             'ar.name' => $this::VALIDATE_REQUIRE_STRING,
             'en.name' => $this::VALIDATE_REQUIRE_STRING,
-            'color_id' => 'nullable|exists:colors,id',
+            'color_id.*' => 'nullable|exists:colors,id',
             'category_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',

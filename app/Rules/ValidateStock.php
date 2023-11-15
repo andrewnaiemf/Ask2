@@ -29,7 +29,7 @@ class ValidateStock implements Rule
     {
         if (request()->input('product_id')) {
             $productId = request()->input('product_id');
-        }elseif (request()->input('orderItemId')) {
+        } elseif (request()->input('orderItemId')) {
             $productId = OrderItem::find(request()->input('orderItemId'))->product_id;
         }
         $product = Product::find($productId);
@@ -38,8 +38,28 @@ class ValidateStock implements Rule
             return false;
         }
 
-        if (in_array($product->provider->subdepartment->name_en, ['Restaurants']) ) {//ignor stock quantity
-           return true;
+        if (in_array(
+            $product->provider->subdepartment->name_en,
+            [
+            'Restaurants',
+            'Craft works',
+            'Food and sweets',
+            'Cafes',
+            'Furniture and electrical appliances',
+            'Second hand stores',
+            'Household supplies',
+            'Sweets and nuts',
+            'Food and perfume materials',
+            'Beauty corner',
+            'clothes and shoes',
+            'Insulators',
+            'Blacksmithing and carpentry',
+            'Electricity and plumbing',
+            'Tiles and paint'
+            ]
+        )
+        ) {//ignor stock quantity
+            return true;
         }
 
 

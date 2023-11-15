@@ -25,13 +25,13 @@ class Colors extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Colors';
+	public static $group = 'order';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
 	 * @param static property string
 	 */
-	public static $displayInMenu = true;
+	public static $displayInMenu = false;
 
 	/**
 	 * change icon in navigation menu
@@ -86,10 +86,10 @@ class Colors extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            text() ->make(__('dash.product.name'), 'name')->translatable([
+            text() ->make(__('dash.product.color'), 'name')->translatable([
                 'ar' => __('dash.ar'),
                 'en' => 'English'
-                ])->showInShow(),
+                ]),
 		];
 	}
 

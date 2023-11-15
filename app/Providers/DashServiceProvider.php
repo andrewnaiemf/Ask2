@@ -15,6 +15,7 @@ use App\Dash\Resources\Cities;
 use App\Dash\Resources\ClinicBookings;
 use App\Dash\Resources\ClinicBookingsDetails;
 use App\Dash\Resources\Clinics;
+use App\Dash\Resources\Colors;
 use App\Dash\Resources\Departments;
 use App\Dash\Resources\Documents;
 use App\Dash\Resources\HotelBookings;
@@ -69,6 +70,7 @@ class DashServiceProvider extends DashServiceProviderInit
             // Rooms::class,
             // RoomTypes::class,
             OtherServiceBookings::class,
+            Colors::class,
             BookingDetails::class,
             Categories::class,
             Products::class,

@@ -7,13 +7,16 @@ use App\Models\Addon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemAddon;
+use App\Models\OrderItemAttribute;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use App\Models\Provider;
 use App\Models\ProviderOffering;
 use App\Models\User;
 use App\Rules\ValidateStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -33,7 +36,12 @@ class OrderController extends Controller
         ->unless($request->status == 'New', function ($query) {
             return $query->whereNotIn('status', ['Accepted','Pending']);
         })
-        ->with(['orderItems.product','provider.user','address'])
+        ->with(['orderItems.product',
+            'orderItems.attribute.color',
+            'orderItems.addons.addon',
+            'provider.user',
+            'address
+         '])
         ->orderBy('updated_at', 'desc')
         ->simplePaginate($perPage);
 
@@ -71,9 +79,12 @@ class OrderController extends Controller
         }
 
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->first();
+
         if ($order) {
             return $this->returnError('You already have cart');
         }
+
+        DB::beginTransaction();
 
         $order = Order::create([
             'user_id' => auth()->user()->id,
@@ -103,6 +114,16 @@ class OrderController extends Controller
             $addonPrice = $this->attachAddon($request, $orderItem);
         }
 
+        if ($request->has('color_id') || $request->has('size')) {
+            $is_attached = $this->attachAttributes($request, $order, $orderItem);
+
+            if (isset($is_attached) && !$is_attached) {
+                DB::rollBack();
+                return $this->returnError('color_id is invalid');
+            }
+        }
+
+
 
         $price = $product->price * $request->qty +  $addonPrice;
         $order->update([
@@ -110,11 +131,61 @@ class OrderController extends Controller
             'sub_total_price' => $price
         ]);
 
-        $order->load('orderItems.addons.addon');
-
+        $order->load('orderItems.addons.addon', 'orderItems.attribute.color');
+        DB::commit();
         return $this->returnData($order);
 
     }
+
+    public function attachAttributes($request,  $order, $orderItem)
+    {
+
+
+        if($request->product_id) {
+            $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
+        }
+
+        $order_itmes_attribute_id = ProductAttribute::where('product_id', $request->product_id)->first()->id;
+        $color_ids = Product::find($request->product_id)->colors->pluck('id')->toArray();
+
+        if(isset($color_ids) && !in_array($request->color_id ,$color_ids)){
+            return true;
+        }
+
+
+        $attribute = new OrderItemAttribute([
+            'product_attribute_id' => $order_itmes_attribute_id,
+            'color_id' => $request->color_id
+        ]);
+
+        $orderItem->attribute()->save($attribute);
+
+    }
+
+    // public function attachSize($request,  $order, $orderItem)
+    // {
+
+    //     if ($request->orderItemIs) {
+    //         $orderItem = $order->orderItems()->where('id', $request->orderItemId)->first();
+    //     }
+
+    //     if($request->product_id) {
+    //         $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
+    //     }
+    //     $order_itmes_attribute_id = ProductAttribute::where('product_id', $request->product_id)->first()->id;
+
+    //     if (isset($orderItem->attribute) && $orderItem->attribute->size) {
+    //         $orderItem->attribute->update([
+    //             'product_attribute_id' => $order_itmes_attribute_id,
+    //         ]);
+    //     } else {
+    //         $attribute = new OrderItemAttribute([
+    //             'product_attribute_id' => $order_itmes_attribute_id,
+    //         ]);
+
+    //         $orderItem->attribute()->save($attribute);
+    //     }
+    // }
 
     public function attachAddon($request, $orderItem)
     {
@@ -163,7 +234,9 @@ class OrderController extends Controller
                 new ValidateStock(), // Use the custom validation rule here
             ],
             'addons' => 'nullable|array',
-            'addons.*.id' => 'nullable|integer|exists:addons,id'
+            'addons.*.id' => 'nullable|integer|exists:addons,id',
+            'size' => 'nullable',
+            'color_id' =>'nullable|integer|exists:colors,id'
         ]);
 
         if ($validator->fails()) {
@@ -195,10 +268,10 @@ class OrderController extends Controller
         }
 
         if (isset($request->qty)) {
-           $cart_updated =  $this->updateQty($request, $order);
-           if(!$cart_updated){
+            $cart_updated =  $this->updateQty($request, $order);
+            if(!$cart_updated) {
                 return $this->returnError('api.there is not item with this id ');
-           }
+            }
         }
 
         if ($request->coupon) {
@@ -269,7 +342,7 @@ class OrderController extends Controller
     {
         if ($request->orderItemId) {
             $orderItem = $order->orderItems()->where('id', $request->orderItemId)->first();
-        }else{
+        } else {
             return false;
         }
         if($request->product_id) {
@@ -332,8 +405,13 @@ class OrderController extends Controller
     public function showCart()
     {
 
-        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->with(['orderItems.product' ,'orderItems.addons.addon'])->first();
-
+        $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])
+            ->with(
+                ['orderItems.product',
+                'orderItems.attribute.color',
+                'orderItems.addons.addon'
+            ])->first();
+            // $order->load('orderItems.attribute.size');
         if(isset($order->orderItems) && count($order->orderItems) == 0) {
             return $this->returnData(null);
         }
@@ -349,7 +427,13 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::where(['id' => $id,'type' => 'Order'])
-        ->with(['orderItems','user','provider','address'])->first();
+        ->with([
+            'user',
+            'provider',
+            'address',
+            'orderItems.attribute.color',
+            'orderItems.addons.addon'
+            ])->first();
 
         return $this->returnData($order);
     }

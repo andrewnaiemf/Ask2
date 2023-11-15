@@ -41,4 +41,8 @@ class Product extends Model
         return $this->hasOne(ProductAttribute::class);
     }
 
+    public function colors(){
+        return $this->belongsToMany(Color::class);
+    }
+
 }
