@@ -1,16 +1,14 @@
 <?php
 namespace App\Dash\Resources;
-
-use App\Models\OrderItem;
 use Dash\Resource;
 
-class OrderItems extends Resource {
+class OrderItemAttributes extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\OrderItem::class ;
+	public static $model = \App\Models\OrderItemAttribute::class ;
 
 
 	/**
@@ -70,7 +68,7 @@ class OrderItems extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-        return __('dash.orders.orderItems');
+		return 'OrderItemAttribute';
 	}
 
 	/**
@@ -88,11 +86,8 @@ class OrderItems extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            belongsTo()->make(__('dash.orders.product'), 'product', Products::class),
-            text()->make(__('dash.orders.quantity'),'qty'),
-            number()->make(__('dash.orders.unit_price'),'unit_price'),
-            hasOne()->make(__('dash.product.attributes'), 'attribute', OrderItemAttributes::class)->hideInIndex(),
-
+			text()->make(__('dash::dash.color'), 'color'),
+			// text()->make(__('dash::dash.size'), 'size'),
 		];
 	}
 

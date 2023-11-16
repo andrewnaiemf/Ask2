@@ -23,6 +23,7 @@ use App\Dash\Resources\HotelBookingsDetails;
 use App\Dash\Resources\HotelServices;
 use App\Dash\Resources\MainDepartments;
 use App\Dash\Resources\News;
+use App\Dash\Resources\OrderItemAttributes;
 use App\Dash\Resources\OrderItems;
 use App\Dash\Resources\Orders;
 use App\Dash\Resources\OtherServiceBookings;
@@ -36,6 +37,7 @@ use App\Dash\Resources\RoomTypes;
 use App\Dash\Resources\SubDepartments;
 use App\Dash\Resources\Suggestions;
 use App\Dash\Resources\Users;
+use CreateOrderItemAttributes;
 use Dash\DashServiceProviderInit;
 
 class DashServiceProvider extends DashServiceProviderInit
@@ -78,6 +80,7 @@ class DashServiceProvider extends DashServiceProviderInit
             // ClinicBookings::class,
             // ClinicBookingsDetails::class,
             OrderItems::class,
+            OrderItemAttributes::class,
             Orders::class,
             AskForNews::class,
             News::class,

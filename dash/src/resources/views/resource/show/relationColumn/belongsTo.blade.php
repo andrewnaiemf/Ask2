@@ -20,7 +20,6 @@ $resourceName   = resourceShortName($field['resource']);
 
     @endif
 
-
 @elseif(!empty($OneRelationData)  && is_object($OneRelationData))
 {{ $OneRelationData->{$columnName} }}
 @else

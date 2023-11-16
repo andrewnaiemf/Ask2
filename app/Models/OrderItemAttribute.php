@@ -16,7 +16,7 @@ class OrderItemAttribute extends Model
     public function toArray()
     {
         // $attribute = parent::toArray();
-        $attribute['size'] = $this->attribute->size;
+        $attribute['size'] =  $this->attribute ? $this->attribute->size : '';
         $attribute['color'] = ['value' => $this->color->value,  'name' =>  $this->color->name];
         $attribute = array_merge(['id' => $this->id], $attribute);
         return $attribute;
