@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API\Provider;
 
 use App\Http\Controllers\Controller;
+use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +22,7 @@ class ProductController extends Controller
     {
         $perPage = $request->header('per_page', 10);
 
-        $products = Product::where(['provider_id' => auth()->user()->provider->id])
+        $products = Product::with(['category','attribute','colors'])->where(['provider_id' => auth()->user()->provider->id])
         ->simplePaginate($perPage);
         return $this->returnData($products);
     }
@@ -46,7 +48,7 @@ class ProductController extends Controller
         $validator = $this->validateProductRequest($request);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $this->returnError($validator->errors()->all());
         }
         $product_data = $request->except('image');
         $product = Product::create($product_data);
@@ -55,8 +57,34 @@ class ProductController extends Controller
             $this->productImage($request->image, $product);
         }
 
+        $this->productAttribute($request, $product);
+
         return $this->returnSuccessMessage(trans("api.product.createdSuccessfully"));
 
+    }
+
+    public function productAttribute($request, $product)
+    {
+        $productAttribute = new ProductAttribute();
+        $productAttribute->product_id = $product->id;
+        if ($request->color_id) {
+            $this->productColorAttribute($request, $product, $productAttribute);
+        }
+
+        if ($request->size) {
+            $this->productSizeAttribute($request, $productAttribute);
+        }
+        $productAttribute->save();
+    }
+
+    public function productColorAttribute($request, $product, $productAttribute){
+        $colors = Color::whereIn('id', $request->color_id)->get();
+        $product->colors()->sync($colors);
+    }
+
+    public function productSizeAttribute($request, $productAttribute){
+        $productAttribute['size'] = $request->size;
+         $productAttribute->save();
     }
 
     public function productImage($images, $product)
@@ -111,7 +139,7 @@ class ProductController extends Controller
         $validator = $this->validateProductRequest($request);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401, $validator->errors()->all());
+            return $this->returnError($validator->errors()->all());
         }
 
         $product_data = $request->except('image');
@@ -159,13 +187,15 @@ class ProductController extends Controller
     protected function validateProductRequest(Request $request)
     {
         return Validator::make($request->all(), [
-            'stock' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0',
+            'size' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'description' => $this::VALIDATE_REQUIRE_STRING,
+            'description' =>  'nullable|string',
             'ar.info' => $this::VALIDATE_REQUIRE_STRING,
             'en.info' => $this::VALIDATE_REQUIRE_STRING,
             'ar.name' => $this::VALIDATE_REQUIRE_STRING,
             'en.name' => $this::VALIDATE_REQUIRE_STRING,
+            'color_id.*' => 'nullable|exists:colors,id',
             'category_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',

@@ -2,13 +2,13 @@
 namespace App\Dash\Resources;
 use Dash\Resource;
 
-class Orders extends Resource {
+class OrderItemAttributes extends Resource {
 
 	/**
 	 * define Model of resource
 	 * @param Model Class
 	 */
-	public static $model = \App\Models\Order::class ;
+	public static $model = \App\Models\OrderItemAttribute::class ;
 
 
 	/**
@@ -31,7 +31,7 @@ class Orders extends Resource {
 	 * show or hide resouce In Navigation Menu true|false
 	 * @param static property string
 	 */
-	public static $displayInMenu = true;
+	public static $displayInMenu = false;
 
 	/**
 	 * change icon in navigation menu
@@ -68,7 +68,7 @@ class Orders extends Resource {
 	 * @return string
 	 */
 	public static function customName() {
-        return __('dash.orders.orders');
+		return 'OrderItemAttribute';
 	}
 
 	/**
@@ -86,15 +86,8 @@ class Orders extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            hasMany()->make(__('dash.orders.orderItems'),'orderItems', OrderItems::class)->hideInIndex(),
-            belongsTo()->make(__('dash.orders.user'), 'user', Users::class),
-            belongsTo()->make(__('dash.orders.provider'), 'provider', Providers::class),
-            belongsTo()->make(__('dash.orders.address'), 'address', Addresses::class)->hideInIndex(),
-            text()->make(__('dash.orders.status'), 'status'),
-            number()->make(__('dash.orders.total_amount'), 'total_amount'),
-            number()->make(__('dash.orders.coupon_amount'), 'coupon_amount'),
-            text()->make(__('dash.orders.shipping_status'), 'shipping_status'),
-            text()->make(__('dash.orders.shipping_method'), 'shipping_method'),
+			text()->make(__('dash::dash.color'), 'color'),
+			// text()->make(__('dash::dash.size'), 'size'),
 		];
 	}
 

@@ -21,6 +21,7 @@ class OrderItem extends Model
         'updated_at',
     ];
 
+
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -30,5 +31,14 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function addons()
+    {
+        return $this->hasMany(OrderItemAddon::class);
+    }
+
+    public function attribute(){
+        return $this->hasOne(OrderItemAttribute::class);
     }
 }

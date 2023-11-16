@@ -1,5 +1,7 @@
 <?php
 namespace App\Dash\Resources;
+
+use App\Models\OrderItem;
 use Dash\Resource;
 
 class OrderItems extends Resource {
@@ -25,7 +27,7 @@ class OrderItems extends Resource {
 	 * and add this key directly users
 	 * @param static property
 	 */
-	public static $group = 'Health';
+	public static $group = 'order';
 
 	/**
 	 * show or hide resouce In Navigation Menu true|false
@@ -86,9 +88,11 @@ class OrderItems extends Resource {
 	public function fields() {
 		return [
 			id()->make(__('dash::dash.id'), 'id'),
-            belongsTo()->make(__('dash.orders.product'), 'product', PharmacyProducts::class),
+            belongsTo()->make(__('dash.orders.product'), 'product', Products::class),
             text()->make(__('dash.orders.quantity'),'qty'),
             number()->make(__('dash.orders.unit_price'),'unit_price'),
+            hasOne()->make(__('dash.product.attributes'), 'attribute', OrderItemAttributes::class)->hideInIndex(),
+
 		];
 	}
 

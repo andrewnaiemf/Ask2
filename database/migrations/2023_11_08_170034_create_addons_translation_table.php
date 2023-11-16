@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductTranslationsTable extends Migration
+class CreateAddonsTranslationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateProductTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_translations', function (Blueprint $table) {
+        Schema::create('addons_translation', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('addon_id');
             $table->string('locale')->index();
             $table->string('name');
-            $table->text('info');
             $table->timestamps();
-
-            $table->unique(['product_id', 'locale']); // Unique constraint on product_id and locale
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('addon_id')->references('id')->on('addons')->onDelete('cascade');
         });
     }
 
@@ -33,6 +30,6 @@ class CreateProductTranslationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_translations');
+        Schema::dropIfExists('addons_translation');
     }
 }

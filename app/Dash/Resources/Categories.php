@@ -27,7 +27,7 @@ class Categories extends Resource
      * and add this key directly users
      * @param static property
      */
-    public static $group = 'Health';
+    public static $group = 'categories';
 
     /**
      * show or hide resouce In Navigation Menu true|false
@@ -71,7 +71,7 @@ class Categories extends Resource
      */
     public static function customName()
     {
-        return __('dash.departments.pharmacy_departments');
+        return __('dash.category.categories');
     }
 
     /**
@@ -91,23 +91,15 @@ class Categories extends Resource
     {
         return [
             id()->make(__('dash::dash.id'), 'id'),
-            belongsToMany()->make(__('dash.departments.providers'), 'providers', Providers::class)
+            belongsToMany()->make(__('dash.category.provider'), 'providers', Providers::class)
             ->query(function ($model) {
                 return $model::where('subdepartment_id', 40);
-            })
-            ,
-            select()->make(__('dash.departments.department'), 'department_id')->options([
-            '40' => __('dash.departments.pharmacies')
-            ])->selected(40),
-            text()->make(__('dash.departments.name'), 'name')->translatable([
+            }),
+
+            text()->make(__('dash.category.name'), 'name')->translatable([
             'ar' => __('dash.ar'),
             'en' => 'English'
             ])->showInShow(),
-            image()
-            ->make(__('dash.images'), 'icon')
-                ->path(('categories'))
-                ->accept('image/*')
-                ->rule('required', 'image'),
         ];
     }
 
