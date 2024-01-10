@@ -47,7 +47,7 @@ class HomeController extends Controller
         return  $providers;
     }
 
-    public function mainDepartments($user)
+    public function mainDepartments()
     {
 
         $departments = Department::with('subdepartments.providers.user')->whereNull('parent_id')->get();
