@@ -39,7 +39,6 @@ class HomeController extends Controller
 
     public function mostRate()
     {
-
         $providers = Provider::with(['user','department','subdepartment'])->where('status', 'Accepted')->get()->filter(function ($provider) {
             return $provider->rating > 3;
         })->sortByDesc('rating')->values();
