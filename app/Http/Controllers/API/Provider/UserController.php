@@ -90,13 +90,15 @@ class UserController extends Controller
 
 
         $user->load(['provider.department',
-                        'provider.subdepartment',
-                        'provider.images',
-                        'provider.ratings',
-                        'provider.clinics.schedules.clinicScheduleDoctors',
-                        'provider.categories',
-                        'provider.products'
-                    ]);
+                    'provider.subdepartment',
+                    'provider.images',
+                    'provider.ratings',
+                    'provider.clinics.schedules.clinicScheduleDoctors',
+                    'provider.categories',
+                    'provider.products' => function ($query) {
+                        $query->notDeletedCategory();
+                    },
+                ]);
 
         $providerData = $user->toArray();
         $providerData['provider']['clinics'] = [];
@@ -341,7 +343,7 @@ class UserController extends Controller
 
         $path = 'Provider/' .$user->id. '/placeImages/';
 
-       foreach ($images as $type => $image) {
+        foreach ($images as $type => $image) {
 
             $imageName = $image->hashName();
             $image->storeAs($path,$imageName);
@@ -349,7 +351,7 @@ class UserController extends Controller
 
             DocumentProvider::create([
                 'provider_id' => $user->provider->id,
-                'name' => $type ?? 'describe_image',
+                'name' => $type !== 'profile_cover' ? 'describe_image' : 'profile_cover',
                 'path' => $full_path,
             ]);
 
