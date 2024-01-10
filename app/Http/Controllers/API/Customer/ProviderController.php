@@ -15,8 +15,11 @@ class ProviderController extends Controller
     {
         $provider = Provider::where('id', $id)
         ->where('status', 'Accepted')
-        ->with('department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule', 'products')
-        ->first();
+        ->with(['department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule',
+        'products' => function ($query) {
+            $query->notDeletedCategory()->with('category');
+        }
+        ])->first();
 
         if (!$provider) {
            return $this->returnError(trans('api.InvalidProvider'));
