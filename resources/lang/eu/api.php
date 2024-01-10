@@ -51,6 +51,7 @@ return [
         'deletedSuccessfully' => 'کمرے کامیابی سے حذف کردیے گئے',
     ],
     'newsRequestAlreadySentBefore' => 'خبر کی درخواست پہلے ہی بھیج دی گئی ہے',
+    'cartDeletedSuccessfully' => 'کارٹ کامیابی سے حذف ہو گیا',
 
 ];
 

@@ -39,6 +39,7 @@ use App\Dash\Resources\Suggestions;
 use App\Dash\Resources\Users;
 use CreateOrderItemAttributes;
 use Dash\DashServiceProviderInit;
+use App\Dash\Resources\Advertisements;
 
 class DashServiceProvider extends DashServiceProviderInit
 {
@@ -90,6 +91,7 @@ class DashServiceProvider extends DashServiceProviderInit
             Suggestions::class,
             Questions::class,
             Cities::class,
+            Advertisements::class
             // Admins::class,
             // AdminGroups::class,
             // AdminGroupRoles::class,

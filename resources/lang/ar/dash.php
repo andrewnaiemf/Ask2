@@ -28,6 +28,7 @@ return [
     'Booking' => 'الحجوزات',
     'categories' => 'الفئات',
     'Newss' => 'الاخبار',
+    'Advertisements'=> 'الاعلانات',
     'order' => 'الطلبات',
     'beds' => [
         'beds' => 'الاسرة',
@@ -230,5 +231,9 @@ return [
         'productattribute' => 'سمات المنتج',
         'size' => 'الحجم',
         'color' => 'اللون'
-    ]
+    ],
+    'advertisements' => [
+        'image_ar' => 'الصورة ياللغة العربية ',
+        'image_en' => 'الصورة ياللغة الانجليزية ',
+    ],
 ];

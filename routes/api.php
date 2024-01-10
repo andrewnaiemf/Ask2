@@ -32,7 +32,7 @@ use App\Models\Category;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\API\AdvertisementController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -79,6 +79,7 @@ Route::group([
         $provider->update(['status' => 'Accepted']);
     });
 
+    Route::get('advertisements', [AdvertisementController::class, 'index']);
 
 });
 
@@ -173,6 +174,7 @@ Route::group([
         Route::resource('order', OrderController::class);
         Route::post('cart', [OrderController::class, 'cart']);
         Route::post('edit/cart', [OrderController::class, 'updateCart']);
+        Route::delete('cart', [OrderController::class, 'deleteCart']);
         Route::get('cart', [OrderController::class, 'showCart']);
         Route::get('product/{id}', [CustomerProductController::class , 'show']);
 

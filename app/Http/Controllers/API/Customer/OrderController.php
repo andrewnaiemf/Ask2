@@ -298,7 +298,14 @@ class OrderController extends Controller
         $order->save();
 
         if ($request->type) {
+            $checkStock = $this->chechStock($order);
+            if (!$checkStock) {
+                return $this->returnSuccessMessage('api.someProductIsNotAvailableNow');
+            }
             $order->update(['type' => $request->type, 'status' => 'Accepted']);
+            $this->decreaseStock($order);
+            PushNotification::create($order->user_id ,$order->provider->user_id ,$order ,'new_order');
+
             return $this->returnSuccessMessage('api.orderCreatedSuccessfully');
         }
 
@@ -464,11 +471,19 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function deleteCart()
     {
-        //
+        $order = Order::where(['user_id' => auth()->user()->id, 'type' => 'Cart'])->with('orderItems.product')->first();
+
+        if ($order) {
+            foreach ($order->orderItems as $item) {
+                $item->delete();
+            }
+        }
+
+        $order->delete();
+        return $this->returnSuccessMessage( __('api.cartDeletedSuccessfully'));
     }
 }

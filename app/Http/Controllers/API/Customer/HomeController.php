@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Customer;
 
+use App\Models\Advertisement;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Provider;
@@ -31,21 +32,23 @@ class HomeController extends Controller
 
         $mostRate = $this->mostRate();
         $mainDepartments = $this->mainDepartments();
+        $advertisements = Advertisement::all();
 
-        return $this->returnData(['user' => $user, 'mostRate' => $mostRate, 'mainDepartments' => $mainDepartments]);
-
+        return $this->returnData(['user' => $user, 'mostRate' => $mostRate, 'mainDepartments' => $mainDepartments, 'advertisements' => $advertisements]);
     }
 
-    function mostRate() {
+    public function mostRate()
+    {
 
         $providers = Provider::with(['user','department','subdepartment'])->where('status', 'Accepted')->get()->filter(function ($provider) {
-                        return $provider->rating > 3;
-                    })->sortByDesc('rating')->values();
+            return $provider->rating > 3;
+        })->sortByDesc('rating')->values();
 
         return  $providers;
     }
 
-    function mainDepartments(){
+    public function mainDepartments($user)
+    {
 
         $departments = Department::with('subdepartments.providers.user')->whereNull('parent_id')->get();
         return  $departments;

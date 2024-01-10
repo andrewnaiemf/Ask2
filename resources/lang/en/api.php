@@ -51,4 +51,5 @@ return [
         'deletedSuccessfully' => 'room deleted successfully',
     ],
     'newsRequestAlreadySentBefore' => 'news request already sent before',
+    'cartDeletedSuccessfully' => 'cart deleted successfully',
 ];
