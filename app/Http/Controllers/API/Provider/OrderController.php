@@ -36,7 +36,14 @@ class OrderController extends Controller
         ->when($request->status == 'Rejected', function ($query) {
             return $query->where('status', 'Rejected');
         })
-        ->with(['orderItems.product','user','address'])
+        ->with(['orderItems.product' => function ($query) {
+            $query->withTrashed(); // Include soft-deleted products
+            $query->with(['category.addons']);
+        },
+        'user',
+        'address' => function ($query) {
+            $query->withTrashed(); // Include soft-deleted addresses
+        }])
         ->orderBy('updated_at', 'desc')
         ->simplePaginate($perPage);
 
