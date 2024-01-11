@@ -146,7 +146,24 @@ class Provider extends Model
         }
 
         $offering = null;
-        if (in_array($this->subdepartment->id, ['40'])) {//e-commerce offerings
+        if( in_array($this->subdepartment->name_en,
+        [   'Restaurants',
+            'Craft works',
+            'Food and sweets',
+            'Cafes',
+            'Furniture and electrical appliances',
+            'Second hand stores',
+            'Household supplies',
+            'Sweets and nuts',
+            'Food and perfume materials',
+            'Beauty corner',
+            'clothes and shoes',
+            'Insulators',
+            'Blacksmithing and carpentry',
+            'Electricity and plumbing',
+            'Tiles and paint'
+        ]
+        ) ) {//e-commerce offerings
             $offering = $this->offering;
         }
 
