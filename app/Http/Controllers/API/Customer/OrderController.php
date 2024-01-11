@@ -326,6 +326,23 @@ class OrderController extends Controller
         return true; // Return true if stock is sufficient for all items
     }
 
+    public function decreaseStock($order)
+    {
+        $orderItems = $order->orderItems;
+
+        foreach ($orderItems as $item) {
+            $itemQty = $item->qty;
+            $product = $item->product;
+
+            if ($product) {
+                // Ensure stock does not go below zero
+                $product->stock = max(0, $product->stock - $itemQty);
+                $product->save();
+            }
+        }
+
+    }
+
     public function updateShipping($request, $order)
     {
 
