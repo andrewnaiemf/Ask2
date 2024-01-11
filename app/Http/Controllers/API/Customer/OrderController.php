@@ -17,6 +17,7 @@ use App\Rules\ValidateStock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\PushNotification;
 
 class OrderController extends Controller
 {
@@ -310,6 +311,21 @@ class OrderController extends Controller
         }
 
         return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
+    }
+
+    public function chechStock($order){
+        $orderItems = $order->orderItems;
+
+        foreach ($orderItems as $item) {
+            $itemQty = $item->qty;
+            $product = $item->product;
+
+            if ($product && $product->stock < $itemQty) {
+                return false; // Return false if stock is less than item qty
+            }
+        }
+
+        return true; // Return true if stock is sufficient for all items
     }
 
     public function updateShipping($request, $order)
