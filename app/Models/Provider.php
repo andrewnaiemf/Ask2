@@ -163,7 +163,7 @@ class Provider extends Model
             'Electricity and plumbing',
             'Tiles and paint'
         ]
-        ) ) {//e-commerce offerings
+        ) || $this->department->name_en == 'Restaurants' ) {//e-commerce offerings
             $offering = $this->offering;
         }
 

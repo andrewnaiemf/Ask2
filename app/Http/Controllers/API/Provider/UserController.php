@@ -204,7 +204,7 @@ class UserController extends Controller
             'Electricity and plumbing',
             'Tiles and paint'
         ]
-        ) ){///e-commerce
+        ) || $provider->department->name_en == 'Restaurants' ){///e-commerce
 
             $offering = ProviderOffering::where('provider_id', $provider->id)->first();
 
