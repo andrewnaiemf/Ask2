@@ -17,7 +17,7 @@ class ProviderController extends Controller
         ->where('status', 'Accepted')
         ->with(['department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule',
         'products' => function ($query) {
-            $query->notDeletedCategory()->with('category');
+            $query->notDeletedCategory()->with('category.addons');
         }
         ])->first();
 
