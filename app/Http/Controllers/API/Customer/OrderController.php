@@ -97,7 +97,7 @@ class OrderController extends Controller
             'total_amount' => null,
             'payment_status' => 'Pending',
             'shipping_status' => null,
-            'shipping_method' =>null,
+            'shipping_method' => null,
         ]);
 
 
@@ -138,7 +138,7 @@ class OrderController extends Controller
 
     }
 
-    public function attachAttributes($request,  $order, $orderItem)
+    public function attachAttributes($request, $order, $orderItem)
     {
 
 
@@ -149,7 +149,7 @@ class OrderController extends Controller
         $order_itmes_attribute_id = ProductAttribute::where('product_id', $request->product_id)->first()->id;
         $color_ids = Product::find($request->product_id)->colors->pluck('id')->toArray();
 
-        if(isset($color_ids) && !in_array($request->color_id ,$color_ids)){
+        if(isset($color_ids) && !in_array($request->color_id, $color_ids)) {
             return true;
         }
 
@@ -237,7 +237,7 @@ class OrderController extends Controller
             'addons' => 'nullable|array',
             'addons.*.id' => 'nullable|integer|exists:addons,id',
             'size' => 'nullable',
-            'color_id' =>'nullable|integer|exists:colors,id'
+            'color_id' => 'nullable|integer|exists:colors,id'
         ]);
 
         if ($validator->fails()) {
@@ -269,10 +269,7 @@ class OrderController extends Controller
         }
 
         if (isset($request->qty)) {
-            $cart_updated =  $this->updateQty($request, $order);
-            if(!$cart_updated) {
-                return $this->returnError('api.there is not item with this id ');
-            }
+            $this->updateQty($request, $order);
         }
 
         if ($request->coupon) {
@@ -305,7 +302,7 @@ class OrderController extends Controller
             }
             $order->update(['type' => $request->type, 'status' => 'Accepted']);
             $this->decreaseStock($order);
-            PushNotification::create($order->user_id ,$order->provider->user_id ,$order ,'new_order');
+            PushNotification::create($order->user_id, $order->provider->user_id, $order, 'new_order');
 
             return $this->returnSuccessMessage('api.orderCreatedSuccessfully');
         }
@@ -313,7 +310,8 @@ class OrderController extends Controller
         return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
     }
 
-    public function chechStock($order){
+    public function chechStock($order)
+    {
         $orderItems = $order->orderItems;
 
         foreach ($orderItems as $item) {
@@ -363,11 +361,17 @@ class OrderController extends Controller
 
     public function updateQty($request, $order)
     {
+        if ($request->force_edit) {
+            $provider_id = Product::find($request->product_id)->provider_id;
+            $request->provider_id = $provider_id;
+            $order->delete();
+            return $order = $this->createNewCart($request);
+        }
+
         if ($request->orderItemId) {
             $orderItem = $order->orderItems()->where('id', $request->orderItemId)->first();
-        } else {
-            return false;
         }
+
         if($request->product_id) {
             $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
         }
@@ -433,8 +437,9 @@ class OrderController extends Controller
                 ['orderItems.product',
                 'orderItems.attribute.color',
                 'orderItems.addons.addon'
-            ])->first();
-            // $order->load('orderItems.attribute.size');
+            ]
+            )->first();
+        // $order->load('orderItems.attribute.size');
         if(isset($order->orderItems) && count($order->orderItems) == 0) {
             return $this->returnData(null);
         }
@@ -500,6 +505,6 @@ class OrderController extends Controller
         }
 
         $order->delete();
-        return $this->returnSuccessMessage( __('api.cartDeletedSuccessfully'));
+        return $this->returnSuccessMessage(__('api.cartDeletedSuccessfully'));
     }
 }
