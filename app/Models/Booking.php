@@ -11,7 +11,7 @@ class Booking extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'user_id','provider_id','notes','status','department_id','sub_department_id'
+        'user_id','provider_id','notes','status','department_id','sub_department_id','year','month','day','time'
     ];
 
     protected $hidden =[
@@ -22,7 +22,7 @@ class Booking extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function provider()

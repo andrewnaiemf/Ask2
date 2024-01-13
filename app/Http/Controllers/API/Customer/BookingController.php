@@ -52,7 +52,7 @@ class BookingController extends Controller
             return $this->returnError($validation);
         }
 
-        $provider = Provider::find($request->provider_id);
+        $provider = Provider::findOrFail($request->provider_id);
 
         $data = [
             'department_id'=> $provider->department->id,
@@ -60,7 +60,7 @@ class BookingController extends Controller
             'user_id' => auth()->user()->id
         ];
 
-        $data = array_merge($data , $request->all());
+        $data = array_merge($data, $request->all());
 
         $booking = Booking::create( $data);
 
