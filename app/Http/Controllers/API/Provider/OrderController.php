@@ -38,7 +38,13 @@ class OrderController extends Controller
         })
         ->with(['orderItems.product' => function ($query) {
             $query->withTrashed(); // Include soft-deleted products
-            $query->with(['category.addons']);
+        },
+        'orderItems' => function ($query) {
+            $query->with(['addons' => function ($query) {
+                $query->with(['addon' => function ($query) {
+                    $query->withTrashed(); // Include soft-deleted addons
+                }]);
+            }]);
         },
         'user',
         'address' => function ($query) {
