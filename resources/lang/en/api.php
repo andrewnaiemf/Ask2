@@ -50,6 +50,7 @@ return [
         'updatedSuccessfully' => 'room updated successfully',
         'deletedSuccessfully' => 'room deleted successfully',
     ],
+    'cantMakeOrderFromDifferentProvider' => 'You cannot order from more than one service provider in a single order',
     'newsRequestAlreadySentBefore' => 'news request already sent before',
     'cartDeletedSuccessfully' => 'cart deleted successfully',
     'haveCart' => 'You already have cart',

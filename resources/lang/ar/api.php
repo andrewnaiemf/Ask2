@@ -45,7 +45,7 @@ return [
     'newsCreatedSuccessfully' => 'تم إنشاء الأخبار بنجاح',
     'newsRequestSentSuccessfully' => 'تم إرسال طلب الأخبار بنجاح',
     'bookingUpdatedSuccessfully' => 'تم تحديث حالة الحجز بنجاح',
-
+    'cantMakeOrderFromDifferentProvider' => 'You cannot order from more than one service provider in a single order',
     'room' =>[
         'createdSuccessfully' => 'تم إنشاء الغرفة بنجاح',
         'updatedSuccessfully' => 'تم تحديث الغرفة بنجاح',

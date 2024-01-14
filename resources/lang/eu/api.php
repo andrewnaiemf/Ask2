@@ -50,6 +50,7 @@ return [
         'updatedSuccessfully' => 'کمرے کامیابی سے اپ ڈیٹ ہوگیے',
         'deletedSuccessfully' => 'کمرے کامیابی سے حذف کردیے گئے',
     ],
+    'cantMakeOrderFromDifferentProvider' => 'آپ ایک ہی پرووائیڈر سے زیادہ سے زیادہ ایک آرڈر بنا سکتے ہیں۔',
     'newsRequestAlreadySentBefore' => 'خبر کی درخواست پہلے ہی بھیج دی گئی ہے',
     'cartDeletedSuccessfully' => 'کارٹ کامیابی سے حذف ہو گیا',
     'haveCart' => 'آپ کے پاس پہلے ہی کارٹ ہے',
