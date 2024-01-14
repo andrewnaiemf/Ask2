@@ -48,9 +48,9 @@ class RatingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError($validator->errors()->all());
         }
-
+dd('aa');
 
         $rate = Rating::create([
             'user_id' =>  $request->provider_id,

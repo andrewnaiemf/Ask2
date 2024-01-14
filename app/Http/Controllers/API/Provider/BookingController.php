@@ -27,7 +27,7 @@ class BookingController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError($validator->errors()->all());
         }
 
         $bookings = Booking::where('provider_id', auth()->user()->provider->id)
