@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
+use App\Models\Provider;
 use App\Models\Rating;
 use App\Models\User;
 use App\Notifications\PushNotification;
@@ -40,7 +41,8 @@ class RatingController extends Controller
      */
     public function store(Request $request)
     {
-
+        $prvider_user_id = Provider::findOrFail($request->provider_id)->user_id;
+        $request['provider_id'] = $prvider_user_id;
         $validator=Validator::make($request->all(), [
             'rate' => 'required|numeric|between:0,5',
             'feedback' => 'nullable',
@@ -50,7 +52,6 @@ class RatingController extends Controller
         if ($validator->fails()) {
             return $this->returnValidationError($validator->errors()->all());
         }
-dd('aa');
 
         $rate = Rating::create([
             'user_id' =>  $request->provider_id,
