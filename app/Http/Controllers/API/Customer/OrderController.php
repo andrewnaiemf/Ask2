@@ -90,7 +90,12 @@ class OrderController extends Controller
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->first();
 
         if ($order) {
-            return $this->returnError(__('api.haveCart'));
+
+            return response()->json([
+                'status' => false,
+                'msg' =>__('haveCart'),
+                'have_cart' => true
+            ], 422);
         }
 
         DB::beginTransaction();
