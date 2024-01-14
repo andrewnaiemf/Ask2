@@ -39,15 +39,15 @@ class BookingController extends Controller
                             });
                         })
                         /////////////sub_department 36 is hotel for main department 35////////////
-                        ->when(auth()->user()->provider->subdepartment_id == 36, function ($query) use ($request) {
-                            $query->whereHas('hotelBookingDetail', function ($query) use ($request) {
-                                $query->where('year', $request->year)
-                                    ->whereRaw("arrival_month <= ?", [$request->month])
-                                    ->whereRaw("departure_month >= ?", [$request->month])
-                                    ->whereRaw("arrival_day <= ?", [$request->day])
-                                    ->whereRaw("departure_day >= ?", [$request->day]);
-                            });
-                        })
+                        // ->when(auth()->user()->provider->subdepartment_id == 36, function ($query) use ($request) {
+                        //     $query->whereHas('hotelBookingDetail', function ($query) use ($request) {
+                        //         $query->where('year', $request->year)
+                        //             ->whereRaw("arrival_month <= ?", [$request->month])
+                        //             ->whereRaw("departure_month >= ?", [$request->month])
+                        //             ->whereRaw("arrival_day <= ?", [$request->day])
+                        //             ->whereRaw("departure_day >= ?", [$request->day]);
+                        //     });
+                        // })
                         // Conditional query: If the request status is 'New,Today', filter by 'New,Today' status.
                         ->when(in_array($request->status, ['New', 'Today']), function ($query) use ($request) {
                             return $query->where('status', $request->status);
@@ -60,7 +60,7 @@ class BookingController extends Controller
                         ->when(!in_array($request->status, ['New', 'Completed', 'Today']), function ($query) use ($request) {
                             return $query->whereNotIn('status', ['New','Completed']);
                         })
-                        ->with(['hotelBookingDetail.roomBookingDetail.room.room_type','hotelBookingDetail.roomBookingDetail.room.beds','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                        ->with(['bookingDetail', 'provider.user', 'user'])
                         ->orderBy('id', 'desc')
                         ->simplePaginate($perPage);
 

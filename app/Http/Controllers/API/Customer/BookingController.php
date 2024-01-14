@@ -29,7 +29,7 @@ class BookingController extends Controller
                 ->unless($request->status == 'New', function ($query) {
                     return $query->whereNotIn('status', ['New']);
                 })
-                ->with(['hotelBookingDetail.roomBookingDetail.room.room_type','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic'])
+                ->with(['bookingDetail', 'provider.user', 'user'])
                 ->orderBy('id', 'desc')
                 ->simplePaginate($perPage);
 
@@ -39,7 +39,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::find($id);
-        $booking->load((['hotelBookingDetail.roomBookingDetail.room.room_type','bookingDetail', 'provider.user', 'user', 'clinicBookings.clinic']));
+        $booking->load((['bookingDetail', 'provider.user', 'user']));
 
         return $this->returnData($booking);
     }
@@ -68,16 +68,16 @@ class BookingController extends Controller
             $this->bookingDetail($request, $booking);
         }
 
-        if ($request['clinic_id']) {
-            $this->clinicBooking($request, $booking->id);
-        }
+        // if ($request['clinic_id']) {
+        //     $this->clinicBooking($request, $booking->id);
+        // }
 
-        if ($request['booking_type'] == 'Hotel') {
-            $response = $this->hotelBooking($request, $booking);
-            if ($response) {
-                return $this->returnError($response);
-            }
-        }
+        // if ($request['booking_type'] == 'Hotel') {
+        //     $response = $this->hotelBooking($request, $booking);
+        //     if ($response) {
+        //         return $this->returnError($response);
+        //     }
+        // }
 
         PushNotification::create($booking->user_id ,$provider->user->id ,$booking ,'booking');
 
