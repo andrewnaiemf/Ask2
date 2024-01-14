@@ -127,7 +127,7 @@ class OrderController extends Controller
         $this->updateStatus($order, $request->status);
 
         ///////////////////////////////////////////////notification logic
-        return $this->returnSuccessMessage('api.orderUpdatedSuccessfully');
+        return $this->returnSuccessMessage(__('api.orderUpdatedSuccessfully'));
 
     }
 

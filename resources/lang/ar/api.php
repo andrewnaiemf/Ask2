@@ -52,4 +52,5 @@ return [
     ],
     'newsRequestAlreadySentBefore' => 'تم ارسال الطلب من قبل',
     'cartDeletedSuccessfully' => 'تم حذف السلة بنجاح',
+    'haveCart' => 'لديك سلة تسوق بالفعل',
 ];

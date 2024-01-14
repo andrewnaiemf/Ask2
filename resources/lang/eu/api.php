@@ -52,6 +52,7 @@ return [
     ],
     'newsRequestAlreadySentBefore' => 'خبر کی درخواست پہلے ہی بھیج دی گئی ہے',
     'cartDeletedSuccessfully' => 'کارٹ کامیابی سے حذف ہو گیا',
+    'haveCart' => 'آپ کے پاس پہلے ہی کارٹ ہے',
 
 ];
 

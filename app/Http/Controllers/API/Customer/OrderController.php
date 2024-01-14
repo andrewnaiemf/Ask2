@@ -90,7 +90,7 @@ class OrderController extends Controller
         $order = Order::where(['user_id' => auth()->user()->id,'type' => 'Cart'])->first();
 
         if ($order) {
-            return $this->returnError('You already have cart');
+            return $this->returnError(__('api.haveCart'));
         }
 
         DB::beginTransaction();
@@ -128,7 +128,7 @@ class OrderController extends Controller
 
             if (isset($is_attached) && !$is_attached) {
                 DB::rollBack();
-                return $this->returnError('color_id is invalid');
+                return $this->returnError(__('api.color_id_is_invalid'));
             }
         }
 
@@ -306,16 +306,16 @@ class OrderController extends Controller
         if ($request->type) {
             $checkStock = $this->chechStock($order);
             if (!$checkStock) {
-                return $this->returnSuccessMessage('api.someProductIsNotAvailableNow');
+                return $this->returnSuccessMessage(__('api.someProductIsNotAvailableNow'));
             }
             $order->update(['type' => $request->type, 'status' => 'Accepted']);
             $this->decreaseStock($order);
             PushNotification::create($order->user_id, $order->provider->user_id, $order, 'new_order');
 
-            return $this->returnSuccessMessage('api.orderCreatedSuccessfully');
+            return $this->returnSuccessMessage(__('api.orderCreatedSuccessfully'));
         }
 
-        return $this->returnSuccessMessage('api.cartUpdatedSuccessfully');
+        return $this->returnSuccessMessage(__('api.cartUpdatedSuccessfully'));
     }
 
     public function chechStock($order)

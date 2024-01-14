@@ -52,4 +52,5 @@ return [
     ],
     'newsRequestAlreadySentBefore' => 'news request already sent before',
     'cartDeletedSuccessfully' => 'cart deleted successfully',
+    'haveCart' => 'You already have cart',
 ];
