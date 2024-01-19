@@ -33,6 +33,8 @@ use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdvertisementController;
+use App\Http\Controllers\API\ColorController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -65,6 +67,7 @@ Route::group([
     Route::post('reset_password', [AuthController::class, 'reset']);
 
     Route::get('cities', [CityController::class, 'index' ]);
+    Route::get('colors', [ColorController::class, 'index' ]);
 
     Route::get('departments', [DepartmentController::class, 'index' ]);
 
