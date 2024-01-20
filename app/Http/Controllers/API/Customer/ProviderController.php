@@ -19,6 +19,7 @@ class ProviderController extends Controller
         'products' => function ($query) {
             $query->notDeletedCategory()->with('category.addons');
             $query->notDeletedCategory()->with('colors');
+            $query->notDeletedCategory()->with('sizes');
         }
         ])->first();
 

@@ -48,7 +48,7 @@ class Product extends Model
         return $this->hasMany(ProductAttribute::class);
     }
 
-    public function size(){
+    public function sizes(){
         return $this->hasMany(ProductAttribute::class);
     }
 
