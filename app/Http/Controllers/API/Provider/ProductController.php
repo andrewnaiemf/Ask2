@@ -65,26 +65,35 @@ class ProductController extends Controller
 
     public function productAttribute($request, $product)
     {
-        $productAttribute = new ProductAttribute();
-        $productAttribute->product_id = $product->id;
+        // $productAttribute = new ProductAttribute();
+        // $productAttribute->product_id = $product->id;
         if ($request->color_id) {
-            $this->productColorAttribute($request, $product, $productAttribute);
+            $this->productColorAttribute($request, $product);
         }
 
         if ($request->size) {
-            $this->productSizeAttribute($request, $productAttribute);
+            $this->productSizeAttribute($request, $product);
         }
-        $productAttribute->save();
+        // $productAttribute->save();
     }
 
-    public function productColorAttribute($request, $product, $productAttribute){
+    public function productColorAttribute($request, $product)
+    {
         $colors = Color::whereIn('id', $request->color_id)->get();
         $product->colors()->sync($colors);
     }
 
-    public function productSizeAttribute($request, $productAttribute){
-        $productAttribute['size'] = $request->size;
-         $productAttribute->save();
+    public function productSizeAttribute($request, $product)
+    {
+        $product->size()->delete();
+
+        foreach ($request->size as $size) {
+            $productAttribute = new ProductAttribute();
+            $productAttribute->product_id = $product->id;
+            $productAttribute['size'] = $size;
+            $productAttribute->save();
+        }
+
     }
 
     public function productImage($images, $product)
@@ -92,13 +101,13 @@ class ProductController extends Controller
 
         $userId = auth()->user()->id;
 
-        $path = 'Provider/' .$userId. '/products/';
+        $path = 'Provider/' . $userId . '/products/';
         $product_images = $product->images ?? [];
 
         foreach ($images as $image) {
             $imageName = $image->hashName();
             $image->storeAs($path, $imageName);
-            $full_path = $path.$imageName;
+            $full_path = $path . $imageName;
             array_push($product_images, $full_path);
         }
 
@@ -150,6 +159,13 @@ class ProductController extends Controller
             $this->productImage($request->image, $product);
         }
 
+        if ($request->color_id) {
+            $this->productColorAttribute($request, $product, $product);
+        }
+
+        if ($request->size) {
+            $this->productSizeAttribute($request, $product);
+        }
         return $this->returnSuccessMessage(trans("api.product.updatedSuccessfully"));
     }
 
@@ -175,7 +191,7 @@ class ProductController extends Controller
         $pathes = array_values(array_diff($product->images, [$request->image_path]));
 
         if (Storage::disk('public')->exists($request->image_path)) {
-            Storage::delete( $request->image_path);
+            Storage::delete($request->image_path);
         }
         // Convert the array to JSON and then back to an array
         $product->update(['images' => json_encode($pathes)]);
@@ -188,7 +204,7 @@ class ProductController extends Controller
     {
         return Validator::make($request->all(), [
             'stock' => 'nullable|integer|min:0',
-            'size' => 'nullable|string',
+            'size' => 'nullable|array',
             'price' => 'required|numeric|min:0',
             'description' =>  'nullable|string',
             'ar.info' => $this::VALIDATE_REQUIRE_STRING,

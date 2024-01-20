@@ -18,11 +18,12 @@ class ProviderController extends Controller
         ->with(['department', 'subdepartment', 'images', 'ratings', 'user', 'hotelSchedule',
         'products' => function ($query) {
             $query->notDeletedCategory()->with('category.addons');
+            $query->notDeletedCategory()->with('colors');
         }
         ])->first();
 
         if (!$provider) {
-           return $this->returnError(trans('api.InvalidProvider'));
+            return $this->returnError(trans('api.InvalidProvider'));
         }
 
         if (in_array($provider->subdepartment->id, ['22', '23', '24'])) {

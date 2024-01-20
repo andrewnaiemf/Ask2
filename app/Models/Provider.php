@@ -228,7 +228,7 @@ class Provider extends Model
 
     public function profileCover()
     {
-        return $this->hasMany(DocumentProvider::class)->where('name','profile_cover')->first();
+        return $this->hasMany(DocumentProvider::class)->where('name','profile_cover')->orderBy('created_at', 'desc')->first();
     }
 
 

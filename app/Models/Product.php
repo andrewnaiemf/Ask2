@@ -45,7 +45,11 @@ class Product extends Model
 
     public function attribute()
     {
-        return $this->hasOne(ProductAttribute::class);
+        return $this->hasMany(ProductAttribute::class);
+    }
+
+    public function size(){
+        return $this->hasMany(ProductAttribute::class);
     }
 
     public function colors(){
