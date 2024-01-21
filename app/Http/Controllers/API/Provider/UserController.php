@@ -218,14 +218,17 @@ class UserController extends Controller
                 ];
                 $offering->update($offering_data);
             }else{
-                $offering_data = [
-                    'provider_id' => $provider->id,
-                    'delivery_time' => $request->delivery_time ?? '',
-                    'coupon_name' => $request->coupon_name ?? '',
-                    'coupon_value' => $request->coupon_value ?? 0,
-                    'delivery_fees' => $request->delivery_fees ?? 0
-                ];
-                ProviderOffering::create($offering_data);
+                if ($request->delivery_time || $request->coupon_name || $request->coupon_value || $request->delivery_fees) {
+                    $offering_data = [
+                        'provider_id' => $provider->id,
+                        'delivery_time' => $request->delivery_time ?? '',
+                        'coupon_name' => $request->coupon_name ?? '',
+                        'coupon_value' => $request->coupon_value ?? 0,
+                        'delivery_fees' => $request->delivery_fees ?? 0
+                    ];
+                    ProviderOffering::create($offering_data);
+                }
+
             }
 
         }
