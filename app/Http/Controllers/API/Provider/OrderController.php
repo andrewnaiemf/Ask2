@@ -45,6 +45,7 @@ class OrderController extends Controller
                     $query->withTrashed(); // Include soft-deleted addons
                 }]);
             }]);
+            $query->with('attribute.color');
         },
         'user',
         'address' => function ($query) {
@@ -89,7 +90,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::where(['id' => $id,'type' => 'Order'])
-        ->with(['orderItems','user','address'])->first();
+        ->with(['orderItems.attribute.color','user','address'])->first();
 
         return $this->returnData($order);
     }
