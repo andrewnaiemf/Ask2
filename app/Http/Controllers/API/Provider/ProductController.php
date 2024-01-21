@@ -85,7 +85,7 @@ class ProductController extends Controller
 
     public function productSizeAttribute($request, $product)
     {
-        $product->size()->delete();
+        $product->sizes()->delete();
 
         foreach ($request->size as $size) {
             $productAttribute = new ProductAttribute();
