@@ -159,7 +159,7 @@ class OrderController extends Controller
             $orderItem = $order->orderItems()->where('product_id', $request->product_id)->first();
         }
 
-        $order_itmes_attribute_id = $request->size_id;
+        $order_itmes_attribute_id = $request->size;
         $color_ids = Product::find($request->product_id)->colors->pluck('id')->toArray();
 
         if(isset($color_ids) && !in_array($request->color_id, $color_ids)) {
