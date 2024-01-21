@@ -138,7 +138,7 @@ class OrderController extends Controller
         }
 
 
-
+        $addonPrice = 0;
         $price = $product->price * $request->qty +  $addonPrice;
         $order->update([
             'total_amount' => $price,
