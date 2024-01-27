@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Services\ScheduleService;
 use Illuminate\Support\Facades\Storage;
+
 class UserController extends Controller
 {
     /**
@@ -122,10 +123,10 @@ class UserController extends Controller
         }
 
 
-        if ( $user->provider->department->id == 35) {
+        if ($user->provider->department->id == 35) {
             $providerData['hotel_schedule'] = $user->provider->hotelSchedule;
             $providerData['schedule'] = null;
-        }else{
+        } else {
             $scheduleService = new ScheduleService();
             $workTime = $scheduleService->getProviderWorkTime($user->provider->id);
             $providerData['schedule'] =  $workTime ;
@@ -142,32 +143,33 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $userId = auth()->user()->id;
-        $provider = Provider::where('user_id' , $userId)->first();
-        $validation =  $this->validateUserData( $request );
+        $provider = Provider::where('user_id', $userId)->first();
+        $validation =  $this->validateUserData($request);
 
-        if ( $validation) {
+        if ($validation) {
             return $validation;
         }
 
         $providerData = $request->except(['city_id', 'email', 'profile', 'image']);
 
-        $this->workDescription($userId, $request['email'] , $request['city_id']);
+        $this->workDescription($userId, $request['email'], $request['city_id']);
 
-        $this->providerDocuments($request, $userId, $request['profile'] , $request['image']);
+        $this->providerDocuments($request, $userId, $request['profile'], $request['image']);
 
         if ($request['schedule'] &&  $provider->department->id != 35) {
 
-            $this->providerSchedule($userId, $request['schedule'] ,$request['open_all_time']);
+            $this->providerSchedule($userId, $request['schedule'], $request['open_all_time']);
 
-        }else if($request['schedule'] &&  $provider->department->id == 35){
+        } elseif($request['schedule'] &&  $provider->department->id == 35) {
 
             $this->providerHotelSchedule($userId, $request['schedule']);
 
         }
 
-        if( $provider->department->id == 35 ){////Hotels and hotel apartments
+        if($provider->department->id == 35) {////Hotels and hotel apartments
             $request['service'] = json_encode($request['service']);
 
             if (isset($request['hotel_rating'])) {
@@ -175,9 +177,9 @@ class UserController extends Controller
                 $hotel_rating = $request['hotel_rating'];
                 $hotelrating = HotelRating::where('provider_id', $provider->id)->first();
 
-                if ( $hotelrating) {
+                if ($hotelrating) {
                     $hotelrating->update(['rating' => $hotel_rating]);
-                }else{
+                } else {
                     HotelRating::create([
                         'provider_id' => $provider->id,
                         'rating' => $hotel_rating,
@@ -187,8 +189,9 @@ class UserController extends Controller
             }
         }
 
-        if( in_array($provider->subdepartment->name_en,
-        [   'Restaurants',
+        if(in_array(
+            $provider->subdepartment->name_en,
+            [   'Restaurants',
             'Craft works',
             'Food and sweets',
             'Cafes',
@@ -202,13 +205,15 @@ class UserController extends Controller
             'Insulators',
             'Blacksmithing and carpentry',
             'Electricity and plumbing',
-            'Tiles and paint'
+            'Tiles and paint',
+            'Selling and maintaining phones',
+            'Computer sales and maintenance'
         ]
-        ) || $provider->department->name_en == 'Restaurants' ){///e-commerce
+        ) || $provider->department->name_en == 'Restaurants') {///e-commerce
 
             $offering = ProviderOffering::where('provider_id', $provider->id)->first();
 
-            if ( $offering ) {
+            if ($offering) {
                 $offering_data = [
                     'provider_id' => $provider->id,
                     'delivery_time' => $request->delivery_time ?? $offering->delivery_time,
@@ -217,7 +222,7 @@ class UserController extends Controller
                     'delivery_fees' => $request->delivery_fees ?? $offering->delivery_fees
                 ];
                 $offering->update($offering_data);
-            }else{
+            } else {
                 if ($request->delivery_time || $request->coupon_name || $request->coupon_value || $request->delivery_fees) {
                     $offering_data = [
                         'provider_id' => $provider->id,
@@ -234,14 +239,15 @@ class UserController extends Controller
         }
 
         if (!empty($providerData)) {
-            $provider = Provider::where('user_id',$userId)->first();
+            $provider = Provider::where('user_id', $userId)->first();
             $provider->update($providerData);
         }
 
-        return $this->returnSuccessMessage( trans("api.user'sdataUpdatedSuccessfully") );
+        return $this->returnSuccessMessage(trans("api.user'sdataUpdatedSuccessfully"));
     }
 
-    public function workDescription($userId, $email, $city_id){
+    public function workDescription($userId, $email, $city_id)
+    {
         $userData = [];
         if ($email) {
             $userData['email'] = $email;
@@ -258,37 +264,40 @@ class UserController extends Controller
 
     }
 
-    public function providerDocuments($request, $userId, $profile, $image){
+    public function providerDocuments($request, $userId, $profile, $image)
+    {
 
         $user = User::find($userId);
-        $path = 'Provider/' .$userId. '/';
+        $path = 'Provider/' . $userId . '/';
 
         $this->updateProfilePicture($request, $user, $path);
 
         if ($image) {
-            $this->updateProviderPlaceImages($user,$image);
+            $this->updateProviderPlaceImages($user, $image);
         }
 
     }
 
-    public function providerSchedule($userId, $schedules, $open_all_time){
-        $provider = Provider::where('user_id',$userId)->first();
+    public function providerSchedule($userId, $schedules, $open_all_time)
+    {
+        $provider = Provider::where('user_id', $userId)->first();
 
 
         $provider->update(['open_all_time' => $open_all_time]);
         foreach ($schedules as $id => $schedule) {
             $day = $provider->schedule()->where('day_of_week', $schedule['day_of_week'])->first();
-            if($day){
+            if($day) {
                 $day->update($schedule);
-            }else{
+            } else {
                 $schedule['provider_id'] = $provider->id;
-                Schedule::create( $schedule);
+                Schedule::create($schedule);
             }
         }
 
     }
-    public function providerHotelSchedule($userId, $schedules){
-        $provider = Provider::where('user_id',$userId)->first();
+    public function providerHotelSchedule($userId, $schedules)
+    {
+        $provider = Provider::where('user_id', $userId)->first();
 
         if ($provider->hotelSchedule) {
             // If a hotel schedule exists, update its attributes
@@ -315,7 +324,7 @@ class UserController extends Controller
                 // Update the profile picture
                 $imageName = $profile->hashName();
                 $profile->storeAs($path, $imageName);
-                $fullPath = $path.$imageName;
+                $fullPath = $path . $imageName;
 
                 $user->update([
                     'profile' => $fullPath
@@ -342,15 +351,16 @@ class UserController extends Controller
         }
     }
 
-    public function updateProviderPlaceImages($user, $images){
+    public function updateProviderPlaceImages($user, $images)
+    {
 
-        $path = 'Provider/' .$user->id. '/placeImages/';
+        $path = 'Provider/' . $user->id . '/placeImages/';
 
         foreach ($images as $type => $image) {
 
             $imageName = $image->hashName();
-            $image->storeAs($path,$imageName);
-            $full_path = $path.$imageName;
+            $image->storeAs($path, $imageName);
+            $full_path = $path . $imageName;
 
             DocumentProvider::create([
                 'provider_id' => $user->provider->id,
@@ -362,7 +372,8 @@ class UserController extends Controller
     }
 
 
-    public function validateUserData ( $request ) {
+    public function validateUserData($request)
+    {
 
         $validator = Validator::make($request->all(), [
 

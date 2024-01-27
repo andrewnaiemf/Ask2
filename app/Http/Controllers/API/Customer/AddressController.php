@@ -19,7 +19,7 @@ class AddressController extends Controller
     {
         $perPage = $request->header('per_page', 10);
 
-        $addresses = Address::where('user_id',auth()->user()->id)->simplePaginate($perPage);
+        $addresses = Address::where('user_id', auth()->user()->id)->simplePaginate($perPage);
 
         return $this->returnData($addresses);
     }
@@ -43,19 +43,20 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         $userId = auth()->user()->id;
-        $validation =  $this->validateAddressData( $request );
+        $validation =  $this->validateAddressData($request);
 
-        if ( $validation) {
+        if ($validation) {
             return $validation;
         }
         $request['user_id'] = auth()->user()->id;
         $address = Address::create($request->all());
 
-        return $this->returnSuccessMessage( trans("api.addressAddedSuccessfully") );
+        return $this->returnSuccessMessage(trans("api.addressAddedSuccessfully"));
     }
 
 
-    public function validateAddressData ( $request ) {
+    public function validateAddressData($request)
+    {
 
         $validator = Validator::make($request->all(), [
 
@@ -70,7 +71,7 @@ class AddressController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->returnValidationError(401,$validator->errors()->all());
+            return $this->returnValidationError(401, $validator->errors()->all());
         }
     }
 
@@ -106,7 +107,26 @@ class AddressController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $userId = auth()->user()->id;
+
+        // Validate the request data
+        $validation = $this->validateAddressData($request);
+        if ($validation) {
+            return $validation;
+        }
+
+        // Find the address by ID
+        $address = Address::findOrFail($id);
+
+        // Check if the user is the owner of the address
+        if ($address->user_id != $userId) {
+            return $this->returnErrorMessage(trans("api.unauthorizedAction"));
+        }
+
+        // Update the address with the new data
+        $address->update($request->all());
+
+        return $this->returnSuccessMessage(trans("api.addressUpdatedSuccessfully"));
     }
 
     /**
@@ -117,6 +137,8 @@ class AddressController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $address = Address::findOrFail($id);
+        $address->delete();
+        return $this->returnSuccessMessage(trans("api.addressDeletedSuccessfully"));
     }
 }
